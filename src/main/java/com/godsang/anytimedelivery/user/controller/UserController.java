@@ -19,6 +19,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public void joinUser(@RequestBody UserDto userDto) {
         User user = userMapper.dtoToUser(userDto);
-        userService.createUser(user, userDto.isCustomer());
+        userService.createUser(user, userDto.getIsCustomer());
     }
 }

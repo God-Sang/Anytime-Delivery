@@ -10,5 +10,5 @@ public class UserDto { // TODO validation
     private String password;
     private String phone;
     private String nickName;
-    private boolean isCustomer;
+    private Boolean isCustomer;
 }
