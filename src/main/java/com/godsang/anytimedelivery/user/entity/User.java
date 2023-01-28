@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Entity(name = "USERS")
 public class User extends Auditable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     @Column(unique = true, nullable = false, length = 40)
