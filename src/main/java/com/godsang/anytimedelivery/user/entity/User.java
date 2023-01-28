@@ -26,6 +26,7 @@ public class User extends Auditable {
     @Column(nullable = false, length = 13)
     private String phone;
 
+    @Column(nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 }

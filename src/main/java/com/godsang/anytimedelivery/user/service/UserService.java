@@ -1,5 +1,6 @@
 package com.godsang.anytimedelivery.user.service;
 
+import com.godsang.anytimedelivery.auth.utils.UserAuthorityUtils;
 import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,13 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserAuthorityUtils userAuthorityUtils;
 
     @Transactional
     public void createUser(User user, boolean isCustomer) {
         verifyUserEmailExists(user.getEmail());
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
-//        user.setRole(); TODO role 세팅
+        user.setRole(userAuthorityUtils.createRoles(isCustomer));
         userRepository.save(user);
     }
 
