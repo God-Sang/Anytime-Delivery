@@ -15,10 +15,10 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @PostMapping
+    @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public void joinUser(@RequestBody UserDto userDto) {
         User user = userMapper.dtoToUser(userDto);
-        userService.createUser(user, userDto.getIsCustomer());
+        userService.createUser(user, userDto.getRole());
     }
 }

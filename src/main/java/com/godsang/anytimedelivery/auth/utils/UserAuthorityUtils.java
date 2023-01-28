@@ -12,8 +12,8 @@ public class UserAuthorityUtils {
     private final List<GrantedAuthority> CUSTOMER_ROLES = AuthorityUtils.createAuthorityList("ROLE_CUSTOMER");
     private final List<GrantedAuthority> OWNER_ROLES = AuthorityUtils.createAuthorityList("ROLE_OWNER");
 
-    public Role createRoles(boolean isCustomer) {
-        if (isCustomer) {
+    public Role createRoles(String role) {
+        if (role.equals(Role.ROLE_CUSTOMER.getName())) {
             return Role.ROLE_CUSTOMER;
         }
         return Role.ROLE_OWNER;
