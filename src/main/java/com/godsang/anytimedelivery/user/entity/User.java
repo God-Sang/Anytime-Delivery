@@ -1,7 +1,9 @@
 package com.godsang.anytimedelivery.user.entity;
 
 import com.godsang.anytimedelivery.common.audit.BaseEntity;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity(name = "USERS")
+@NoArgsConstructor
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +23,23 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 10)
+    @Column(unique = true, nullable = false, length = 10)
     private String nickName;
 
-    @Column(nullable = false, length = 13)
+    @Column(unique = true, nullable = false, length = 13)
     private String phone;
 
     @Column(nullable = false, updatable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Builder
+    public User(Long userId, String email, String password, String nickName, String phone, Role role) {
+        this.userId = userId;
+        this.email = email;
+        this.password = password;
+        this.nickName = nickName;
+        this.phone = phone;
+        this.role = role;
+    }
 }
