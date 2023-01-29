@@ -1,6 +1,6 @@
 package com.godsang.anytimedelivery.user.entity;
 
-import com.godsang.anytimedelivery.audit.Auditable;
+import com.godsang.anytimedelivery.audit.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity(name = "USERS")
-public class User extends Auditable {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
