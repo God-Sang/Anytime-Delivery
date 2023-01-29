@@ -20,7 +20,7 @@ public class UserService {
         verifyUserEmailExists(user.getEmail());
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
-        user.setRole(userAuthorityUtils.createRoles(role));
+        user.setRole(userAuthorityUtils.createRoles(role, user.getEmail()));
         userRepository.save(user);
     }
 
