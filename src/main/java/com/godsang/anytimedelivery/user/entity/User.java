@@ -1,6 +1,6 @@
 package com.godsang.anytimedelivery.user.entity;
 
-import com.godsang.anytimedelivery.audit.BaseEntity;
+import com.godsang.anytimedelivery.common.audit.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 

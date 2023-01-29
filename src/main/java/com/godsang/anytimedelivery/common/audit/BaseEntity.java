@@ -1,4 +1,4 @@
-package com.godsang.anytimedelivery.audit;
+package com.godsang.anytimedelivery.common.audit;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
