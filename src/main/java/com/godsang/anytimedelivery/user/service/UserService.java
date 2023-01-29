@@ -16,12 +16,12 @@ public class UserService {
     private final UserAuthorityUtils userAuthorityUtils;
 
     @Transactional
-    public void createUser(User user, String role) {
+    public User createUser(User user, String role) {
         verifyUserEmailExists(user.getEmail());
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         user.setRole(userAuthorityUtils.createRoles(role, user.getEmail()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     private void verifyUserEmailExists(String email) {
