@@ -24,7 +24,7 @@ public class UserDto {
         @Pattern(regexp = "^01(?:0|1|[6-9])-(?:\\d{3}|\\d{4})-\\d{4}$", message = "올바르지 않은 핸드폰 번호입니다.")
         private String phone;
         @NotBlank
-        @Pattern(regexp = "^[a-zA-Z가-힣\\d]{2,10}$", message = "2 ~ 10 글자 이내의 한글, 영어, 숫자만 가능합니다.")
+        @Pattern(regexp = "^(?=.*[a-zA-Z가-힣])[0-9a-zA-Z가-힣]{2,10}$", message = "2 ~ 10 글자 이내의 한글, 영어, 숫자만 가능하며 한글, 영어는 반드시 하나 이상 포함되어야 합니다.")
         private String nickName;
         @NotBlank
         private String role;
