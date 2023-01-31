@@ -15,6 +15,11 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private final UserAuthorityUtils userAuthorityUtils;
     private final UserRepository userRepository;
 
+    /**
+     * login 시 parameter로 받은 username이 DB에 존재하는 지 확인
+     * unique인 email로 사용자 확인
+     * @Return UserDetailsImpl
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username)
