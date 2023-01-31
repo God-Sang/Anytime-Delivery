@@ -51,7 +51,7 @@ public class UserService {
     /**
      * 핸드폰 번호 중복 확인
      * @throws
-     * */
+     */
     private void verifyUserPhoneExists(String phone) {
         if (userRepository.existsByPhone(phone)) {
             throw new RuntimeException();
