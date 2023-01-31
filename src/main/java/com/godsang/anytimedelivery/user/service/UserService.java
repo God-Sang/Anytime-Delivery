@@ -15,18 +15,56 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserAuthorityUtils userAuthorityUtils;
 
+    /**
+     * 패스워드 인코딩, role 생성 후 DB 저장
+     * @Return User
+     */
     @Transactional
     public User createUser(User user, String role) {
-        verifyUserEmailExists(user.getEmail());
+        verifyDuplicatedSignupInfo(user.getEmail(), user.getPhone(), user.getNickName());
         String encryptedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encryptedPassword);
         user.setRole(userAuthorityUtils.createRoles(role, user.getEmail()));
         return userRepository.save(user);
     }
 
+    /**
+     * 회원가입 시 unique 필드 중복 확인
+     */
+    private void verifyDuplicatedSignupInfo(String email, String phone, String nickName) {
+        verifyUserEmailExists(email);
+        verifyUserPhoneExists(phone);
+        verifyUserNickNameExists(nickName);
+    }
+
+    /**
+     * 재사용을 위해 분리
+     * 이메일 중복 확인
+     * @throws
+     */
     private void verifyUserEmailExists(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException(); // TODO 예외 커스텀
+        }
+    }
+
+    /**
+     * 핸드폰 번호 중복 확인
+     * @throws
+     * */
+    private void verifyUserPhoneExists(String phone) {
+        if (userRepository.existsByPhone(phone)) {
+            throw new RuntimeException();
+        }
+    }
+
+    /**
+     * 닉네임 중복 확인
+     * @throws
+     */
+    private void verifyUserNickNameExists(String nickName) {
+        if (userRepository.existsByNickName(nickName)) {
+            throw new RuntimeException();
         }
     }
 }
