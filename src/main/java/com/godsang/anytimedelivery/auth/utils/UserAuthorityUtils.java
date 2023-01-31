@@ -10,9 +10,9 @@ import java.util.List;
 
 @Component
 public class UserAuthorityUtils {
-    private final String ADMIN = "ROLE_" + Role.ROLE_ADMIN.getName();
-    private final String CUSTOMER = "ROLE_" + Role.ROLE_CUSTOMER.getName();
-    private final String OWNER = "ROLE_" + Role.ROLE_OWNER.getName();
+    private final String ADMIN = Role.ROLE_ADMIN.toString();
+    private final String CUSTOMER = Role.ROLE_CUSTOMER.toString();
+    private final String OWNER = Role.ROLE_OWNER.toString();
     private final List<GrantedAuthority> ADMIN_ROLES = AuthorityUtils.createAuthorityList(ADMIN, CUSTOMER, OWNER);
     private final List<GrantedAuthority> CUSTOMER_ROLES = AuthorityUtils.createAuthorityList(CUSTOMER);
     private final List<GrantedAuthority> OWNER_ROLES = AuthorityUtils.createAuthorityList(OWNER);
