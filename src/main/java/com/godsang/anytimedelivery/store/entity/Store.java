@@ -1,18 +1,23 @@
 package com.godsang.anytimedelivery.store.entity;
 
-import lombok.NoArgsConstructor;
+import com.godsang.anytimedelivery.category.entity.Category;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalTime;
 
 @Entity
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Store {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long storeId;
   @Column(nullable = false)
-  private Long registrationNumber;
+  private String registrationNumber;
   @Column(nullable = false)
   private String name;
   @Column(nullable = false)
@@ -26,4 +31,6 @@ public class Store {
   private LocalTime close_time;
   @Column(nullable = false)
   private int delivery_fee;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Category category;
 }
