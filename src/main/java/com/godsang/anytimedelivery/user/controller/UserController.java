@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @RestController
@@ -21,7 +23,7 @@ public class UserController {
     private final UserMapper userMapper;
 
     @PostMapping("/signup")
-    public ResponseEntity signupUser(@RequestBody UserDto.Post postDto) {
+    public ResponseEntity signupUser(@Valid @RequestBody UserDto.Post postDto) {
         User user = userService.createUser(userMapper.dtoToUser(postDto), postDto.getRole());
 
         return new ResponseEntity(new SingleResponseDto<>(userMapper.userToResponse(user)), HttpStatus.CREATED);
