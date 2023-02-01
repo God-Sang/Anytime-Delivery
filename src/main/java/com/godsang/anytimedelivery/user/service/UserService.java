@@ -1,6 +1,8 @@
 package com.godsang.anytimedelivery.user.service;
 
 import com.godsang.anytimedelivery.auth.utils.UserAuthorityUtils;
+import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
+import com.godsang.anytimedelivery.common.Exception.ExceptionCode;
 import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,31 +42,31 @@ public class UserService {
     /**
      * 재사용을 위해 분리
      * 이메일 중복 확인
-     * @throws
+     * @throws BusinessLogicException when same email found.
      */
     private void verifyUserEmailExists(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException(); // TODO 예외 커스텀
+            throw new BusinessLogicException(ExceptionCode.EMAIL_ALREADY_EXISTS);
         }
     }
 
     /**
      * 핸드폰 번호 중복 확인
-     * @throws
+     * @throws BusinessLogicException when same phone number found.
      */
     private void verifyUserPhoneExists(String phone) {
         if (userRepository.existsByPhone(phone)) {
-            throw new RuntimeException();
+            throw new BusinessLogicException(ExceptionCode.PHONE_NUMBER_ALREADY_EXISTS);
         }
     }
 
     /**
      * 닉네임 중복 확인
-     * @throws
+     * @throws BusinessLogicException when same nickname found.
      */
     private void verifyUserNickNameExists(String nickName) {
         if (userRepository.existsByNickName(nickName)) {
-            throw new RuntimeException();
+            throw new BusinessLogicException(ExceptionCode.NICKNAME_ALREADY_EXISTS);
         }
     }
 }
