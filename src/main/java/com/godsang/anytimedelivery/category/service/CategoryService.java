@@ -47,7 +47,6 @@ public class CategoryService {
    */
   @CacheEvict(cacheNames = "categories", key = "'categories'")
   public Category updateCategory(String from, String to) {
-    System.out.println(from);
     Category category = findVerifiedCategory(from);
     checkDuplicate(to);
     category.changeName(to);
@@ -66,7 +65,7 @@ public class CategoryService {
   private Category findVerifiedCategory(String name) {
     Optional<Category> optionalCategory = categoryRepository.findByName(name);
     if (optionalCategory.isEmpty()) {
-      throw new BusinessLogicException(ExceptionCode.CATEGORY_ALREADY_EXISTS);
+      throw new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND);
     }
     return optionalCategory.get();
   }
