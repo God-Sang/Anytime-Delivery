@@ -1,7 +1,5 @@
 package com.godsang.anytimedelivery.category.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +24,7 @@ public class Category {
   public Category(String name) {
     this.name = name;
   }
+
   public void changeName(String name) {
     this.name = name;
   }

@@ -19,13 +19,13 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RestController
 public class UserController {
-    private final UserService userService;
-    private final UserMapper userMapper;
+  private final UserService userService;
+  private final UserMapper userMapper;
 
-    @PostMapping("/signup")
-    public ResponseEntity signupUser(@Valid @RequestBody UserDto.Post postDto) {
-        User user = userService.createUser(userMapper.dtoToUser(postDto), postDto.getRole());
+  @PostMapping("/signup")
+  public ResponseEntity signupUser(@Valid @RequestBody UserDto.Post postDto) {
+    User user = userService.createUser(userMapper.dtoToUser(postDto), postDto.getRole());
 
-        return new ResponseEntity(new SingleResponseDto<>(userMapper.userToResponse(user)), HttpStatus.CREATED);
-    }
+    return new ResponseEntity(new SingleResponseDto<>(userMapper.userToResponse(user)), HttpStatus.CREATED);
+  }
 }

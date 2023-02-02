@@ -12,11 +12,11 @@ import java.io.IOException;
  * Authentication, Authority 관련 에러 발생 시 response 포맷
  */
 public class AuthErrorResponseUtils {
-    public static void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {
-        Gson gson = new Gson();
+  public static void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {
+    Gson gson = new Gson();
 
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(status.value());
-        response.getWriter().write(gson.toJson(ErrorResponse.of(status, message)));
-    }
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setStatus(status.value());
+    response.getWriter().write(gson.toJson(ErrorResponse.of(status, message)));
+  }
 }

@@ -4,13 +4,13 @@ import lombok.Getter;
 
 @Getter
 public enum Role {
-    ROLE_ADMIN("ADMIN"),
-    ROLE_CUSTOMER("CUSTOMER"),
-    ROLE_OWNER("OWNER");
+  ROLE_ADMIN("ADMIN"),
+  ROLE_CUSTOMER("CUSTOMER"),
+  ROLE_OWNER("OWNER");
 
-    private final String name;
+  private final String name;
 
-    Role(String name) {
-        this.name = name;
-    }
+  Role(String name) {
+    this.name = name;
+  }
 }
