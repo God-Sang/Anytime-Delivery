@@ -1,10 +1,13 @@
 package com.godsang.anytimedelivery.store.entity;
 
 import com.godsang.anytimedelivery.category.entity.Category;
+import com.godsang.anytimedelivery.category.entity.CategoryStore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +34,10 @@ public class Store {
   private LocalTime close_time;
   @Column(nullable = false)
   private int delivery_fee;
-  @ManyToOne(fetch = FetchType.LAZY)
-  private Category category;
+  @OneToMany(mappedBy = "store", cascade = CascadeType.PERSIST)
+  private List<CategoryStore> categoryStores = new ArrayList<>();
+
+  public void addCategoryStore(CategoryStore categoryStore) {
+    categoryStores.add(categoryStore);
+  }
 }

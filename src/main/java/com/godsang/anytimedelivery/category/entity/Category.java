@@ -24,7 +24,7 @@ public class Category {
   @Column(unique = true, nullable = false)
   private String name;
   @OneToMany(mappedBy = "category")
-  private List<Store> stores = new ArrayList<>();
+  private List<CategoryStore> categoryStores = new ArrayList<>();
 
   public Category(String name) {
     this.name = name;
