@@ -12,7 +12,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
@@ -67,8 +66,8 @@ public class storeRepositoryTest {
   @DisplayName("연관관계 그래프 탐색")
   void associationTest() {
     //when
-    Category categoryAfter = categoryRepository.findById(1L).get();
-    String categoryName = categoryAfter.getCategoryStores().get(0).getCategory().getName();
+    Category category = categoryRepository.findById(1L).get();
+    String categoryName = category.getCategoryStores().get(0).getCategory().getName();
     //then
     assertThat(categoryName)
         .isIn(categoryName);
