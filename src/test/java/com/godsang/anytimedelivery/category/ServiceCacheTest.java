@@ -1,4 +1,4 @@
-package com.godsang.anytimedelivery.categoriy;
+package com.godsang.anytimedelivery.category;
 
 import com.godsang.anytimedelivery.category.entity.Category;
 import com.godsang.anytimedelivery.category.repository.CategoryRepository;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
-public class serviceCacheTest {
+public class ServiceCacheTest {
   @MockBean
   private CategoryRepository categoryRepository;
   @Autowired
