@@ -16,11 +16,11 @@ import java.io.IOException;
  */
 @Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        log.warn("인증 없는 요청: {}", authException.getMessage());
+  @Override
+  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    log.warn("인증 없는 요청: {}", authException.getMessage());
 
-        String message = "Login required.";
-        AuthErrorResponseUtils.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, message);
-    }
+    String message = "Login required.";
+    AuthErrorResponseUtils.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, message);
+  }
 }

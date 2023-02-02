@@ -15,9 +15,9 @@ import java.io.IOException;
  */
 @Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
-    @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        log.info("# 로그인 성공: {}", request.getParameter("email"));
-        response.setStatus(HttpStatus.OK.value());
-    }
+  @Override
+  public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    log.info("# 로그인 성공: {}", request.getParameter("email"));
+    response.setStatus(HttpStatus.OK.value());
+  }
 }

@@ -15,9 +15,9 @@ import java.io.IOException;
  */
 @Slf4j
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
-    @Override
-    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        log.info("로그아웃 성공: {}", request.getSession());
-        response.setStatus(HttpStatus.OK.value());
-    }
+  @Override
+  public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    log.info("로그아웃 성공: {}", request.getSession());
+    response.setStatus(HttpStatus.OK.value());
+  }
 }

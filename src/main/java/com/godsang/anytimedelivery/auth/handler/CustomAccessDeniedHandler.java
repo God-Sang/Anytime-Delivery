@@ -16,11 +16,11 @@ import java.io.IOException;
  */
 @Slf4j
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        log.warn("권한 없는 요청: {}", accessDeniedException.getMessage());
+  @Override
+  public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    log.warn("권한 없는 요청: {}", accessDeniedException.getMessage());
 
-        String message = "UnAuthorized Request.";
-        AuthErrorResponseUtils.sendErrorResponse(response, HttpStatus.FORBIDDEN, message);
-    }
+    String message = "UnAuthorized Request.";
+    AuthErrorResponseUtils.sendErrorResponse(response, HttpStatus.FORBIDDEN, message);
+  }
 }

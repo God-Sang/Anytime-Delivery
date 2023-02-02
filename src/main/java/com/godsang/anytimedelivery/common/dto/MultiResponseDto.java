@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class MultiResponseDto<T> {
-    private List<T> data;
+  private List<T> data;
 }

@@ -16,11 +16,11 @@ import java.io.IOException;
  */
 @Slf4j
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
-    @Override
-    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        log.error("# 로그인 실패: {}", exception.getMessage());
+  @Override
+  public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+    log.error("# 로그인 실패: {}", exception.getMessage());
 
-        String message = "Login failed.";
-        AuthErrorResponseUtils.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, message);
-    }
+    String message = "Login failed.";
+    AuthErrorResponseUtils.sendErrorResponse(response, HttpStatus.UNAUTHORIZED, message);
+  }
 }

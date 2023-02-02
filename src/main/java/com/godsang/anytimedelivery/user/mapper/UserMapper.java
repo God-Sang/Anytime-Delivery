@@ -7,8 +7,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mapping(target = "role", ignore = true)
-    User dtoToUser(UserDto.Post postDto);
+  @Mapping(target = "role", ignore = true)
+  User dtoToUser(UserDto.Post postDto);
 
-    UserDto.Response userToResponse(User user);
+  UserDto.Response userToResponse(User user);
 }
