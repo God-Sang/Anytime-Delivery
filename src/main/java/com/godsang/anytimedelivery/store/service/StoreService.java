@@ -9,12 +9,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service logics for Stores
+ */
 @Service
 @RequiredArgsConstructor
 public class StoreService {
   private final StoreRepository storeRepository;
   private final CategoryService categoryService;
 
+  /**
+   * search stores by category id and page information.
+   * @param categoryId
+   * @param pageable
+   * @return
+   */
   public List<Store> findByCategoryId(Long categoryId, Pageable pageable) {
     categoryService.checkCategoryId(categoryId);
     return storeRepository.findStoresByCategory(categoryId, pageable);
