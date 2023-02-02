@@ -4,7 +4,10 @@ import com.godsang.anytimedelivery.category.entity.Category;
 import com.godsang.anytimedelivery.category.repository.CategoryRepository;
 import com.godsang.anytimedelivery.category.service.CategoryService;
 import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -138,7 +141,7 @@ public class ServiceCacheTest {
     given(categoryRepository.findByName(name)).willReturn(Optional.empty());
     // when then
     Assertions.assertThrows(BusinessLogicException.class, () -> {
-          categoryService.deleteCategory(name);
+      categoryService.deleteCategory(name);
     });
   }
 
