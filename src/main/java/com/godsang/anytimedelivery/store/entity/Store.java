@@ -1,6 +1,5 @@
 package com.godsang.anytimedelivery.store.entity;
 
-import com.godsang.anytimedelivery.category.entity.Category;
 import com.godsang.anytimedelivery.category.entity.CategoryStore;
 import lombok.*;
 
@@ -34,6 +33,15 @@ public class Store {
   private LocalTime close_time;
   @Column(nullable = false)
   private int delivery_fee;
+  @Column(nullable = false)
+  private int delivery_time;
+  @Column
+  private String mainPhoto1;
+  @Column
+  private String mainPhoto2;
+  @Column
+  private String mainPhoto3;
+
   @OneToMany(mappedBy = "store", cascade = CascadeType.PERSIST)
   private List<CategoryStore> categoryStores = new ArrayList<>();
 
