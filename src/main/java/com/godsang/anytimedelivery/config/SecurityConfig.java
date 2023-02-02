@@ -52,6 +52,10 @@ public class SecurityConfig {
         .antMatchers(HttpMethod.GET, "/owner/**").hasRole(OWNER)
         .antMatchers(HttpMethod.PATCH, "/owner/**").hasRole(OWNER)
         .antMatchers(HttpMethod.DELETE, "/owner/**").hasRole(OWNER)
+        .antMatchers(HttpMethod.POST, "/categories/**").hasRole(ADMIN)
+        .antMatchers(HttpMethod.PATCH, "/categories/**").hasRole(ADMIN)
+        .antMatchers(HttpMethod.DELETE, "/categories/**").hasRole(ADMIN)
+        .antMatchers(HttpMethod.GET, "/categories/**").permitAll()
         .anyRequest().permitAll();
     return http.build();
   }

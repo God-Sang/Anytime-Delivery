@@ -3,10 +3,9 @@ package com.godsang.anytimedelivery.category.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Categories for stores. Only an admin can manage it.
@@ -19,7 +18,10 @@ public class Category {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long categoryId;
+  @Column(unique = true, nullable = false)
   private String name;
+  @OneToMany(mappedBy = "category")
+  private List<CategoryStore> categoryStores = new ArrayList<>();
 
   public Category(String name) {
     this.name = name;

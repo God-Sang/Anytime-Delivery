@@ -62,6 +62,16 @@ public class CategoryService {
     categoryRepository.delete(category);
   }
 
+  /**
+   * validate id of category
+   */
+  public void checkCategoryId(Long categoryId) {
+    Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+    if (optionalCategory.isEmpty()) {
+      throw new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND);
+    }
+  }
+
   private Category findVerifiedCategory(String name) {
     Optional<Category> optionalCategory = categoryRepository.findByName(name);
     if (optionalCategory.isEmpty()) {
