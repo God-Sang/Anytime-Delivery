@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -78,9 +79,9 @@ public class storeRepositoryTest {
   void findStoresByCategoryIdTest() {
     Long categoryId = categoryId1;
     int size = 3;
-    List<Store> stores = storeRepository.findStoresByCategory(categoryId, PageRequest.of(0, size));
+    Page<Store> stores = storeRepository.findStoresByCategory(categoryId, PageRequest.of(0, size));
 
-    assertThat(stores.size())
+    assertThat(stores.stream().count())
         .isEqualTo(size);
   }
 }
