@@ -1,11 +1,32 @@
 package com.godsang.anytimedelivery.helper;
 
+import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
 
+import java.time.LocalTime;
+
 public class StubData {
-  public static class MockUser {
+  public static class MockStore {
+    public static Store getMockEntity(Long storeId, String name) {
+      return Store.builder()
+          .storeId(storeId)
+          .address("서울시 행복동")
+          .close_time(LocalTime.now())
+          .delivery_fee(0)
+          .open_time(LocalTime.now())
+          .delivery_time(10)
+          .info("가게")
+          .name(name)
+          .registrationNumber("1-2-3")
+          .mainPhoto1("mainPhoto1")
+          .mainPhoto2("mainPhoto1")
+          .mainPhoto3("mainPhoto1")
+          .build();
+    }
+  }
+   public static class MockUser {
     public static User getMockEntity(long userId, String email, String password, String phone, String nickName, Role role) {
       return User.builder()
           .userId(userId)
