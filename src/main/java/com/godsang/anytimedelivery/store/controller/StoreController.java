@@ -6,6 +6,7 @@ import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.mapper.StoreMapper;
 import com.godsang.anytimedelivery.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class StoreController {
    * Pagination을 위해 page와 size 값도 입력 받는다.
    */
   @GetMapping
+  @Cacheable
   public ResponseEntity findByCategory(@RequestBody @Valid StoreDto.GetRequest getDto) {
     Page<Store> stores = storeService.findByCategoryId(
         getDto.getCategoryId(), PageRequest.of(getDto.getPage(), getDto.getSize()));
