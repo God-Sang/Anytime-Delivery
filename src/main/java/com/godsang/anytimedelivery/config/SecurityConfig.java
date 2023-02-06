@@ -45,7 +45,6 @@ public class SecurityConfig {
         .and()
         .authorizeHttpRequests() // TODO 권한 path 분기
         .antMatchers(HttpMethod.POST, "/customer/**").hasRole(CUSTOMER)
-        .antMatchers(HttpMethod.GET, "/customer/**").hasRole(CUSTOMER)
         .antMatchers(HttpMethod.PATCH, "/customer/**").hasRole(CUSTOMER)
         .antMatchers(HttpMethod.DELETE, "/customer/**").hasRole(CUSTOMER)
         .antMatchers(HttpMethod.POST, "/owner/**").hasRole(OWNER)
@@ -55,7 +54,6 @@ public class SecurityConfig {
         .antMatchers(HttpMethod.POST, "/categories/**").hasRole(ADMIN)
         .antMatchers(HttpMethod.PATCH, "/categories/**").hasRole(ADMIN)
         .antMatchers(HttpMethod.DELETE, "/categories/**").hasRole(ADMIN)
-        .antMatchers(HttpMethod.GET, "/categories/**").permitAll()
         .anyRequest().permitAll();
     return http.build();
   }
