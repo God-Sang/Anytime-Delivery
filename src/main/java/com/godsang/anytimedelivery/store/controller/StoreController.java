@@ -38,10 +38,10 @@ public class StoreController {
   @GetMapping
   @Cacheable
   public ResponseEntity findByCategory(@RequestParam("category-id") @NotNull @Positive Long categoryId,
-                                       @RequestParam @NotNull @PositiveOrZero Integer page,
-                                       @RequestParam @NotNull @PositiveOrZero Integer size) {
+                                       @RequestParam @NotNull @Positive Integer page,
+                                       @RequestParam @NotNull @Positive Integer size) {
     Page<Store> stores = storeService.findByCategoryId(
-        categoryId, PageRequest.of(page, size));
+        categoryId, PageRequest.of(page + 1, size));
     List<StoreDto.GetResponse> storeDtos = storeMapper.storeListToGetResponseDto(stores.getContent());
     return new ResponseEntity(new PageResponseDto(storeDtos, stores), HttpStatus.OK);
   }
