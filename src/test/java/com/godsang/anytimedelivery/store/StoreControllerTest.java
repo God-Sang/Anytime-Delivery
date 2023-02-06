@@ -19,12 +19,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
@@ -40,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(StoreController.class)
+@MockBean(JpaMetamodelMappingContext.class)
 public class StoreControllerTest {
   @Autowired
   private MockMvc mockMvc;
@@ -74,12 +75,12 @@ public class StoreControllerTest {
       responseDto.setName(store.getName());
       dtos.add(responseDto);
     }
-    Page<Store> result = new PageImpl<>(stores, PageRequest.of(0, 10), 20);
+    Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
     given(storeService.findByCategoryId(any(), any()))
         .willReturn(result);
     given(storeMapper.storeListToGetResponseDto(stores))
         .willReturn(dtos);
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1L, 0, 10);
+    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1L, 1, 10);
 
     //when
     ResultActions resultActions = mockMvc.perform(
