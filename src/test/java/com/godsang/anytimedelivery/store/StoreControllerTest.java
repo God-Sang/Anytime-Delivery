@@ -1,6 +1,8 @@
 package com.godsang.anytimedelivery.store;
 
 
+import com.godsang.anytimedelivery.category.entity.Category;
+import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
 import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.store.controller.StoreController;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
@@ -8,6 +10,8 @@ import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.mapper.StoreMapper;
 import com.godsang.anytimedelivery.store.service.StoreService;
 import com.google.gson.Gson;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,6 +35,7 @@ import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,6 +44,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StoreControllerTest {
   @Autowired
   private MockMvc mockMvc;
+  @Autowired
+  private StoreController storeController;
   @MockBean
   private StoreService storeService;
   @MockBean
@@ -110,5 +117,25 @@ public class StoreControllerTest {
     MvcResult mvcResult = resultActions
         .andExpect(status().isBadRequest())
         .andReturn();
+  }
+
+  @Test
+  @DisplayName("캐시 정장 작동 확인")
+  void findByCategoryCacheTest() throws Exception {
+    //given
+    StoreDto.GetRequest getRequest = new StoreDto.GetRequest(1L, 0, 10);
+    String content = gson.toJson(getRequest);
+
+    //when
+    for (int i = 0; i < 10; i++) {
+      mockMvc.perform(
+          get("/customer/stores")
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(content)
+              .accept(MediaType.APPLICATION_JSON));
+    }
+
+    //then
+    verify(storeService, atMostOnce()).findByCategoryId(any(), any());
   }
 }
