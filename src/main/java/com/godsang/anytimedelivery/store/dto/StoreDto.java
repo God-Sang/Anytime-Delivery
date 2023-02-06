@@ -1,31 +1,12 @@
 package com.godsang.anytimedelivery.store.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalTime;
 
 
 public class StoreDto {
-  @Getter
-  @Setter
-  @AllArgsConstructor
-  public static class GetRequest {
-    @Positive
-    @NotNull
-    private Long categoryId;
-    @PositiveOrZero
-    @NotNull
-    private Integer page;
-    @PositiveOrZero
-    @NotNull
-    private Integer size;
-  }
-
   @Getter
   @Setter
   public static class GetResponse {

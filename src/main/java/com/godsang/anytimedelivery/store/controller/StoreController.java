@@ -11,9 +11,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
@@ -22,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/customer/stores")
 @RequiredArgsConstructor
+@Validated
 public class StoreController {
   private final StoreService storeService;
   private final StoreMapper storeMapper;
@@ -32,9 +37,11 @@ public class StoreController {
    */
   @GetMapping
   @Cacheable
-  public ResponseEntity findByCategory(@RequestBody @Valid StoreDto.GetRequest getDto) {
+  public ResponseEntity findByCategory(@RequestParam("category-id") @NotNull @Positive Long categoryId,
+                                       @RequestParam @NotNull @PositiveOrZero Integer page,
+                                       @RequestParam @NotNull @PositiveOrZero Integer size) {
     Page<Store> stores = storeService.findByCategoryId(
-        getDto.getCategoryId(), PageRequest.of(getDto.getPage(), getDto.getSize()));
+        categoryId, PageRequest.of(page, size));
     List<StoreDto.GetResponse> storeDtos = storeMapper.storeListToGetResponseDto(stores.getContent());
     return new ResponseEntity(new PageResponseDto(storeDtos, stores), HttpStatus.OK);
   }

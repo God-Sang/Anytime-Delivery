@@ -1,8 +1,6 @@
 package com.godsang.anytimedelivery.store;
 
 
-import com.godsang.anytimedelivery.category.entity.Category;
-import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
 import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.store.controller.StoreController;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
@@ -10,8 +8,6 @@ import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.mapper.StoreMapper;
 import com.godsang.anytimedelivery.store.service.StoreService;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,6 +24,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,8 @@ import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -80,18 +79,15 @@ public class StoreControllerTest {
         .willReturn(result);
     given(storeMapper.storeListToGetResponseDto(stores))
         .willReturn(dtos);
-    StoreDto.GetRequest getRequest = new StoreDto.GetRequest(1L, 0, 10);
-    String content = gson.toJson(getRequest);
-
-    //when
-    Long categoryId = 1L;
+    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1L, 0, 10);
 
     //when
     ResultActions resultActions = mockMvc.perform(
         get("/customer/stores")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(content)
+            .queryParams(queries)
             .accept(MediaType.APPLICATION_JSON));
+    //then
     MvcResult mvcResult = resultActions
         .andExpect(jsonPath("$.data[0].name").exists())
         .andExpect(jsonPath("$.data[9].name").exists())
@@ -105,14 +101,13 @@ public class StoreControllerTest {
   @WithMockUser(username = "tester", roles = {"CUSTOMER"})
   void findByCategoryFailTest(Long categoryId, Integer page, Integer size) throws Exception {
     //given
-    StoreDto.GetRequest getRequest = new StoreDto.GetRequest(categoryId, page, size);
-    String content = gson.toJson(getRequest);
+    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(categoryId, page, size);
 
     //when
     ResultActions resultActions = mockMvc.perform(
         get("/customer/stores")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(content)
+            .queryParams(queries)
             .accept(MediaType.APPLICATION_JSON));
     MvcResult mvcResult = resultActions
         .andExpect(status().isBadRequest())
@@ -123,15 +118,14 @@ public class StoreControllerTest {
   @DisplayName("캐시 정장 작동 확인")
   void findByCategoryCacheTest() throws Exception {
     //given
-    StoreDto.GetRequest getRequest = new StoreDto.GetRequest(1L, 0, 10);
-    String content = gson.toJson(getRequest);
+    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1L, 0, 10);
 
     //when
     for (int i = 0; i < 10; i++) {
       mockMvc.perform(
           get("/customer/stores")
               .contentType(MediaType.APPLICATION_JSON)
-              .content(content)
+              .queryParams(queries)
               .accept(MediaType.APPLICATION_JSON));
     }
 

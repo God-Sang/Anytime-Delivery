@@ -4,6 +4,8 @@ import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalTime;
 
@@ -25,8 +27,17 @@ public class StubData {
           .mainPhoto3("mainPhoto1")
           .build();
     }
+
+    public static MultiValueMap<String, String> getMockGetQuery(Long categoryId, Integer page, Integer size) {
+      MultiValueMap<String, String> queries = new LinkedMultiValueMap<>();
+      queries.add("category-id", String.valueOf(categoryId));
+      queries.add("page", String.valueOf(page));
+      queries.add("size", String.valueOf(size));
+      return queries;
+    }
   }
-   public static class MockUser {
+
+  public static class MockUser {
     public static User getMockEntity(long userId, String email, String password, String phone, String nickName, Role role) {
       return User.builder()
           .userId(userId)
