@@ -64,7 +64,9 @@ public class StoreControllerTest {
     for (int i = 1; i <= 10; i++) {
       Store store = StubData.MockStore.getMockEntity((long) i, "store" + i);
       stores.add(store);
-      dtos.add(new StoreDto.GetResponse(store.getName()));
+      StoreDto.GetResponse responseDto = new StoreDto.GetResponse();
+      responseDto.setName(store.getName());
+      dtos.add(responseDto);
     }
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(0, 10), 20);
     given(storeService.findByCategoryId(any(), any()))
@@ -88,7 +90,6 @@ public class StoreControllerTest {
         .andExpect(jsonPath("$.data[9].name").exists())
         .andExpect(jsonPath("$.pageInfo.size").value(10))
         .andReturn();
-    System.out.println(mvcResult.getResponse().getContentAsString());
   }
 
   @DisplayName("유효하지 않은 입력")

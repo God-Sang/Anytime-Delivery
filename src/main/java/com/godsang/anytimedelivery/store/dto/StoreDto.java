@@ -42,9 +42,5 @@ public class StoreDto {
     private String mainPhoto1;
     private String mainPhoto2;
     private String mainPhoto3;
-
-    public GetResponse(String name) {
-      this.name = name;
-    }
   }
 }
