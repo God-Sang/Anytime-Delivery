@@ -26,7 +26,7 @@ public class Store {
   private String tel;
   @Column(nullable = false, unique = true)
   private String address;
-  private String storeInfo;
+  private String introduction;
   @Column(nullable = false)
   private LocalTime openTime;
   @Column(nullable = false)

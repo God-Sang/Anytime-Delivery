@@ -15,7 +15,7 @@ public class StoreDto {
     private String name;
     private String tel;
     private String address;
-    private String storeInfo;
+    private String introduction;
     private LocalTime openTime;
     private LocalTime closeTime;
     private int deliveryFee;

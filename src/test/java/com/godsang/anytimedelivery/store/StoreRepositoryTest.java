@@ -10,10 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -21,18 +21,18 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@Transactional
+@DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class storeRepositoryTest {
-  @Autowired
-  private StoreRepository storeRepository;
-  @Autowired
-  private CategoryRepository categoryRepository;
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+public class StoreRepositoryTest {
   private final String storeNamePrefix = "피자";
   private final Long categoryId1 = 1L;
   private final Long categoryId2 = 2L;
   private final int numberOfStoresCreated = 10;
+  @Autowired
+  private StoreRepository storeRepository;
+  @Autowired
+  private CategoryRepository categoryRepository;
   private List<String> categoryName = new ArrayList<>();
 
   @BeforeAll
@@ -46,12 +46,12 @@ public class storeRepositoryTest {
     for (int i = 0; i < numberOfStoresCreated; i++) {
       Store store = Store.builder()
           .address("aa" + i)
-          .close_time(LocalTime.now())
-          .open_time(LocalTime.now())
-          .delivery_fee(0)
+          .closeTime(LocalTime.now())
+          .openTime(LocalTime.now())
+          .deliveryFee(0)
           .name(storeNamePrefix + i)
-          .tel("1234")
-          .registrationNumber("1234")
+          .tel("1234" + i)
+          .registrationNumber("1234" + i)
           .categoryStores(new ArrayList<>())
           .build();
       CategoryStore categoryStore1 = new CategoryStore(category1, store);
