@@ -15,11 +15,11 @@ public class StoreDto {
     private String name;
     private String tel;
     private String address;
-    private String info;
-    private LocalTime open_time;
-    private LocalTime close_time;
-    private int delivery_fee;
-    private int delivery_time;
+    private String storeInfo;
+    private LocalTime openTime;
+    private LocalTime closeTime;
+    private int deliveryFee;
+    private int deliveryTime;
     private String mainPhoto1;
     private String mainPhoto2;
     private String mainPhoto3;

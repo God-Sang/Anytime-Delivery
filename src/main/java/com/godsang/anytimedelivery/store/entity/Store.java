@@ -18,28 +18,25 @@ public class Store {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long storeId;
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true, length = 12)
   private String registrationNumber;
   @Column(nullable = false)
   private String name;
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true, length = 13)
   private String tel;
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String address;
-  private String info;
+  private String storeInfo;
   @Column(nullable = false)
-  private LocalTime open_time;
+  private LocalTime openTime;
   @Column(nullable = false)
-  private LocalTime close_time;
+  private LocalTime closeTime;
   @Column(nullable = false)
-  private int delivery_fee;
+  private int deliveryFee;
   @Column(nullable = false)
-  private int delivery_time;
-  @Column
+  private int deliveryTime;
   private String mainPhoto1;
-  @Column
   private String mainPhoto2;
-  @Column
   private String mainPhoto3;
 
   @OneToMany(mappedBy = "store", cascade = CascadeType.PERSIST)
