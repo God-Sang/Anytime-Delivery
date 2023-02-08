@@ -47,7 +47,7 @@ public class CategoryService {
    */
   @CacheEvict(cacheNames = "categories", key = "'categories'")
   public Category updateCategory(String from, String to) {
-    Category category = findVerifiedCategory(from);
+    Category category = findVerifiedCategoryByName(from);
     checkDuplicate(to);
     category.changeName(to);
     return categoryRepository.save(category);
@@ -58,21 +58,19 @@ public class CategoryService {
    */
   @CacheEvict(cacheNames = "categories", key = "'categories'")
   public void deleteCategory(String name) {
-    Category category = findVerifiedCategory(name);
+    Category category = findVerifiedCategoryByName(name);
     categoryRepository.delete(category);
   }
 
   /**
    * validate id of category
    */
-  public void checkCategoryId(Long categoryId) {
+  public Category findVerifiedCategoryById(Long categoryId) {
     Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
-    if (optionalCategory.isEmpty()) {
-      throw new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND);
-    }
+    return optionalCategory.orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
   }
 
-  private Category findVerifiedCategory(String name) {
+  private Category findVerifiedCategoryByName(String name) {
     Optional<Category> optionalCategory = categoryRepository.findByName(name);
     if (optionalCategory.isEmpty()) {
       throw new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND);

@@ -9,7 +9,7 @@ import java.time.LocalTime;
 public class StoreDto {
   @Getter
   @Setter
-  public static class GetResponse {
+  public static class Response {
     private Long storeId;
     private String registrationNumber;
     private String name;

@@ -67,16 +67,16 @@ public class StoreControllerTest {
   void findByCategoryTest() throws Exception {
     //given
     List<Store> stores = new ArrayList<>();
-    List<StoreDto.GetResponse> dtos = new ArrayList<>();
+    List<StoreDto.Response> dtos = new ArrayList<>();
     for (int i = 1; i <= 10; i++) {
       Store store = StubData.MockStore.getMockEntity((long) i, "store" + i);
       stores.add(store);
-      StoreDto.GetResponse responseDto = new StoreDto.GetResponse();
+      StoreDto.Response responseDto = new StoreDto.Response();
       responseDto.setName(store.getName());
       dtos.add(responseDto);
     }
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
-    given(storeService.findByCategoryId(any(), any()))
+    given(storeService.findStoreByCategoryId(any(), any()))
         .willReturn(result);
     given(storeMapper.storeListToGetResponseDto(stores))
         .willReturn(dtos);
@@ -131,6 +131,6 @@ public class StoreControllerTest {
     }
 
     //then
-    verify(storeService, atMostOnce()).findByCategoryId(any(), any());
+    verify(storeService, atMostOnce()).findStoreByCategoryId(any(), any());
   }
 }

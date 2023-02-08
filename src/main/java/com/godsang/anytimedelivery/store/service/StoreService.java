@@ -8,8 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 /**
  * Service logics for Stores
  */
@@ -20,13 +18,14 @@ public class StoreService {
   private final CategoryService categoryService;
 
   /**
-   * search stores by category id and page information.`
-   * @param categoryId
-   * @param pageable
-   * @return
+   * search stores by category id and page information.
+   *
+   * @param categoryId 카테고리 아이디
+   * @param pageable 페이지 정보
+   * @return Store Page
    */
-  public Page<Store> findByCategoryId(Long categoryId, Pageable pageable) {
-    categoryService.checkCategoryId(categoryId);
+  public Page<Store> findStoreByCategoryId(Long categoryId, Pageable pageable) {
+    categoryService.findVerifiedCategoryById(categoryId);
     return storeRepository.findStoresByCategory(categoryId, pageable);
   }
 }
