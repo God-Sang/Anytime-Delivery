@@ -36,7 +36,7 @@ public class CategoryController {
     );
   }
 
-  @DeleteMapping("/{category-id}")
+  @DeleteMapping
   public ResponseEntity deleteCategory(@RequestParam String name) {
     categoryService.deleteCategory(name);
     return new ResponseEntity(HttpStatus.OK);
