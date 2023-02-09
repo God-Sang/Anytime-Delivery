@@ -21,7 +21,7 @@ import java.util.List;
  * 고객의 Store 검색을 위한 Controller
  */
 @RestController
-@RequestMapping("/categories/{category-id}")
+@RequestMapping("/customer/categories/{category-id}/stores")
 @RequiredArgsConstructor
 @Validated
 public class StoreForCustomerController {
