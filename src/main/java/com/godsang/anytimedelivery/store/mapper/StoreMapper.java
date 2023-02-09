@@ -8,7 +8,8 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface StoreMapper {
-  StoreDto.GetResponse storeToResponseDto(Store store);
+  StoreDto.Response storeToResponseDto(Store store);
 
-  List<StoreDto.GetResponse> storeListToGetResponseDto(List<Store> stores);
+  List<StoreDto.Response> storeListToGetResponseDto(List<Store> stores);
+
 }

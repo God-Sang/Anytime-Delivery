@@ -1,5 +1,6 @@
 package com.godsang.anytimedelivery.category.controller;
 
+import com.godsang.anytimedelivery.category.dto.CategoryDto;
 import com.godsang.anytimedelivery.category.service.CategoryService;
 import com.godsang.anytimedelivery.common.dto.MultiResponseDto;
 import com.godsang.anytimedelivery.common.dto.SingleResponseDto;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/categories")
+@RequestMapping("/customer/categories")
 public class CategoryController {
   private final CategoryService categoryService;
 
@@ -22,16 +23,16 @@ public class CategoryController {
   }
 
   @PatchMapping
-  public ResponseEntity updateCategory(@RequestParam String from, @RequestParam String to) {
+  public ResponseEntity updateCategory(@RequestBody CategoryDto.Patch patchDto) {
     return new ResponseEntity(
-        new SingleResponseDto(categoryService.updateCategory(from, to)), HttpStatus.OK
+        new SingleResponseDto(categoryService.updateCategory(patchDto.getPreName(), patchDto.getCurName())), HttpStatus.OK
     );
   }
 
   @PostMapping
-  public ResponseEntity addCategory(@RequestParam String name) {
+  public ResponseEntity addCategory(@RequestBody CategoryDto.Post postDto) {
     return new ResponseEntity(
-        new SingleResponseDto(categoryService.addCategory(name)), HttpStatus.CREATED
+        new SingleResponseDto(categoryService.addCategory(postDto.getName())), HttpStatus.CREATED
     );
   }
 

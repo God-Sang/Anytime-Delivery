@@ -2,7 +2,7 @@ package com.godsang.anytimedelivery.store;
 
 
 import com.godsang.anytimedelivery.helper.StubData;
-import com.godsang.anytimedelivery.store.controller.StoreController;
+import com.godsang.anytimedelivery.store.controller.StoreForCustomerController;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.mapper.StoreMapper;
@@ -39,13 +39,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(StoreController.class)
+@WebMvcTest(StoreForCustomerController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-public class StoreControllerTest {
+public class StoreForCustomerControllerTest {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
-  private StoreController storeController;
+  private StoreForCustomerController storeForCustomerController;
   @MockBean
   private StoreService storeService;
   @MockBean
@@ -67,16 +67,16 @@ public class StoreControllerTest {
   void findByCategoryTest() throws Exception {
     //given
     List<Store> stores = new ArrayList<>();
-    List<StoreDto.GetResponse> dtos = new ArrayList<>();
+    List<StoreDto.Response> dtos = new ArrayList<>();
     for (int i = 1; i <= 10; i++) {
       Store store = StubData.MockStore.getMockEntity((long) i, "store" + i);
       stores.add(store);
-      StoreDto.GetResponse responseDto = new StoreDto.GetResponse();
+      StoreDto.Response responseDto = new StoreDto.Response();
       responseDto.setName(store.getName());
       dtos.add(responseDto);
     }
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
-    given(storeService.findByCategoryId(any(), any()))
+    given(storeService.findStoreByCategoryId(any(), any()))
         .willReturn(result);
     given(storeMapper.storeListToGetResponseDto(stores))
         .willReturn(dtos);
@@ -131,6 +131,6 @@ public class StoreControllerTest {
     }
 
     //then
-    verify(storeService, atMostOnce()).findByCategoryId(any(), any());
+    verify(storeService, atMostOnce()).findStoreByCategoryId(any(), any());
   }
 }
