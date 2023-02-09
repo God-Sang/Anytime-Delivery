@@ -46,10 +46,10 @@ public class CategoryService {
    * update a specific category after duplication check
    */
   @CacheEvict(cacheNames = "categories", key = "'categories'")
-  public Category updateCategory(String from, String to) {
-    Category category = findVerifiedCategoryByName(from);
-    checkDuplicate(to);
-    category.changeName(to);
+  public Category updateCategory(String prevName, String curName) {
+    Category category = findVerifiedCategoryByName(prevName);
+    checkDuplicate(curName);
+    category.changeName(curName);
     return categoryRepository.save(category);
   }
 
