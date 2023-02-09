@@ -12,12 +12,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.util.List;
 
@@ -25,10 +21,10 @@ import java.util.List;
  * 고객의 Store 검색을 위한 Controller
  */
 @RestController
-@RequestMapping("/customer/stores")
+@RequestMapping("/categories/{category-id}")
 @RequiredArgsConstructor
 @Validated
-public class StoreController {
+public class StoreForCustomerController {
   private final StoreService storeService;
   private final StoreMapper storeMapper;
 
@@ -37,13 +33,12 @@ public class StoreController {
    * Pagination을 위해 page와 size 값도 입력 받는다.
    */
   @GetMapping
-  @Cacheable
-  public ResponseEntity findByCategory(@RequestParam("category-id") @NotNull @Positive Long categoryId,
-                                       @RequestParam @NotNull @Positive Integer page,
-                                       @RequestParam @NotNull @Positive Integer size) {
-    Page<Store> stores = storeService.findByCategoryId(
-        categoryId, PageRequest.of(page + 1, size));
-    List<StoreDto.GetResponse> storeDtos = storeMapper.storeListToGetResponseDto(stores.getContent());
-    return new ResponseEntity(new PageResponseDto(storeDtos, stores), HttpStatus.OK);
+  @Cacheable(cacheNames = "stores", key = "categoryId") // TODO 수정
+  public ResponseEntity getStores(@PathVariable("category-id") @Positive long categoryId,
+                                  @RequestParam @Positive int page,
+                                  @RequestParam @Positive int size) {
+    Page<Store> stores = storeService.findStoreByCategoryId(categoryId, PageRequest.of(page - 1, size));
+    List<StoreDto.Response> storeDtos = storeMapper.storeListToGetResponseDto(stores.getContent());
+    return new ResponseEntity(new PageResponseDto<>(storeDtos, stores), HttpStatus.OK);
   }
 }

@@ -2,7 +2,7 @@ package com.godsang.anytimedelivery.store;
 
 
 import com.godsang.anytimedelivery.helper.StubData;
-import com.godsang.anytimedelivery.store.controller.StoreController;
+import com.godsang.anytimedelivery.store.controller.StoreForCustomerController;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.mapper.StoreMapper;
@@ -39,13 +39,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(StoreController.class)
+@WebMvcTest(StoreForCustomerController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-public class StoreControllerTest {
+public class StoreForCustomerControllerTest {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
-  private StoreController storeController;
+  private StoreForCustomerController storeForCustomerController;
   @MockBean
   private StoreService storeService;
   @MockBean
