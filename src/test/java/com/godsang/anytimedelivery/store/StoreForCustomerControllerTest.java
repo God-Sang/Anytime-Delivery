@@ -23,8 +23,6 @@ import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
@@ -44,8 +42,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StoreForCustomerControllerTest {
   @Autowired
   private MockMvc mockMvc;
-  @Autowired
-  private StoreForCustomerController storeForCustomerController;
   @MockBean
   private StoreService storeService;
   @MockBean
@@ -61,8 +57,8 @@ public class StoreForCustomerControllerTest {
     );
   }
 
-  @DisplayName("유효한 입력")
   @Test
+  @DisplayName("유효한 입력")
   @WithMockUser(username = "tester", roles = {"CUSTOMER"})
   void findByCategoryTest() throws Exception {
     //given
@@ -80,20 +76,18 @@ public class StoreForCustomerControllerTest {
         .willReturn(result);
     given(storeMapper.storeListToGetResponseDto(stores))
         .willReturn(dtos);
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1L, 1, 10);
+    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1, 10);
 
     //when
-    ResultActions resultActions = mockMvc.perform(
-        get("/customer/stores")
-            .contentType(MediaType.APPLICATION_JSON)
-            .queryParams(queries)
-            .accept(MediaType.APPLICATION_JSON));
-    //then
-    MvcResult mvcResult = resultActions
+    mockMvc.perform(
+            get("/categories/{category-id}/stores", 1L)
+                .queryParams(queries)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+        //then
         .andExpect(jsonPath("$.data[0].name").exists())
         .andExpect(jsonPath("$.data[9].name").exists())
-        .andExpect(jsonPath("$.pageInfo.size").value(10))
-        .andReturn();
+        .andExpect(jsonPath("$.pageInfo.size").value(10));
   }
 
   @DisplayName("유효하지 않은 입력")
@@ -102,29 +96,28 @@ public class StoreForCustomerControllerTest {
   @WithMockUser(username = "tester", roles = {"CUSTOMER"})
   void findByCategoryFailTest(Long categoryId, Integer page, Integer size) throws Exception {
     //given
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(categoryId, page, size);
+    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(page, size);
 
     //when
-    ResultActions resultActions = mockMvc.perform(
-        get("/customer/stores")
-            .contentType(MediaType.APPLICATION_JSON)
-            .queryParams(queries)
-            .accept(MediaType.APPLICATION_JSON));
-    MvcResult mvcResult = resultActions
-        .andExpect(status().isBadRequest())
-        .andReturn();
+    mockMvc.perform(
+            get("/categories/{category-id}/stores", categoryId)
+                .queryParams(queries)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isBadRequest());
   }
 
   @Test
   @DisplayName("캐시 정장 작동 확인")
   void findByCategoryCacheTest() throws Exception {
     //given
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1L, 0, 10);
+    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1, 10);
 
     //when
     for (int i = 0; i < 10; i++) {
       mockMvc.perform(
-          get("/customer/stores")
+          get("/categories/{category-id}/stores", 1L)
               .contentType(MediaType.APPLICATION_JSON)
               .queryParams(queries)
               .accept(MediaType.APPLICATION_JSON));

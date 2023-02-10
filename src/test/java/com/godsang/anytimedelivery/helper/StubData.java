@@ -28,9 +28,8 @@ public class StubData {
           .build();
     }
 
-    public static MultiValueMap<String, String> getMockGetQuery(Long categoryId, Integer page, Integer size) {
+    public static MultiValueMap<String, String> getMockGetQuery(Integer page, Integer size) {
       MultiValueMap<String, String> queries = new LinkedMultiValueMap<>();
-      queries.add("category-id", String.valueOf(categoryId));
       queries.add("page", String.valueOf(page));
       queries.add("size", String.valueOf(size));
       return queries;
