@@ -16,11 +16,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
@@ -37,7 +39,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(StoreForCustomerController.class)
+/**
+ * custom SpringSecurity configuration을 적용하기 위해 @EnableWebSecurity 어노테이션을 스캔하도록 필터 포함
+ * @WebMvcTest 어노테이션은 SpringSecurity에서 자동으로 구성하는 기본 configuration 파일을 스캔하기 때문
+ */
+@WebMvcTest(value = StoreForCustomerController.class,
+    includeFilters = @ComponentScan.Filter(classes = {EnableWebSecurity.class}))
 @MockBean(JpaMetamodelMappingContext.class)
 public class StoreForCustomerControllerTest {
   @Autowired
@@ -125,5 +132,22 @@ public class StoreForCustomerControllerTest {
 
     //then
     verify(storeService, atMostOnce()).findStoreByCategoryId(any(), any());
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER")
+  @DisplayName("OWNER 권한으로 store 조회 시 failure")
+  void requestWithOwnerTest() throws Exception {
+    // given
+    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1, 10);
+
+    // when
+    mockMvc.perform(
+            get("/categories/{category-id}/stores", 1L)
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParams(queries)
+        )
+        // then
+        .andExpect(status().isForbidden());
   }
 }
