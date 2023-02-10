@@ -1,40 +1,44 @@
 package com.godsang.anytimedelivery.address;
 
 import com.godsang.anytimedelivery.address.entity.Address;
-import com.godsang.anytimedelivery.address.repository.AddressRepository;
+import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.user.entity.Role;
+import com.godsang.anytimedelivery.user.entity.User;
+import com.godsang.anytimedelivery.user.repository.UserRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.redis.DataRedisTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
-
-import java.util.Optional;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@DataRedisTest
-@MockBean(JpaMetamodelMappingContext.class)
+@DataJpaTest
 public class AddressRepositoryTest {
   @Autowired
-  private AddressRepository addressRepository;
+  private UserRepository userRepository;
 
   @Test
+  @DisplayName("유저 - 주소 매핑 테스트")
   void saveAndRetrieveTest() {
-    // given
+    //given
+    User user = userRepository.save(StubData.MockUser.getMockEntity(
+        2L, "email", "1q2w3e4r!", "010", "nickName", Role.ROLE_CUSTOMER));
+
     Long userId = 1L;
+    String addr = "서울시 행복구 행복동";
     Address address = Address.builder()
-        .userId(userId)
-        .oldAddress("정자동 178-4")
-        .newAddress("경기 성남시 분당구 정자일로 95")
+        .address(addr)
         .detailAddress("10층 페이팀")
-        .dong("정자동")
         .build();
-    // when
-    addressRepository.save(address);
-    Optional<Address> retrieved = addressRepository.findById(userId);
+
+    //when
+    User foundUser = userRepository.findById(user.getUserId()).get();
+    foundUser.setAddress(address);
+    userRepository.save(foundUser);
+
+    String retrievedAddress = userRepository.findById(userId).get().getAddress().getAddress();
 
     // then
-    assertThat(retrieved.isPresent())
-        .isTrue();
+    assertThat(retrievedAddress).isEqualTo(addr);
   }
 }
