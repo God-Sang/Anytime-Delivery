@@ -6,7 +6,6 @@ import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
-import org.springframework.security.config.annotation.authentication.configurers.ldap.LdapAuthenticationProviderConfigurer;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -81,8 +80,8 @@ public class StubData {
           .detailAddress(detailAddress)
           .build();
     }
-    public static AddressDto.PostRequest getMockAddressPostRequestDto(String address, String detail, String deliveryArea) {
-      return AddressDto.PostRequest.builder()
+    public static AddressDto.Dto getMockAddressPostRequestDto(String address, String detail, String deliveryArea) {
+      return AddressDto.Dto.builder()
           .address(address)
           .detailAddress(detail)
           .deliveryArea(deliveryArea)

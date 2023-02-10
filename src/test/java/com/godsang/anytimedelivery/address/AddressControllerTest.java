@@ -58,7 +58,7 @@ public class AddressControllerTest {
   @MethodSource("provideValidPost")
   void registerValidTest(String address, String detail, String deliveryArea) throws Exception {
     // given
-    AddressDto.PostRequest request = StubData.MockAddress.getMockAddressPostRequestDto(address, detail, deliveryArea);
+    AddressDto.Dto request = StubData.MockAddress.getMockAddressPostRequestDto(address, detail, deliveryArea);
     String content = gson.toJson(request);
 
     given(userInfoUtils.extractUserId()).willReturn(1L);
@@ -76,7 +76,7 @@ public class AddressControllerTest {
   @MethodSource("provideInvalidPost")
   void registerInValidTest(String address, String detail, String deliveryArea) throws Exception {
     // given
-    AddressDto.PostRequest request = StubData.MockAddress.getMockAddressPostRequestDto(address, detail, deliveryArea);
+    AddressDto.Dto request = StubData.MockAddress.getMockAddressPostRequestDto(address, detail, deliveryArea);
     String content = gson.toJson(request);
 
     given(userInfoUtils.extractUserId()).willReturn(1L);
