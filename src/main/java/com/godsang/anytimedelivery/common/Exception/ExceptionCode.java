@@ -14,7 +14,10 @@ public enum ExceptionCode {
   EMAIL_ALREADY_EXISTS(409, "Email already exists."),
   PHONE_NUMBER_ALREADY_EXISTS(409, "Phone number already exists."),
   NICKNAME_ALREADY_EXISTS(409, "Nickname already exists."),
-  USER_NOT_FOUND(404, "User does not exits");
+  USER_NOT_FOUND(404, "User does not exits"),
+
+  //Address
+  ADDRESS_NOT_EXIST(404, "User has no address yet");
 
   private final int code;
   private final String description;
