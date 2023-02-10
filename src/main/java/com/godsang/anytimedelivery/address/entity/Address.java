@@ -1,18 +1,25 @@
 package com.godsang.anytimedelivery.address.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Getter
 @Builder
-@RedisHash("address")
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
   @Id
-  private Long userId;
-  private String oldAddress;
-  private String newAddress;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long addressId;
+  private String address;
   private String detailAddress;
-  private String dong;
+  // TODO: deliveryArea와 매핑하기
 }
