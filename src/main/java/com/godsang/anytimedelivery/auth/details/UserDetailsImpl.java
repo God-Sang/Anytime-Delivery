@@ -9,11 +9,17 @@ import java.util.List;
 
 public class UserDetailsImpl implements UserDetails {
   private final User user;
+  private final Long userId;
   private final List<GrantedAuthority> roles;
 
   public UserDetailsImpl(User user, List<GrantedAuthority> roles) {
     this.user = user;
     this.roles = roles;
+    this.userId = user.getUserId();
+  }
+
+  public Long getUserId() {
+    return this.userId;
   }
 
   /**
