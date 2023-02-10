@@ -15,7 +15,7 @@ public class UserDto {
   @NoArgsConstructor
   public static class Post {
     @NotBlank
-    @Pattern(regexp = "[a-z]+@[a-z]+\\.[a-z]+(\\.[a-z]+)?", message = "올바르지 않은 이메일입니다.")
+    @Pattern(regexp = "[a-z\\d]+@[a-z]+\\.[a-z]+(\\.[a-z]+)?", message = "올바르지 않은 이메일입니다.")
     private String email;
     @NotBlank
     @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[$@!%*?&#~])[A-Za-z\\d$@!%*?&#~]{8,15}", message = "영어, 숫자, 특수문자를 포함하여 8 ~ 15 글자 이내여야 합니다.")
