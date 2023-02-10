@@ -10,7 +10,7 @@ public class AddressDto {
   @Getter
   @Setter
   @Builder
-  public static class PostRequest {
+  public static class Dto {
     @NotBlank
     private String deliveryArea; // 시도명 + 시군구명 + 읍면동명, ex) "00시00구00동"
     @NotBlank
