@@ -20,11 +20,20 @@ public class AddressController {
   private final UserInfoUtils userInfoUtils;
   private final AddressMapper addressMapper;
 
+  /** register an address to a user.*/
   @PostMapping
-  public ResponseEntity registerAddress(@RequestBody @Valid AddressDto.PostRequest postRequest) {
+  public ResponseEntity registerAddress(@RequestBody @Valid AddressDto.Dto dto) {
     Long userId = userInfoUtils.extractUserId();
-    Address address = addressMapper.postRequestDtoToAddress(postRequest);
+    Address address = addressMapper.dtoToAddress(dto);
     addressService.saveAddress(userId, address);
     return new ResponseEntity(HttpStatus.OK);
+  }
+  /** retrieve an address of a user */
+  @GetMapping
+  public ResponseEntity getMyAddress() {
+    Long userId = userInfoUtils.extractUserId();
+    Address address = addressService.getAddress(userId);
+    AddressDto.Dto response = addressMapper.addressToDto(address);
+    return new ResponseEntity(response, HttpStatus.OK);
   }
 }
