@@ -116,7 +116,7 @@ public class StoreForCustomerControllerTest {
   }
 
   @Test
-  @DisplayName("캐시 정장 작동 확인")
+  @DisplayName("캐시 정상 작동 확인")
   void findByCategoryCacheTest() throws Exception {
     //given
     MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1, 10);
