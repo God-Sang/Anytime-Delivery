@@ -41,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * custom SpringSecurity configuration을 적용하기 위해 @EnableWebSecurity 어노테이션을 스캔하도록 필터 포함
+ *
  * @WebMvcTest 어노테이션은 SpringSecurity에서 자동으로 구성하는 기본 configuration 파일을 스캔하기 때문
  */
 @WebMvcTest(value = StoreForCustomerController.class,
@@ -72,17 +73,15 @@ public class StoreForCustomerControllerTest {
     List<Store> stores = new ArrayList<>();
     List<StoreDto.Response> dtos = new ArrayList<>();
     for (int i = 1; i <= 10; i++) {
-      Store store = StubData.MockStore.getMockEntity((long) i, "store" + i);
+      Store store = StubData.MockStore.builder().storeId(i).name("store" + i).build();
       stores.add(store);
       StoreDto.Response responseDto = new StoreDto.Response();
       responseDto.setName(store.getName());
       dtos.add(responseDto);
     }
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
-    given(storeService.findStoreByCategoryId(any(), any()))
-        .willReturn(result);
-    given(storeMapper.storeListToGetResponseDto(stores))
-        .willReturn(dtos);
+    given(storeService.findStoreByCategoryId(any(), any())).willReturn(result);
+    given(storeMapper.storeListToGetResponseDto(stores)).willReturn(dtos);
     MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1, 10);
 
     //when

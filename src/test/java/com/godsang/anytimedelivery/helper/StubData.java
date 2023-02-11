@@ -6,29 +6,30 @@ import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import javax.persistence.Entity;
 import java.time.LocalTime;
 import java.util.List;
 
 public class StubData {
-  public static class MockStore {
-    public static Store getMockEntity(Long storeId, String name) {
-      return Store.builder()
-          .storeId(storeId)
-          .address("서울시 행복동")
-          .closeTime(LocalTime.now())
-          .deliveryFee(0)
-          .openTime(LocalTime.now())
-          .deliveryTime(10)
-          .introduction("가게")
-          .name(name)
-          .registrationNumber("1-2-3")
-          .mainPhoto1("mainPhoto1")
-          .mainPhoto2("mainPhoto1")
-          .mainPhoto3("mainPhoto1")
-          .build();
+
+  @Entity
+  @NoArgsConstructor
+  public static class MockStore extends Store {
+    @Builder
+    private MockStore(long storeId, String registrationNumber, String name, String tel, String address) {
+      super.setStoreId(storeId);
+      super.setRegistrationNumber(registrationNumber);
+      super.setName(name);
+      super.setTel(tel);
+      super.setAddress(address);
+      super.setOpenTime(LocalTime.now());
+      super.setCloseTime(LocalTime.now());
+      super.setDeliveryFee(6000);
+      super.setDeliveryTime(30);
     }
 
     public static MultiValueMap<String, String> getMockGetQuery(Integer page, Integer size) {
@@ -42,11 +43,11 @@ public class StubData {
 
   public static class MockStorePost extends StoreDto.Post {
     @Builder
-    private MockStorePost(String registrationNumber, String tel, int deliveryFee, int deliveryTime, String openTime, String closeTime, List<Long> categoryIds, List<String> deliveryAreas) {
+    private MockStorePost(String registrationNumber, String name, String address, String tel, int deliveryFee, int deliveryTime, String openTime, String closeTime, List<Long> categoryIds, List<String> deliveryAreas) {
       super.setRegistrationNumber(registrationNumber);
-      super.setName("애니타임 치킨");
+      super.setName(name);
       super.setTel(tel);
-      super.setAddress("서울특별시 강남구 강남대로 396 101호");
+      super.setAddress(address);
       super.setDeliveryFee(deliveryFee);
       super.setDeliveryTime(deliveryTime);
       super.setOpenTime(openTime);
@@ -56,38 +57,37 @@ public class StubData {
     }
   }
 
+  @Entity
+  @NoArgsConstructor
+  public static class MockUser extends User {
+    @Builder
+    private MockUser(long userId, String email, String phone, String nickName) {
+      super.setUserId(userId);
+      super.setEmail(email);
+      super.setPassword("1q2w3e4r@");
+      super.setPhone(phone);
+      super.setNickName(nickName);
+      super.setRole(Role.ROLE_CUSTOMER);
+    }
 
-  public static class MockUser {
-    public static User getMockEntity(long userId, String email, String password, String phone, String nickName, Role role) {
-      return User.builder()
-          .userId(userId)
-          .email(email)
-          .password(password)
-          .phone(phone)
-          .nickName(nickName)
-          .role(role)
+    public static User getMockEntity() {
+      return MockUser.builder()
+          .userId(1L)
+          .email("anytime@email.com")
+          .phone("010-1234-5678")
+          .nickName("애니타임")
           .build();
     }
   }
 
-  public static class MockUserDto {
-    public static UserDto.Post getMockPost(String email, String password, String phone, String nickName, String role) {
-      return UserDto.Post.builder()
-          .email(email)
-          .password(password)
-          .phone(phone)
-          .nickName(nickName)
-          .role(role)
-          .build();
-    }
-
-    public static UserDto.Response getMockResponse(String email, String phone, String nickName, Role role) {
-      return UserDto.Response.builder()
-          .email(email)
-          .phone(phone)
-          .nickName(nickName)
-          .role(role)
-          .build();
+  public static class MockUserPost extends UserDto.Post {
+    @Builder
+    private MockUserPost(String email, String password, String phone, String nickName) {
+      super.setEmail(email);
+      super.setPassword(password);
+      super.setPhone(phone);
+      super.setNickName(nickName);
+      super.setRole("customer");
     }
   }
 }
