@@ -125,7 +125,6 @@ public class StoreForCustomerControllerTest {
     for (int i = 0; i < 10; i++) {
       mockMvc.perform(
           get("/categories/{category-id}/stores", 1L)
-              .contentType(MediaType.APPLICATION_JSON)
               .queryParams(queries)
               .accept(MediaType.APPLICATION_JSON));
     }
