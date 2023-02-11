@@ -53,7 +53,7 @@ public class StoreService {
     verifyDuplicatedStoreInfo(store.getRegistrationNumber(), store.getTel(), store.getAddress());
     setCategoryStore(store, categoryIds);
     setDeliveryAreaStore(store, deliveryAreas);
-    return store;
+    return storeRepository.save(store);
   }
 
   /**
