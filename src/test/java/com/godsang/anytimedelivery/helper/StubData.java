@@ -1,13 +1,16 @@
 package com.godsang.anytimedelivery.helper;
 
+import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
+import lombok.Builder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.time.LocalTime;
+import java.util.List;
 
 public class StubData {
   public static class MockStore {
@@ -35,6 +38,24 @@ public class StubData {
       return queries;
     }
   }
+
+
+  public static class MockStorePost extends StoreDto.Post {
+    @Builder
+    private MockStorePost(String registrationNumber, String tel, int deliveryFee, int deliveryTime, String openTime, String closeTime, List<Long> categoryIds, List<String> deliveryAreas) {
+      super.setRegistrationNumber(registrationNumber);
+      super.setName("애니타임 치킨");
+      super.setTel(tel);
+      super.setAddress("서울특별시 강남구 강남대로 396 101호");
+      super.setDeliveryFee(deliveryFee);
+      super.setDeliveryTime(deliveryTime);
+      super.setOpenTime(openTime);
+      super.setCloseTime(closeTime);
+      super.setCategoryIds(categoryIds);
+      super.setDeliveryAreas(deliveryAreas);
+    }
+  }
+
 
   public static class MockUser {
     public static User getMockEntity(long userId, String email, String password, String phone, String nickName, Role role) {
