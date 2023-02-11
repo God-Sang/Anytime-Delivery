@@ -12,4 +12,5 @@ public interface StoreMapper {
 
   List<StoreDto.Response> storeListToGetResponseDto(List<Store> stores);
 
+  Store postDtoToStore(StoreDto.Post postDto);
 }
