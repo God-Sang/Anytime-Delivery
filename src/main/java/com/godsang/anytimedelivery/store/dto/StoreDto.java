@@ -15,6 +15,7 @@ public class StoreDto {
     @Pattern(regexp = "^\\d{3}-\\d{2}-\\d{5}$", message = "올바르지 않은 사업자 등록번호입니다.")
     @NotBlank
     private String registrationNumber;
+    @Pattern(regexp = "^[가-힣a-zA-Z\\d\\s]+$", message = "한글, 영어, 숫자만 입력 가능합니다.")
     @NotBlank
     private String name;
     @Pattern(regexp = "^0\\d{1,2}-\\d{3,4}-\\d{4}$", message = "올바르지 않은 전화번호입니다.")
