@@ -18,4 +18,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
   boolean existsByTel(String tel);
 
   boolean existsByAddress(String address);
+
+  boolean existsByName(String name);
 }

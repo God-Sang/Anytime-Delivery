@@ -50,7 +50,7 @@ public class StoreService {
   @Transactional
   public Store createStore(List<Long> categoryIds, List<String> deliveryAreas, Store store) {
     // TODO session에서 user찾기
-    verifyDuplicatedStoreInfo(store.getRegistrationNumber(), store.getTel(), store.getAddress());
+    verifyDuplicatedStoreInfo(store.getRegistrationNumber(), store.getTel(), store.getAddress(), store.getName());
     setCategoryStore(store, categoryIds);
     setDeliveryAreaStore(store, deliveryAreas);
     return storeRepository.save(store);
@@ -81,10 +81,11 @@ public class StoreService {
   /**
    * 가게 등록 시 unique 필드 중복 확인
    */
-  private void verifyDuplicatedStoreInfo(String registrationNumber, String tel, String address) {
+  private void verifyDuplicatedStoreInfo(String registrationNumber, String tel, String address, String name) {
     verifyRegistrationNumberExists(registrationNumber);
     verifyTelExists(tel);
     verifyAddressExists(address);
+    verifyNameExists(name);
   }
 
   /**
@@ -117,6 +118,17 @@ public class StoreService {
   private void verifyAddressExists(String address) {
     if (storeRepository.existsByAddress(address)) {
       throw new BusinessLogicException(ExceptionCode.ADDRESS_ALREADY_EXISTS);
+    }
+  }
+
+  /**
+   * 가게명 중복 확인
+   *
+   * @throws BusinessLogicException when same name found
+   */
+  private void verifyNameExists(String name) {
+    if (storeRepository.existsByName(name)) {
+      throw new BusinessLogicException(ExceptionCode.NAME_ALREADY_EXISTS);
     }
   }
 }

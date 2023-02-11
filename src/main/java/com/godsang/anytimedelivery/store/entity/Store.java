@@ -20,7 +20,7 @@ public class Store {
   private Long storeId;
   @Column(nullable = false, unique = true, length = 12)
   private String registrationNumber;
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String name;
   @Column(nullable = false, unique = true, length = 13)
   private String tel;

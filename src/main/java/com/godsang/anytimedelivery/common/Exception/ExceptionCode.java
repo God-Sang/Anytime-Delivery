@@ -13,7 +13,8 @@ public enum ExceptionCode {
   NICKNAME_ALREADY_EXISTS(409, "Nickname already exists."),
   REGISTRATION_NUMBER_ALREADY_EXISTS(409, "Registration number already exists."),
   TEL_ALREADY_EXISTS(409, "Tel already exists."),
-  ADDRESS_ALREADY_EXISTS(409, "Address already exists.");
+  ADDRESS_ALREADY_EXISTS(409, "Address already exists."),
+  NAME_ALREADY_EXISTS(409, "Name already exists.");
 
   private final int code;
   private final String description;
