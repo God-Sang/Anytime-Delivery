@@ -2,8 +2,15 @@ package com.godsang.anytimedelivery.store.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.UniqueElements;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -38,14 +45,17 @@ public class StoreDto {
     @Max(value = 100, message = "최대 100분까지 설정할 수 있습니다.")
     @NotNull
     private Integer deliveryTime;
+    @Size(min = 1, max = 3, message = "최소 한 개, 최대 세 개까지 선택 가능합니다.")
+    @UniqueElements(message = "중복된 값이 존재합니다.")
     @NotNull
-    private List<@Positive Long> categoryIds; // TODO validation 중복 요소, 0보다 큰지, 요소가 비었는지(blank)
+    private List<@Positive Long> categoryIds;
+    @Size(min = 1, message = "한 개 이상의 배달 가능 지역을 선택해야 합니다.")
+    @UniqueElements(message = "중복된 값이 존재합니다.")
     @NotNull
-    private List<String> deliveryAreas; // TODO validation 중복 요소, ~시/도 ~시/군/구 ~읍/면/동, 요소가 비었는지(blank)
+    private List<@Pattern(regexp = "^[가-힣]{2,}(시|도)\\s[가-힣]+(시|군|구)\\s[가-힣]+(읍|면|동)$") String> deliveryAreas;
     private String mainPhoto1;
     private String mainPhoto2;
     private String mainPhoto3;
-
   }
 
   @Getter
