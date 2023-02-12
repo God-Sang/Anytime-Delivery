@@ -35,7 +35,7 @@ public class UserRepositoryTest {
     String email = "anytime@email.com";
     String phone = "010-1234-5678";
     String nickName = "애니타임";
-    User user = getUser(email, phone, nickName);
+    User user = StubData.MockUser.getMockEntity(1L, email, phone, nickName);
     userRepository.save(user);
   }
 
@@ -71,7 +71,7 @@ public class UserRepositoryTest {
   @CsvSource(value = {"anytime@email.com:민지:010-1111-1111", "abcd@email.com:애니타임:010-1111-2222", "abcd@email.com:민지:010-1234-5678"}, delimiter = ':')
   @DisplayName("unique 필드가 중복된 User를 저장하면 에러 발생")
   void uniqueTest(String email, String nickName, String phone) {
-    User duplicatedUser = getUser(email, phone, nickName);
+    User duplicatedUser = StubData.MockUser.getMockEntity(2L, email, phone, nickName);
     assertThrows(DataIntegrityViolationException.class, () -> userRepository.save(duplicatedUser));
   }
 
@@ -79,18 +79,10 @@ public class UserRepositoryTest {
   @CsvSource(value = {"everytime@email.com:민지:010-1111-1111", "abcd@email.com:다니엘:010-1111-2222", "newjeans@email.com:하니:010-1234-1234"}, delimiter = ':')
   @DisplayName("중복되지 않은 User 저장")
   void saveTest(String email, String nickName, String phone) {
-    User newUser = getUser(email, phone, nickName);
+    User newUser = StubData.MockUser.getMockEntity(2L, email, phone, nickName);
     assertDoesNotThrow(() -> userRepository.save(newUser));
 
     List<User> findUsers = userRepository.findAll();
     assertThat(findUsers.size()).isEqualTo(2);
-  }
-
-  private User getUser(String email, String phone, String nickName) {
-    return StubData.MockUser.builder()
-        .email(email)
-        .phone(phone)
-        .nickName(nickName)
-        .build();
   }
 }

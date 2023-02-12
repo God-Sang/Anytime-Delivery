@@ -73,7 +73,7 @@ public class StoreForCustomerControllerTest {
     List<Store> stores = new ArrayList<>();
     List<StoreDto.Response> dtos = new ArrayList<>();
     for (int i = 1; i <= 10; i++) {
-      Store store = StubData.MockStore.builder().storeId(i).name("store" + i).build();
+      Store store = StubData.MockStore.getMockEntity((long) i, "111-11", "store" + i, "02-123", "강남구");
       stores.add(store);
       StoreDto.Response responseDto = new StoreDto.Response();
       responseDto.setName(store.getName());

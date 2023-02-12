@@ -35,12 +35,7 @@ public class LoginIntegrationTest {
 
   @BeforeAll
   void saveEntity() {
-    User user = StubData.MockUser.builder()
-        .userId(1L)
-        .email("anytime123@gmail.com")
-        .phone("010-1234-5678")
-        .nickName("애니타임")
-        .build();
+    User user = StubData.MockUser.getMockEntity();
     savedEmail = user.getEmail();
     savedPassword = user.getPassword();
 

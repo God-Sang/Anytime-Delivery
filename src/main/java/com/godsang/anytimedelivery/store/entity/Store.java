@@ -3,7 +3,10 @@ package com.godsang.anytimedelivery.store.entity;
 import com.godsang.anytimedelivery.category.entity.CategoryStore;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.user.entity.User;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,6 +16,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Store {
   @Id
@@ -51,5 +55,18 @@ public class Store {
 
   public void addDeliveryAreaStore(DeliveryAreaStore deliveryAreaStore) {
     deliveryAreaStores.add(deliveryAreaStore);
+  }
+
+  @Builder
+  private Store(Long storeId, String registrationNumber, String name, String tel, String address, LocalTime openTime, LocalTime closeTime, int deliveryFee, int deliveryTime) {
+    this.storeId = storeId;
+    this.registrationNumber = registrationNumber;
+    this.name = name;
+    this.tel = tel;
+    this.address = address;
+    this.openTime = openTime;
+    this.closeTime = closeTime;
+    this.deliveryFee = deliveryFee;
+    this.deliveryTime = deliveryTime;
   }
 }

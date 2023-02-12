@@ -6,37 +6,33 @@ import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import javax.persistence.Entity;
 import java.time.LocalTime;
 import java.util.List;
 
 public class StubData {
-
-  @Entity
-  @NoArgsConstructor
-  public static class MockStore extends Store {
-    @Builder
-    private MockStore(long storeId, String registrationNumber, String name, String tel, String address) {
-      super.setStoreId(storeId);
-      super.setRegistrationNumber(registrationNumber);
-      super.setName(name);
-      super.setTel(tel);
-      super.setAddress(address);
-      super.setOpenTime(LocalTime.now());
-      super.setCloseTime(LocalTime.now());
-      super.setDeliveryFee(6000);
-      super.setDeliveryTime(30);
-    }
-
+  public static class MockStore {
     public static MultiValueMap<String, String> getMockGetQuery(Integer page, Integer size) {
       MultiValueMap<String, String> queries = new LinkedMultiValueMap<>();
       queries.add("page", String.valueOf(page));
       queries.add("size", String.valueOf(size));
       return queries;
+    }
+
+    public static Store getMockEntity(Long storeId, String registrationNumber, String name, String tel, String address) {
+      return Store.builder()
+          .storeId(storeId)
+          .registrationNumber(registrationNumber)
+          .name(name)
+          .tel(tel)
+          .address(address)
+          .openTime(LocalTime.now())
+          .closeTime(LocalTime.now())
+          .deliveryFee(6000)
+          .deliveryTime(30)
+          .build();
     }
   }
 
@@ -57,25 +53,27 @@ public class StubData {
     }
   }
 
-  @Entity
-  @NoArgsConstructor
-  public static class MockUser extends User {
-    @Builder
-    private MockUser(long userId, String email, String phone, String nickName) {
-      super.setUserId(userId);
-      super.setEmail(email);
-      super.setPassword("1q2w3e4r@");
-      super.setPhone(phone);
-      super.setNickName(nickName);
-      super.setRole(Role.ROLE_CUSTOMER);
+  public static class MockUser {
+
+    public static User getMockEntity(long userId, String email, String phone, String nickName) {
+      return User.builder()
+          .userId(userId)
+          .email(email)
+          .password("1q2w3e4r@")
+          .phone(phone)
+          .nickName(nickName)
+          .role(Role.ROLE_CUSTOMER)
+          .build();
     }
 
     public static User getMockEntity() {
-      return MockUser.builder()
+      return User.builder()
           .userId(1L)
           .email("anytime@email.com")
           .phone("010-1234-5678")
           .nickName("애니타임")
+          .password("1q2w3e4r@")
+          .role(Role.ROLE_CUSTOMER)
           .build();
     }
   }

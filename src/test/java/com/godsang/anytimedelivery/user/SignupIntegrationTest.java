@@ -44,12 +44,7 @@ public class SignupIntegrationTest {
 
   @BeforeAll
   void saveEntity() {
-    User user = StubData.MockUser.builder()
-        .userId(1L)
-        .email("anytime@email.com")
-        .phone("010-1234-5678")
-        .nickName("애니타임")
-        .build();
+    User user = StubData.MockUser.getMockEntity();
     userRepository.save(user);
     savedEmail = user.getEmail();
     savedPhone = user.getPhone();

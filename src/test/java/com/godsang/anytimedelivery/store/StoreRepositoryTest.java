@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,12 +45,8 @@ public class StoreRepositoryTest {
 
     List<Store> stores = new ArrayList<>();
     for (int i = 0; i < numberOfStoresCreated; i++) {
-      Store store = StubData.MockStore.builder()
-          .address("aa" + i)
-          .name(storeNamePrefix + i)
-          .tel("1234" + i)
-          .registrationNumber("1234" + i)
-          .build();
+      Store store = StubData.MockStore.getMockEntity(null, "1234" + i, storeNamePrefix + i, "1234" + i, "aa" + i);
+
       CategoryStore categoryStore1 = new CategoryStore(category1, store);
       CategoryStore categoryStore2 = new CategoryStore(category2, store);
       store.addCategoryStore(categoryStore1);
