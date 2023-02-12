@@ -82,7 +82,7 @@ public class StoreForCustomerControllerTest {
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
     given(storeService.findStoreByCategoryId(any(), any())).willReturn(result);
     given(storeMapper.storeListToGetResponseDto(stores)).willReturn(dtos);
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1, 10);
+    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
 
     //when
     mockMvc.perform(
@@ -102,7 +102,7 @@ public class StoreForCustomerControllerTest {
   @WithMockUser(username = "tester", roles = {"CUSTOMER"})
   void findByCategoryFailTest(Long categoryId, Integer page, Integer size) throws Exception {
     //given
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(page, size);
+    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(page, size);
 
     //when
     mockMvc.perform(
@@ -118,7 +118,7 @@ public class StoreForCustomerControllerTest {
   @DisplayName("캐시 정상 작동 확인")
   void findByCategoryCacheTest() throws Exception {
     //given
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1, 10);
+    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
 
     //when
     for (int i = 0; i < 10; i++) {
@@ -137,7 +137,7 @@ public class StoreForCustomerControllerTest {
   @DisplayName("OWNER 권한으로 store 조회 시 failure")
   void requestWithOwnerTest() throws Exception {
     // given
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1, 10);
+    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
 
     // when
     mockMvc.perform(

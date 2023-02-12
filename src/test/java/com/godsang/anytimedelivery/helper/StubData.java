@@ -13,14 +13,16 @@ import java.time.LocalTime;
 import java.util.List;
 
 public class StubData {
-  public static class MockStore {
-    public static MultiValueMap<String, String> getMockGetQuery(Integer page, Integer size) {
+  public static class Query {
+    public static MultiValueMap<String, String> getPageQuery(Integer page, Integer size) {
       MultiValueMap<String, String> queries = new LinkedMultiValueMap<>();
       queries.add("page", String.valueOf(page));
       queries.add("size", String.valueOf(size));
       return queries;
     }
+  }
 
+  public static class MockStore {
     public static Store getMockEntity(Long storeId, String registrationNumber, String name, String tel, String address) {
       return Store.builder()
           .storeId(storeId)
@@ -35,7 +37,6 @@ public class StubData {
           .build();
     }
   }
-
 
   public static class MockStorePost extends StoreDto.Post {
     @Builder
@@ -54,7 +55,6 @@ public class StubData {
   }
 
   public static class MockUser {
-
     public static User getMockEntity(long userId, String email, String phone, String nickName) {
       return User.builder()
           .userId(userId)
