@@ -2,7 +2,7 @@ package com.godsang.anytimedelivery.auth;
 
 import com.godsang.anytimedelivery.auth.details.UserDetailsImpl;
 import com.godsang.anytimedelivery.auth.utils.UserAuthorityUtils;
-import com.godsang.anytimedelivery.auth.utils.UserInfoUtils;
+import com.godsang.anytimedelivery.auth.utils.LoggedInUserInfoUtils;
 import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
@@ -20,9 +20,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserInfoUtilsTest {
+public class LoggedInUserInfoUtilsTest {
   @Autowired
-  private UserInfoUtils userInfoUtils;
+  private LoggedInUserInfoUtils loggedInUserInfoUtils;
   @Autowired
   private UserRepository userRepository;
   @Autowired
@@ -43,7 +43,7 @@ public class UserInfoUtilsTest {
     SecurityContext context = SecurityContextHolder.getContext();
     context.setAuthentication(authentication);
     //when
-    Long userId = userInfoUtils.extractUserId();
+    Long userId = loggedInUserInfoUtils.extractUserId();
     //then
     assertThat(userId)
         .isEqualTo(userId);

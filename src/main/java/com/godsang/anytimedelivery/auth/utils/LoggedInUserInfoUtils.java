@@ -8,18 +8,15 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Component
-public class UserInfoUtils {
+public class LoggedInUserInfoUtils {
   public Long extractUserId() {
-    Map<?, ?> claims;
+    SecurityContext context = SecurityContextHolder.getContext();
+    Authentication authentication = context.getAuthentication();
     try {
-      SecurityContext context = SecurityContextHolder.getContext();
-      Authentication authentication = context.getAuthentication();
       UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
       return userDetails.getUserId();
-    } catch (Exception e) {
+    } catch (ClassCastException e) {
       throw new BusinessLogicException(ExceptionCode.USER_NOT_FOUND);
     }
   }
