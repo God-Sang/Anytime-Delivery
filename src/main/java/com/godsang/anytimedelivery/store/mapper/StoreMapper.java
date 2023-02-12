@@ -10,7 +10,7 @@ import java.util.List;
 public interface StoreMapper {
   StoreDto.Response storeToResponseDto(Store store);
 
-  List<StoreDto.Response> storeListToGetResponseDto(List<Store> stores);
+  List<StoreDto.Response> storeListToResponseDto(List<Store> stores);
 
   Store postDtoToStore(StoreDto.Post postDto);
 }

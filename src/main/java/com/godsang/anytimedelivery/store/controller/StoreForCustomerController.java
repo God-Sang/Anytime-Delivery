@@ -38,7 +38,7 @@ public class StoreForCustomerController {
                                   @RequestParam @Positive int page,
                                   @RequestParam @Positive int size) {
     Page<Store> stores = storeService.findStoreByCategoryId(categoryId, PageRequest.of(page - 1, size));
-    List<StoreDto.Response> storeDtos = storeMapper.storeListToGetResponseDto(stores.getContent());
+    List<StoreDto.Response> storeDtos = storeMapper.storeListToResponseDto(stores.getContent());
     return new ResponseEntity(new PageResponseDto<>(storeDtos, stores), HttpStatus.OK);
   }
 }

@@ -81,7 +81,7 @@ public class StoreForCustomerControllerTest {
     }
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
     given(storeService.findStoreByCategoryId(any(), any())).willReturn(result);
-    given(storeMapper.storeListToGetResponseDto(stores)).willReturn(dtos);
+    given(storeMapper.storeListToResponseDto(stores)).willReturn(dtos);
     MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
 
     //when
