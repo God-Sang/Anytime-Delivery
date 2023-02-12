@@ -80,8 +80,8 @@ public class StubData {
           .detailAddress(detailAddress)
           .build();
     }
-    public static AddressDto.Dto getMockAddressPostRequestDto(String address, String detail, String deliveryArea) {
-      return AddressDto.Dto.builder()
+    public static AddressDto getMockAddressPostRequestDto(String address, String detail, String deliveryArea) {
+      return AddressDto.builder()
           .address(address)
           .detailAddress(detail)
           .deliveryArea(deliveryArea)

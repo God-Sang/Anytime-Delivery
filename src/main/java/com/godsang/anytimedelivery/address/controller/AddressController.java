@@ -22,7 +22,7 @@ public class AddressController {
 
   /** register an address to a user.*/
   @PostMapping
-  public ResponseEntity registerAddress(@RequestBody @Valid AddressDto.Dto dto) {
+  public ResponseEntity registerAddress(@RequestBody @Valid AddressDto dto) {
     Long userId = userInfoUtils.extractUserId();
     Address address = addressMapper.dtoToAddress(dto);
     addressService.saveAddress(userId, address);
@@ -33,7 +33,7 @@ public class AddressController {
   public ResponseEntity getMyAddress() {
     Long userId = userInfoUtils.extractUserId();
     Address address = addressService.getAddress(userId);
-    AddressDto.Dto response = addressMapper.addressToDto(address);
+    AddressDto response = addressMapper.addressToDto(address);
     return new ResponseEntity(response, HttpStatus.OK);
   }
 }

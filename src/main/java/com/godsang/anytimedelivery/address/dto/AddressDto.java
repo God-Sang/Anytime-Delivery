@@ -5,16 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
-
+@Getter
+@Setter
+@Builder
 public class AddressDto {
-  @Getter
-  @Setter
-  @Builder
-  public static class Dto {
-    @NotBlank
-    private String deliveryArea; // 시도명 + 시군구명 + 읍면동명, ex) "00시00구00동"
-    @NotBlank
-    private String address;
-    private String detailAddress;
-  }
+  @NotBlank
+  private String deliveryArea; // 시도명 + 시군구명 + 읍면동명, ex) "00시00구00동"
+  @NotBlank
+  private String address;
+  private String detailAddress;
 }
