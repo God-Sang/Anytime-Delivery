@@ -19,7 +19,7 @@ public class DeliveryAreaService {
    */
   public DeliveryArea findExistedDeliveryArea(String juso) {
     Optional<DeliveryArea> deliveryArea = deliveryAreaRepository.findByJuso(juso);
-    return deliveryArea.orElse(createDeliveryArea(juso));
+    return deliveryArea.orElseGet(() -> createDeliveryArea(juso));
   }
 
   private DeliveryArea createDeliveryArea(String juso) {
