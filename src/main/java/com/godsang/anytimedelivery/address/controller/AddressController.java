@@ -25,7 +25,7 @@ public class AddressController {
   public ResponseEntity registerAddress(@RequestBody @Valid AddressDto dto) {
     Long userId = loggedInUserInfoUtils.extractUserId();
     Address address = addressMapper.dtoToAddress(dto);
-    addressService.saveAddress(userId, address);
+    addressService.saveAddress(userId, address, dto.getDeliveryArea());
     return new ResponseEntity(HttpStatus.OK);
   }
   /** retrieve an address of a user */
