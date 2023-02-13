@@ -1,5 +1,6 @@
 package com.godsang.anytimedelivery.address.entity;
 
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +20,10 @@ public class Address {
   @Column(nullable = false)
   private String address;
   private String detailAddress;
-  // TODO: deliveryArea와 매핑하기
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+  private DeliveryArea deliveryArea;
+
+  public void setDeliveryArea(DeliveryArea deliveryArea) {
+    this.deliveryArea = deliveryArea;
+  }
 }
