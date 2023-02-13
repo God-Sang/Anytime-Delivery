@@ -1,5 +1,6 @@
 package com.godsang.anytimedelivery.helper;
 
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.address.dto.AddressDto;
 import com.godsang.anytimedelivery.address.entity.Address;
