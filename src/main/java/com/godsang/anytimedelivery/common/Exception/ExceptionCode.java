@@ -21,6 +21,7 @@ public enum ExceptionCode {
   TEL_ALREADY_EXISTS(409, "Tel already exists."),
   ADDRESS_ALREADY_EXISTS(409, "Address already exists."),
   NAME_ALREADY_EXISTS(409, "Name already exists."),
+  STORE_NOT_FOUND(404, "Store not found."),
 
   //Address
   ADDRESS_NOT_EXIST(404, "User has no address yet");

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service logics for Stores
@@ -130,5 +131,16 @@ public class StoreService {
     if (storeRepository.existsByName(name)) {
       throw new BusinessLogicException(ExceptionCode.NAME_ALREADY_EXISTS);
     }
+  }
+
+  /**
+   * store id로 store를 찾는다.
+   *
+   * @Param storeId store id
+   * @Return Store
+   */
+  public Store findStoreById(long storeId) {
+    Optional<Store> store = storeRepository.findById(storeId);
+    return store.orElseThrow(() -> new BusinessLogicException(ExceptionCode.STORE_NOT_FOUND));
   }
 }
