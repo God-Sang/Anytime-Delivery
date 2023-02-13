@@ -20,7 +20,7 @@ public enum ExceptionCode {
   REGISTRATION_NUMBER_ALREADY_EXISTS(409, "Registration number already exists."),
   TEL_ALREADY_EXISTS(409, "Tel already exists."),
   ADDRESS_ALREADY_EXISTS(409, "Address already exists."),
-  NAME_ALREADY_EXISTS(409, "Name already exists.");
+  NAME_ALREADY_EXISTS(409, "Name already exists."),
 
   //Address
   ADDRESS_NOT_EXIST(404, "User has no address yet");

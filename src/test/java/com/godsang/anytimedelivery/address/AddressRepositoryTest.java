@@ -22,7 +22,7 @@ public class AddressRepositoryTest {
   void saveAndRetrieveTest() {
     //given
     User user = userRepository.save(StubData.MockUser.getMockEntity(
-        2L, "email", "1q2w3e4r!", "010", "nickName", Role.ROLE_CUSTOMER));
+        2L, "email", "010", "nickName"));
 
     Long userId = 1L;
     String addr = "서울시 행복구 행복동";

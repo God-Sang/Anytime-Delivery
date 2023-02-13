@@ -26,13 +26,11 @@ public class AddressServiceTest {
   private UserRepository userRepository;
   @BeforeAll
   void init() {
-    User user = StubData.MockUser.getMockEntity(1L, "abcd@naver.com", "abcd1234!@#",
-        "010-1111-1111", "nick", Role.ROLE_CUSTOMER);
+    User user = StubData.MockUser.getMockEntity(1L, "abcd@naver.com", "010-1111-1111", "nick");
     userRepository.save(user);
   }
   @Test
   @DisplayName("저장 테스트")
-  @Transactional
   void saveTest() {
     //given
     Long userId = 1L;

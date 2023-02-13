@@ -29,14 +29,13 @@ public class LoggedInUserInfoUtilsTest {
   private UserAuthorityUtils userAuthorityUtils;
   private Long userId = 2L;
   private String email = "abcd@naver.com";
-  private String password = "abcd1234";
 
 
   @Test
   void extractUserIdTest() throws Exception {
     //given
     User user = userRepository.save(StubData.MockUser.getMockEntity(
-        userId, email, password, "010-1234-1234", "nick123", Role.ROLE_CUSTOMER));
+        userId, email, "010-1234-1234", "nick123"));
     Authentication authentication = new UsernamePasswordAuthenticationToken(
         new UserDetailsImpl(user, userAuthorityUtils.createAuthorities(user.getRole())),
         null, userAuthorityUtils.createAuthorities(user.getRole()));
