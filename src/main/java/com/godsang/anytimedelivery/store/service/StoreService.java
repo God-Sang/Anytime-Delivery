@@ -54,8 +54,7 @@ public class StoreService {
    */
   @Transactional
   public Store createStore(List<Long> categoryIds, List<String> deliveryAreas, Store store) {
-    Long a = loggedInUserInfoUtils.extractUserId();
-    User user = userService.findUser(a);
+    User user = userService.findUser(loggedInUserInfoUtils.extractUserId());
     store.setUser(user);
     verifyDuplicatedStoreInfo(store.getRegistrationNumber(), store.getTel(), store.getAddress(), store.getName());
     setCategoryStore(store, categoryIds);
