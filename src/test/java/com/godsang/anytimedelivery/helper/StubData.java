@@ -1,5 +1,7 @@
 package com.godsang.anytimedelivery.helper;
 
+import com.godsang.anytimedelivery.address.dto.AddressDto;
+import com.godsang.anytimedelivery.address.entity.Address;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
@@ -67,6 +69,22 @@ public class StubData {
           .phone(phone)
           .nickName(nickName)
           .role(role)
+          .build();
+    }
+  }
+  public static class MockAddress {
+    // TODO : deliveryArea 오면 수정 예정
+    public static Address getMockAddress(String address, String detailAddress) {
+      return Address.builder()
+          .address(address)
+          .detailAddress(detailAddress)
+          .build();
+    }
+    public static AddressDto getMockAddressPostRequestDto(String address, String detail, String deliveryArea) {
+      return AddressDto.builder()
+          .address(address)
+          .detailAddress(detail)
+          .deliveryArea(deliveryArea)
           .build();
     }
   }

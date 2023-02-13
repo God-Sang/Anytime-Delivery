@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -29,6 +31,14 @@ public class UserService {
     user.setPassword(encryptedPassword);
     user.setRole(userAuthorityUtils.createRoles(role, user.getEmail()));
     return userRepository.save(user);
+  }
+
+  public User findUser(Long userId) {
+    Optional<User> optionalUser = userRepository.findById(userId);
+    if (optionalUser.isEmpty()) {
+      throw new BusinessLogicException(ExceptionCode.USER_NOT_FOUND);
+    }
+    return optionalUser.get();
   }
 
   /**

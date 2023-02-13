@@ -1,5 +1,6 @@
 package com.godsang.anytimedelivery.user.entity;
 
+import com.godsang.anytimedelivery.address.entity.Address;
 import com.godsang.anytimedelivery.common.audit.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,6 +35,9 @@ public class User extends BaseEntity implements Serializable {
   @Enumerated(EnumType.STRING)
   private Role role;
 
+  @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+  @JoinColumn(name = "address_id")
+  private Address address;
   @Builder
   public User(Long userId, String email, String password, String nickName, String phone, Role role) {
     this.userId = userId;
