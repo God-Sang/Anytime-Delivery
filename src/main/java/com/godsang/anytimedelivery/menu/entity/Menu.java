@@ -24,6 +24,7 @@ public class Menu {
   private String name;
   @Column(nullable = false)
   private int price;
+  private String description;
   private String photo;
   @ManyToOne(fetch = FetchType.LAZY)
   private Menu menu;
