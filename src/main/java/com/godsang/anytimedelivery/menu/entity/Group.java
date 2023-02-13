@@ -22,7 +22,7 @@ public class Group {
   @Column(nullable = false)
   private String title;
   @Column(nullable = false)
-  private String choice;
+  private String choiceType;
   @ManyToOne(fetch = FetchType.LAZY)
   private Menu menu;
   @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
