@@ -1,7 +1,10 @@
 package com.godsang.anytimedelivery.menu.entity;
 
 import com.godsang.anytimedelivery.store.entity.Store;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
@@ -16,6 +19,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Menu {
   @Id
@@ -34,4 +38,12 @@ public class Menu {
   private Store store;
   @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Group> groups = new ArrayList<>();
+
+  @Builder
+  private Menu(String name, int price, String description, String photo) {
+    this.name = name;
+    this.price = price;
+    this.description = description;
+    this.photo = photo;
+  }
 }
