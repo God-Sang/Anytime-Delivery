@@ -3,6 +3,7 @@ package com.godsang.anytimedelivery.store;
 import com.godsang.anytimedelivery.category.entity.Category;
 import com.godsang.anytimedelivery.category.entity.CategoryStore;
 import com.godsang.anytimedelivery.category.repository.CategoryRepository;
+import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.repository.StoreRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,31 +30,23 @@ public class StoreRepositoryTest {
   private final Long categoryId1 = 1L;
   private final Long categoryId2 = 2L;
   private final int numberOfStoresCreated = 10;
+  private final List<String> categoryNames = new ArrayList<>();
   @Autowired
   private StoreRepository storeRepository;
   @Autowired
   private CategoryRepository categoryRepository;
-  private List<String> categoryName = new ArrayList<>();
 
   @BeforeAll
   void init() {
     Category category1 = categoryRepository.findById(categoryId1).get();
     Category category2 = categoryRepository.findById(categoryId2).get();
-    categoryName.add(category1.getName());
-    categoryName.add(category2.getName());
+    categoryNames.add(category1.getName());
+    categoryNames.add(category2.getName());
 
     List<Store> stores = new ArrayList<>();
     for (int i = 0; i < numberOfStoresCreated; i++) {
-      Store store = Store.builder()
-          .address("aa" + i)
-          .closeTime(LocalTime.now())
-          .openTime(LocalTime.now())
-          .deliveryFee(0)
-          .name(storeNamePrefix + i)
-          .tel("1234" + i)
-          .registrationNumber("1234" + i)
-          .categoryStores(new ArrayList<>())
-          .build();
+      Store store = StubData.MockStore.getMockEntity(null, "1234" + i, storeNamePrefix + i, "1234" + i, "aa" + i);
+
       CategoryStore categoryStore1 = new CategoryStore(category1, store);
       CategoryStore categoryStore2 = new CategoryStore(category2, store);
       store.addCategoryStore(categoryStore1);
@@ -71,7 +64,7 @@ public class StoreRepositoryTest {
     String categoryName = category.getCategoryStores().get(0).getCategory().getName();
     //then
     assertThat(categoryName)
-        .isIn(categoryName);
+        .isIn(categoryNames);
   }
 
   @Test

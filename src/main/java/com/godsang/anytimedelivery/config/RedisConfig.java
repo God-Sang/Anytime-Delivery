@@ -23,7 +23,6 @@ import java.time.Duration;
 @Configuration
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60)
 @EnableCaching
-@Profile("!signupTest")
 public class RedisConfig {
   @Value("${spring.redis.host}")
   private String host;

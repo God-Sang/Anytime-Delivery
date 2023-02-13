@@ -1,75 +1,93 @@
 package com.godsang.anytimedelivery.helper;
 
+import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.address.dto.AddressDto;
 import com.godsang.anytimedelivery.address.entity.Address;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
+import lombok.Builder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.time.LocalTime;
+import java.util.List;
 
 public class StubData {
-  public static class MockStore {
-    public static Store getMockEntity(Long storeId, String name) {
-      return Store.builder()
-          .storeId(storeId)
-          .address("서울시 행복동")
-          .closeTime(LocalTime.now())
-          .deliveryFee(0)
-          .openTime(LocalTime.now())
-          .deliveryTime(10)
-          .introduction("가게")
-          .name(name)
-          .registrationNumber("1-2-3")
-          .mainPhoto1("mainPhoto1")
-          .mainPhoto2("mainPhoto1")
-          .mainPhoto3("mainPhoto1")
-          .build();
-    }
-
-    public static MultiValueMap<String, String> getMockGetQuery(Long categoryId, Integer page, Integer size) {
+  public static class Query {
+    public static MultiValueMap<String, String> getPageQuery(Integer page, Integer size) {
       MultiValueMap<String, String> queries = new LinkedMultiValueMap<>();
-      queries.add("category-id", String.valueOf(categoryId));
       queries.add("page", String.valueOf(page));
       queries.add("size", String.valueOf(size));
       return queries;
     }
   }
 
-  public static class MockUser {
-    public static User getMockEntity(long userId, String email, String password, String phone, String nickName, Role role) {
-      return User.builder()
-          .userId(userId)
-          .email(email)
-          .password(password)
-          .phone(phone)
-          .nickName(nickName)
-          .role(role)
+  public static class MockStore {
+    public static Store getMockEntity(Long storeId, String registrationNumber, String name, String tel, String address) {
+      return Store.builder()
+          .storeId(storeId)
+          .registrationNumber(registrationNumber)
+          .name(name)
+          .tel(tel)
+          .address(address)
+          .openTime(LocalTime.now())
+          .closeTime(LocalTime.now())
+          .deliveryFee(6000)
+          .deliveryTime(30)
           .build();
     }
   }
 
-  public static class MockUserDto {
-    public static UserDto.Post getMockPost(String email, String password, String phone, String nickName, String role) {
-      return UserDto.Post.builder()
+  public static class MockStorePost extends StoreDto.Post {
+    @Builder
+    private MockStorePost(String registrationNumber, String name, String address, String tel, int deliveryFee, int deliveryTime, String openTime, String closeTime, List<Long> categoryIds, List<String> deliveryAreas) {
+      super.setRegistrationNumber(registrationNumber);
+      super.setName(name);
+      super.setTel(tel);
+      super.setAddress(address);
+      super.setDeliveryFee(deliveryFee);
+      super.setDeliveryTime(deliveryTime);
+      super.setOpenTime(openTime);
+      super.setCloseTime(closeTime);
+      super.setCategoryIds(categoryIds);
+      super.setDeliveryAreas(deliveryAreas);
+    }
+  }
+
+  public static class MockUser {
+    public static User getMockEntity(long userId, String email, String phone, String nickName) {
+      return User.builder()
+          .userId(userId)
           .email(email)
-          .password(password)
+          .password("1q2w3e4r@")
           .phone(phone)
           .nickName(nickName)
-          .role(role)
+          .role(Role.ROLE_CUSTOMER)
           .build();
     }
 
-    public static UserDto.Response getMockResponse(String email, String phone, String nickName, Role role) {
-      return UserDto.Response.builder()
-          .email(email)
-          .phone(phone)
-          .nickName(nickName)
-          .role(role)
+    public static User getMockEntity() {
+      return User.builder()
+          .userId(1L)
+          .email("anytime@email.com")
+          .phone("010-1234-5678")
+          .nickName("애니타임")
+          .password("1q2w3e4r@")
+          .role(Role.ROLE_CUSTOMER)
           .build();
+    }
+  }
+
+  public static class MockUserPost extends UserDto.Post {
+    @Builder
+    private MockUserPost(String email, String password, String phone, String nickName) {
+      super.setEmail(email);
+      super.setPassword(password);
+      super.setPhone(phone);
+      super.setNickName(nickName);
+      super.setRole("customer");
     }
   }
   public static class MockAddress {

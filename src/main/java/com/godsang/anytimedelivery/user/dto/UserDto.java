@@ -1,9 +1,7 @@
 package com.godsang.anytimedelivery.user.dto;
 
 import com.godsang.anytimedelivery.user.entity.Role;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
@@ -12,10 +10,9 @@ import javax.validation.constraints.Pattern;
 public class UserDto {
   @Getter
   @Setter
-  @NoArgsConstructor
   public static class Post {
     @NotBlank
-    @Pattern(regexp = "[a-z]+@[a-z]+\\.[a-z]+(\\.[a-z]+)?", message = "올바르지 않은 이메일입니다.")
+    @Pattern(regexp = "[a-z\\d]+@[a-z]+\\.[a-z]+(\\.[a-z]+)?", message = "올바르지 않은 이메일입니다.")
     private String email;
     @NotBlank
     @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[$@!%*?&#~])[A-Za-z\\d$@!%*?&#~]{8,15}", message = "영어, 숫자, 특수문자를 포함하여 8 ~ 15 글자 이내여야 합니다.")
@@ -28,32 +25,14 @@ public class UserDto {
     private String nickName;
     @NotBlank
     private String role;
-
-    @Builder
-    public Post(String email, String password, String phone, String nickName, String role) {
-      this.email = email;
-      this.password = password;
-      this.phone = phone;
-      this.nickName = nickName;
-      this.role = role;
-    }
   }
 
   @Getter
   @Setter
-  @NoArgsConstructor
   public static class Response {
     private String email;
     private String phone;
     private String nickName;
     private Role role;
-
-    @Builder
-    public Response(String email, String phone, String nickName, Role role) {
-      this.email = email;
-      this.phone = phone;
-      this.nickName = nickName;
-      this.role = role;
-    }
   }
 }

@@ -1,7 +1,6 @@
 package com.godsang.anytimedelivery.user;
 
 import com.godsang.anytimedelivery.helper.StubData;
-import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,7 +32,10 @@ public class UserRepositoryTest {
 
   @BeforeAll
   void saveEntity() {
-    User user = StubData.MockUser.getMockEntity(1L, "anytime@email.com", "1q2w3e4r@", "010-1234-5678", "애니타임", Role.ROLE_CUSTOMER);
+    String email = "anytime@email.com";
+    String phone = "010-1234-5678";
+    String nickName = "애니타임";
+    User user = StubData.MockUser.getMockEntity(1L, email, phone, nickName);
     userRepository.save(user);
   }
 
@@ -69,7 +71,7 @@ public class UserRepositoryTest {
   @CsvSource(value = {"anytime@email.com:민지:010-1111-1111", "abcd@email.com:애니타임:010-1111-2222", "abcd@email.com:민지:010-1234-5678"}, delimiter = ':')
   @DisplayName("unique 필드가 중복된 User를 저장하면 에러 발생")
   void uniqueTest(String email, String nickName, String phone) {
-    User duplicatedUser = StubData.MockUser.getMockEntity(2L, email, "1q2w3e4r!", phone, nickName, Role.ROLE_OWNER);
+    User duplicatedUser = StubData.MockUser.getMockEntity(2L, email, phone, nickName);
     assertThrows(DataIntegrityViolationException.class, () -> userRepository.save(duplicatedUser));
   }
 
@@ -77,7 +79,7 @@ public class UserRepositoryTest {
   @CsvSource(value = {"everytime@email.com:민지:010-1111-1111", "abcd@email.com:다니엘:010-1111-2222", "newjeans@email.com:하니:010-1234-1234"}, delimiter = ':')
   @DisplayName("중복되지 않은 User 저장")
   void saveTest(String email, String nickName, String phone) {
-    User newUser = StubData.MockUser.getMockEntity(2L, email, "1q2w3e4r!", phone, nickName, Role.ROLE_OWNER);
+    User newUser = StubData.MockUser.getMockEntity(2L, email, phone, nickName);
     assertDoesNotThrow(() -> userRepository.save(newUser));
 
     List<User> findUsers = userRepository.findAll();

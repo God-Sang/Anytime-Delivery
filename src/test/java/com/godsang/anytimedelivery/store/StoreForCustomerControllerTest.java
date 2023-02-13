@@ -16,15 +16,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
@@ -39,13 +39,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(StoreForCustomerController.class)
+/**
+ * custom SpringSecurity configuration을 적용하기 위해 @EnableWebSecurity 어노테이션을 스캔하도록 필터 포함
+ *
+ * @WebMvcTest 어노테이션은 SpringSecurity에서 자동으로 구성하는 기본 configuration 파일을 스캔하기 때문
+ */
+@WebMvcTest(value = StoreForCustomerController.class,
+    includeFilters = @ComponentScan.Filter(classes = {EnableWebSecurity.class}))
 @MockBean(JpaMetamodelMappingContext.class)
 public class StoreForCustomerControllerTest {
   @Autowired
   private MockMvc mockMvc;
-  @Autowired
-  private StoreForCustomerController storeForCustomerController;
   @MockBean
   private StoreService storeService;
   @MockBean
@@ -61,39 +65,35 @@ public class StoreForCustomerControllerTest {
     );
   }
 
-  @DisplayName("유효한 입력")
   @Test
+  @DisplayName("유효한 입력")
   @WithMockUser(username = "tester", roles = {"CUSTOMER"})
   void findByCategoryTest() throws Exception {
     //given
     List<Store> stores = new ArrayList<>();
     List<StoreDto.Response> dtos = new ArrayList<>();
     for (int i = 1; i <= 10; i++) {
-      Store store = StubData.MockStore.getMockEntity((long) i, "store" + i);
+      Store store = StubData.MockStore.getMockEntity((long) i, "111-11", "store" + i, "02-123", "강남구");
       stores.add(store);
       StoreDto.Response responseDto = new StoreDto.Response();
       responseDto.setName(store.getName());
       dtos.add(responseDto);
     }
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
-    given(storeService.findStoreByCategoryId(any(), any()))
-        .willReturn(result);
-    given(storeMapper.storeListToGetResponseDto(stores))
-        .willReturn(dtos);
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1L, 1, 10);
+    given(storeService.findStoreByCategoryId(any(), any())).willReturn(result);
+    given(storeMapper.storeListToResponseDto(stores)).willReturn(dtos);
+    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
 
     //when
-    ResultActions resultActions = mockMvc.perform(
-        get("/customer/stores")
-            .contentType(MediaType.APPLICATION_JSON)
-            .queryParams(queries)
-            .accept(MediaType.APPLICATION_JSON));
-    //then
-    MvcResult mvcResult = resultActions
+    mockMvc.perform(
+            get("/categories/{category-id}/stores", 1L)
+                .queryParams(queries)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+        //then
         .andExpect(jsonPath("$.data[0].name").exists())
         .andExpect(jsonPath("$.data[9].name").exists())
-        .andExpect(jsonPath("$.pageInfo.size").value(10))
-        .andReturn();
+        .andExpect(jsonPath("$.pageInfo.size").value(10));
   }
 
   @DisplayName("유효하지 않은 입력")
@@ -102,35 +102,50 @@ public class StoreForCustomerControllerTest {
   @WithMockUser(username = "tester", roles = {"CUSTOMER"})
   void findByCategoryFailTest(Long categoryId, Integer page, Integer size) throws Exception {
     //given
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(categoryId, page, size);
+    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(page, size);
 
     //when
-    ResultActions resultActions = mockMvc.perform(
-        get("/customer/stores")
-            .contentType(MediaType.APPLICATION_JSON)
-            .queryParams(queries)
-            .accept(MediaType.APPLICATION_JSON));
-    MvcResult mvcResult = resultActions
-        .andExpect(status().isBadRequest())
-        .andReturn();
+    mockMvc.perform(
+            get("/categories/{category-id}/stores", categoryId)
+                .queryParams(queries)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isBadRequest());
   }
 
   @Test
-  @DisplayName("캐시 정장 작동 확인")
+  @DisplayName("캐시 정상 작동 확인")
   void findByCategoryCacheTest() throws Exception {
     //given
-    MultiValueMap<String, String> queries = StubData.MockStore.getMockGetQuery(1L, 0, 10);
+    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
 
     //when
     for (int i = 0; i < 10; i++) {
       mockMvc.perform(
-          get("/customer/stores")
-              .contentType(MediaType.APPLICATION_JSON)
+          get("/categories/{category-id}/stores", 1L)
               .queryParams(queries)
               .accept(MediaType.APPLICATION_JSON));
     }
 
     //then
     verify(storeService, atMostOnce()).findStoreByCategoryId(any(), any());
+  }
+
+  @Test
+  @WithMockUser(roles = "OWNER")
+  @DisplayName("OWNER 권한으로 store 조회 시 failure")
+  void requestWithOwnerTest() throws Exception {
+    // given
+    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
+
+    // when
+    mockMvc.perform(
+            get("/categories/{category-id}/stores", 1L)
+                .accept(MediaType.APPLICATION_JSON)
+                .queryParams(queries)
+        )
+        // then
+        .andExpect(status().isForbidden());
   }
 }

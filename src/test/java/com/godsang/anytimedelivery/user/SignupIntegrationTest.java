@@ -23,7 +23,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
+/**
+ * 회원가입 통합 테스트
+ * 메서드마다 rollback 하기 위해 @Transactional 적용
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -35,28 +38,36 @@ public class SignupIntegrationTest {
   private Gson gson;
   @Autowired
   private MockMvc mockMvc;
+  private String savedEmail;
+  private String savedPhone;
+  private String savedNickName;
 
   @BeforeAll
   void saveEntity() {
-    User user = StubData.MockUser.getMockEntity(1L, "anytime@email.com", "1q2w3e4r@", "010-1234-5678", "애니타임", Role.ROLE_CUSTOMER);
+    User user = StubData.MockUser.getMockEntity();
     userRepository.save(user);
+    savedEmail = user.getEmail();
+    savedPhone = user.getPhone();
+    savedNickName = user.getNickName();
   }
 
   @Test
-  @DisplayName("회원가입 성공: response, role, password encoding 확인")
+  @DisplayName("회원가입 성공: 성공 후 email, role, password encoding 확인")
   void signupTest() throws Exception {
     // given
     String email = "asdf@email.com";
-    UserDto.Post postDto = StubData.MockUserDto.getMockPost(email, "1q2w3e4r@", "010-1111-2222", "고길동", Role.ROLE_CUSTOMER.getName());
-    String content = gson.toJson(postDto);
+    String phone = "010-1111-2222";
+    String nickName = "고길동";
+    String content = gson.toJson(getPostDto(email, phone, nickName));
 
-    // when, then
+    // when
     mockMvc.perform(
             post("/users/signup")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
         )
+        // then
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.data.email").value(email));
 
@@ -69,17 +80,18 @@ public class SignupIntegrationTest {
   @DisplayName("회원가입 실패: 중복된 이메일")
   void duplicatedEmailTest() throws Exception {
     // given
-    String email = "anytime@email.com";
-    UserDto.Post postDto = StubData.MockUserDto.getMockPost(email, "1q2w3e4r@", "010-5656-5656", "곽두팔", Role.ROLE_CUSTOMER.getName());
-    String content = gson.toJson(postDto);
+    String phone = "010-1111-2222";
+    String nickName = "고길동";
+    String content = gson.toJson(getPostDto(savedEmail, phone, nickName));
 
-    // when, then
+    // when
     mockMvc.perform(
             post("/users/signup")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
         )
+        // then
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.message").value(ExceptionCode.EMAIL_ALREADY_EXISTS.getDescription()));
 
@@ -89,17 +101,18 @@ public class SignupIntegrationTest {
   @DisplayName("회원가입 실패: 중복된 핸드폰 번호")
   void duplicatedPhoneTest() throws Exception {
     // given
-    String phone = "010-1234-5678";
-    UserDto.Post postDto = StubData.MockUserDto.getMockPost("hello@email.com", "1q2w3e4r@", phone, "박춘삼", Role.ROLE_CUSTOMER.getName());
-    String content = gson.toJson(postDto);
+    String email = "asdf@email.com";
+    String nickName = "고길동";
+    String content = gson.toJson(getPostDto(email, savedPhone, nickName));
 
-    // when, then
+    // when
     mockMvc.perform(
             post("/users/signup")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
         )
+        // then
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.message").value(ExceptionCode.PHONE_NUMBER_ALREADY_EXISTS.getDescription()));
   }
@@ -108,18 +121,28 @@ public class SignupIntegrationTest {
   @DisplayName("회원가입 실패: 중복된 닉네임")
   void duplicatedNickNameTest() throws Exception {
     // given
-    String nickName = "애니타임";
-    UserDto.Post postDto = StubData.MockUserDto.getMockPost("newjeans@email.com", "1q2w3e4r@", "010-1333-9999", nickName, Role.ROLE_CUSTOMER.getName());
-    String content = gson.toJson(postDto);
+    String email = "asdf@email.com";
+    String phone = "010-1111-2222";
+    String content = gson.toJson(getPostDto(email, phone, savedNickName));
 
-    // when, then
+    // when
     mockMvc.perform(
             post("/users/signup")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
         )
+        // then
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.message").value(ExceptionCode.NICKNAME_ALREADY_EXISTS.getDescription()));
+  }
+
+  private UserDto.Post getPostDto(String email, String phone, String nickName) {
+    return StubData.MockUserPost.builder()
+        .email(email)
+        .password("1q2w3e4r@")
+        .phone(phone)
+        .nickName(nickName)
+        .build();
   }
 }
