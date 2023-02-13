@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -17,7 +18,7 @@ public class OptionGroup {
   private Long optionGroupId;
   @ManyToOne(fetch = FetchType.LAZY)
   private Group group;
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
   private Menu option;
 
   public OptionGroup(Group group, Menu option) {
