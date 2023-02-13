@@ -2,6 +2,7 @@ package com.godsang.anytimedelivery.user;
 
 
 import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,7 +36,7 @@ public class LoginIntegrationTest {
 
   @BeforeAll
   void saveEntity() {
-    User user = StubData.MockUser.getMockEntity();
+    User user = StubData.MockUser.getMockEntity(Role.ROLE_CUSTOMER);
     savedEmail = user.getEmail();
     savedPassword = user.getPassword();
 

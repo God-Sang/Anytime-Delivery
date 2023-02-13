@@ -82,14 +82,14 @@ public class StubData {
           .build();
     }
 
-    public static User getMockEntity() {
+    public static User getMockEntity(Role role) {
       return User.builder()
           .userId(1L)
           .email("anytime@email.com")
           .phone("010-1234-5678")
           .nickName("애니타임")
           .password("1q2w3e4r@")
-          .role(Role.ROLE_CUSTOMER)
+          .role(role)
           .build();
     }
   }
