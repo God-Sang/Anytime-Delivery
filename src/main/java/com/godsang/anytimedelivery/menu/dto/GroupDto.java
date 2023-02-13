@@ -1,4 +1,4 @@
-package com.godsang.anytimedelivery.menu.dto.common;
+package com.godsang.anytimedelivery.menu.dto;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +14,5 @@ public class GroupDto {
   private String title;
   @Pattern(regexp = "^(check|radio)$", message = "check 또는 radio 중 하나를 입력해야 합니다.")
   private String choiceType;
-  private List<MenuDto> option;
+  private List<OptionDto> options;
 }
