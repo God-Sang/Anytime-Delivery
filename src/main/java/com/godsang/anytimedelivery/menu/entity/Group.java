@@ -1,6 +1,9 @@
 package com.godsang.anytimedelivery.menu.entity;
 
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
@@ -15,6 +18,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Group {
   @Id
@@ -27,4 +31,14 @@ public class Group {
   private Menu menu;
   @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
   private List<OptionGroup> optionGroups = new ArrayList<>();
+
+  public void addOptionGroup(OptionGroup optionGroup) {
+    this.optionGroups.add(optionGroup);
+  }
+
+  @Builder
+  private Group(String title, String choiceType) {
+    this.title = title;
+    this.choiceType = choiceType;
+  }
 }

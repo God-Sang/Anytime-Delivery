@@ -31,13 +31,13 @@ public class Menu {
   private String description;
   private String photo;
   @ManyToOne(fetch = FetchType.LAZY)
-  private Menu menu;
-  @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Menu> option = new ArrayList<>();
-  @ManyToOne(fetch = FetchType.LAZY)
   private Store store;
   @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Group> groups = new ArrayList<>();
+
+  public void addGroup(Group group) {
+    this.groups.add(group);
+  }
 
   @Builder
   private Menu(String name, int price, String description, String photo) {

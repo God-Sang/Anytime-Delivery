@@ -18,10 +18,10 @@ public class OptionGroup {
   private Long optionGroupId;
   @ManyToOne(fetch = FetchType.LAZY)
   private Group group;
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-  private Menu option;
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private Option option;
 
-  public OptionGroup(Group group, Menu option) {
+  public OptionGroup(Group group, Option option) {
     this.group = group;
     this.option = option;
   }
