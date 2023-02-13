@@ -36,6 +36,20 @@ public class StubData {
           .deliveryTime(30)
           .build();
     }
+
+    public static Store getMockEntity() {
+      return Store.builder()
+          .storeId(1L)
+          .registrationNumber("123-12-12345")
+          .name("애니타임 치킨")
+          .tel("02-123-1234")
+          .address("경기도 성남시 분당구 123")
+          .openTime(LocalTime.of(9, 30))
+          .closeTime(LocalTime.of(21, 30))
+          .deliveryFee(1000)
+          .deliveryTime(30)
+          .build();
+    }
   }
 
   public static class MockStorePost extends StoreDto.Post {
