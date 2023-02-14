@@ -33,7 +33,7 @@ public class Menu {
   private int price;
   private String description;
   private String photo;
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private Store store;
   @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Group> groups = new ArrayList<>();
