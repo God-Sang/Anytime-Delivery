@@ -1,8 +1,6 @@
 package com.godsang.anytimedelivery.helper;
 
 
-import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
-import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.address.dto.AddressDto;
 import com.godsang.anytimedelivery.address.entity.Address;
 import com.godsang.anytimedelivery.menu.dto.GroupDto;
@@ -142,18 +140,18 @@ public class StubData {
           .build();
     }
 
-    public static Group getMockGroupEntity(String title, String choiceType, List<Option> options) {
+    public static Group getMockGroupEntity(String title, String choiceType) {
       return Group.builder()
           .title(title)
           .choiceType(choiceType)
-          .options(options)
           .build();
     }
 
-    public static Option getOption(String name, int price) {
+    public static Option getOption(String name, int price, Group group) {
       return Option.builder()
           .name(name)
           .price(price)
+          .group(group)
           .build();
     }
   }
@@ -167,7 +165,7 @@ public class StubData {
       super.setGroups(groups);
     }
 
-    public static GroupDto.Post getGroupDto(String title, String choiceType, List<OptionDto> optionDtos) {
+    public static GroupDto.Post getGroupDto(String title, String choiceType, List<OptionDto.Post> optionDtos) {
       GroupDto.Post groupDto = new GroupDto.Post();
       groupDto.setTitle(title);
       groupDto.setChoiceType(choiceType);
@@ -175,11 +173,11 @@ public class StubData {
       return groupDto;
     }
 
-    public static OptionDto getOptionDto(String name, int price) {
-      OptionDto optionDto = new OptionDto();
-      optionDto.setName(name);
-      optionDto.setPrice(price);
-      return optionDto;
+    public static OptionDto.Post getOptionDto(String name, int price) {
+      OptionDto.Post optionPostDto = new OptionDto.Post();
+      optionPostDto.setName(name);
+      optionPostDto.setPrice(price);
+      return optionPostDto;
     }
   }
 }
