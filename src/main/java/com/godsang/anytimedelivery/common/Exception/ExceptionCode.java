@@ -27,7 +27,8 @@ public enum ExceptionCode {
   ADDRESS_NOT_EXIST(404, "User has no address yet"),
 
   // Menu
-  OWNER_NOT_MATCHED(403, "Owner not matched.");
+  OWNER_NOT_MATCHED(403, "Owner not matched."),
+  MENU_ALREADY_EXISTS(409, "You already have this menu.");
 
   private final int code;
   private final String description;
