@@ -10,8 +10,16 @@ import org.springframework.data.jpa.repository.Query;
  * Repository for stores.
  */
 public interface StoreRepository extends JpaRepository<Store, Long> {
-  @Query("select s from Store s join s.categoryStores cs join cs.category c where c.categoryId=?1")
-  Page<Store> findStoresByCategory(Long categoryId, Pageable pageable);
+  @Query("select s " +
+            "from Store s " +
+            "join s.deliveryAreaStores das " +
+            "join das.deliveryArea da " +
+            "join s.categoryStores cs " +
+            "join cs.category c " +
+            "where c.categoryId = ?1 " +
+              "and da.deliveryAreaId = ?2"
+            )
+  Page<Store> findStoresByCategoryAndDeliveryArea(Long categoryId, Long deliveryAreaId, Pageable pageable);
 
   boolean existsByRegistrationNumber(String registrationNumber);
 
