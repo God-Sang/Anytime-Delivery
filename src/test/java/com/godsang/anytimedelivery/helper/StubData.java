@@ -1,8 +1,14 @@
 package com.godsang.anytimedelivery.helper;
 
-import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.address.dto.AddressDto;
 import com.godsang.anytimedelivery.address.entity.Address;
+import com.godsang.anytimedelivery.menu.dto.GroupDto;
+import com.godsang.anytimedelivery.menu.dto.MenuDto;
+import com.godsang.anytimedelivery.menu.dto.OptionDto;
+import com.godsang.anytimedelivery.menu.entity.Group;
+import com.godsang.anytimedelivery.menu.entity.Menu;
+import com.godsang.anytimedelivery.menu.entity.Option;
+import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
@@ -90,6 +96,7 @@ public class StubData {
       super.setRole("customer");
     }
   }
+
   public static class MockAddress {
     // TODO : deliveryArea 오면 수정 예정
     public static Address getMockAddress(String address, String detailAddress) {
@@ -98,12 +105,64 @@ public class StubData {
           .detailAddress(detailAddress)
           .build();
     }
+
     public static AddressDto getMockAddressPostRequestDto(String address, String detail, String deliveryArea) {
       return AddressDto.builder()
           .address(address)
           .detailAddress(detail)
           .deliveryArea(deliveryArea)
           .build();
+    }
+  }
+
+  public static class MockMenu {
+    public static Menu getMockMenuEntity(String name, int price) {
+      return Menu.builder()
+          .name(name)
+          .price(price)
+          .description("메뉴 설명")
+          .photo("사진 경로")
+          .build();
+    }
+
+    public static Group getMockGroupEntity(String title, String choiceType, List<Option> options) {
+      return Group.builder()
+          .title(title)
+          .choiceType(choiceType)
+          .options(options)
+          .build();
+    }
+
+    public static Option getOption(String name, int price) {
+      return Option.builder()
+          .name(name)
+          .price(price)
+          .build();
+    }
+  }
+
+
+  public static class MockMenuPost extends MenuDto.Post {
+    @Builder
+    private MockMenuPost(String name, int price, List<GroupDto.Post> groups) {
+      super.setName(name);
+      super.setPrice(price);
+      super.setGroups(groups);
+    }
+
+    public static GroupDto.Post getGroupDto(String title, String choiceType, List<OptionDto> optionDtos) {
+      GroupDto.Post groupDto = new GroupDto.Post();
+      groupDto.setTitle(title);
+      groupDto.setChoiceType(choiceType);
+      groupDto.setOptions(optionDtos);
+      return groupDto;
+    }
+
+    public static OptionDto getOptionDto(String name, int price) {
+      OptionDto optionDto = new OptionDto();
+      optionDto.setName(name);
+      optionDto.setPrice(price);
+      return optionDto;
     }
   }
 }
