@@ -24,7 +24,10 @@ public enum ExceptionCode {
   STORE_NOT_FOUND(404, "Store not found."),
 
   //Address
-  ADDRESS_NOT_EXIST(404, "User has no address yet");
+  ADDRESS_NOT_EXIST(404, "User has no address yet"),
+
+  // Menu
+  OWNER_NOT_MATCHED(403, "Owner not matched.");
 
   private final int code;
   private final String description;
