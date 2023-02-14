@@ -1,5 +1,8 @@
 package com.godsang.anytimedelivery.helper;
 
+
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
+import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.address.dto.AddressDto;
 import com.godsang.anytimedelivery.address.entity.Address;
 import com.godsang.anytimedelivery.menu.dto.GroupDto;
@@ -44,6 +47,20 @@ public class StubData {
           .deliveryTime(30)
           .build();
     }
+
+    public static Store getMockEntity() {
+      return Store.builder()
+          .storeId(1L)
+          .registrationNumber("123-12-12345")
+          .name("애니타임 치킨")
+          .tel("02-123-1234")
+          .address("경기도 성남시 분당구 123")
+          .openTime(LocalTime.of(9, 30))
+          .closeTime(LocalTime.of(21, 30))
+          .deliveryFee(1000)
+          .deliveryTime(30)
+          .build();
+    }
   }
 
   public static class MockStorePost extends StoreDto.Post {
@@ -74,14 +91,14 @@ public class StubData {
           .build();
     }
 
-    public static User getMockEntity() {
+    public static User getMockEntity(Role role) {
       return User.builder()
           .userId(1L)
           .email("anytime@email.com")
           .phone("010-1234-5678")
           .nickName("애니타임")
           .password("1q2w3e4r@")
-          .role(Role.ROLE_CUSTOMER)
+          .role(role)
           .build();
     }
   }

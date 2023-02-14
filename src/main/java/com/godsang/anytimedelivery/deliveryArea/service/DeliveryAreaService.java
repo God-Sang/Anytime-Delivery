@@ -13,7 +13,7 @@ public class DeliveryAreaService {
   private final DeliveryAreaRepository deliveryAreaRepository;
 
   /**
-   * 등록된 배달 가능 지역이 있는지 찾고, 없으면 새로 생성 // TODO async return
+   * 등록된 배달 가능 지역이 있는지 찾고, 없으면 새로 생성
    * @Param juso oo시 oo구 oo동
    * @return deliveryArea
    */
