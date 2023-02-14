@@ -1,37 +1,30 @@
 package com.godsang.anytimedelivery.menu.mapper;
 
-import com.godsang.anytimedelivery.menu.dto.common.GroupDto;
-import com.godsang.anytimedelivery.menu.dto.common.MenuDto;
-import com.godsang.anytimedelivery.menu.dto.common.ParentMenuDto;
+import com.godsang.anytimedelivery.menu.dto.GroupDto;
+import com.godsang.anytimedelivery.menu.dto.MenuDto;
+import com.godsang.anytimedelivery.menu.dto.OptionDto;
 import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
+import com.godsang.anytimedelivery.menu.entity.Option;
 import org.mapstruct.Mapper;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface MenuMapper {
-  Menu menuDtoToOption(MenuDto menuDto);
+  Option optionDtoToOption(OptionDto.Post optionDto);
 
-  List<Menu> menuDtosToOptions(List<MenuDto> menuDtos);
+  List<Option> optionDtosToOptions(List<OptionDto.Post> optionDtos);
 
-  Group groupDtoToGroup(GroupDto groupDto);
+  Group groupDtoToGroup(GroupDto.Post groupDto);
 
-  List<Group> groupDtosToGroups(List<GroupDto> groupDtos);
+  Menu menuDtoToMenu(MenuDto.Post menuDto);
 
-  Menu parentMenuDtoToMenu(ParentMenuDto parentMenuDto);
+  OptionDto.Response optionToOptionDto(Option option);
 
-  List<Menu> parentMenuDtosToMenus(List<ParentMenuDto> parentMenuDtos);
+  List<OptionDto.Response> optionsToOptionDtos(List<Option> options);
 
-  MenuDto optionToMenuDto(Menu menu);
+  GroupDto.Response groupToGroupDto(Group group, List<Option> options);
 
-  List<MenuDto> optionsToMenuDtos(List<Menu> menus);
-
-  GroupDto groupToGroupDto(Group group, List<MenuDto> option);
-
-  List<GroupDto> groupsToGroupDtos(List<Group> groups);
-
-  ParentMenuDto menuToParentMenuDto(Menu menu, List<Group> group);
-
-  List<ParentMenuDto> menusToParentMenuDtos(List<Menu> menus);
+  MenuDto.Response menuToMenuDto(Menu menu);
 }

@@ -33,9 +33,9 @@ public class MenuController {
    */
   @PostMapping
   public ResponseEntity postMenu(@PathVariable("store-id") @Positive long storeId,
-                                 @RequestBody @Valid MenuDto menuDto) {
+                                 @RequestBody @Valid MenuDto.Post menuDto) {
     Menu menu = menuMapper.menuDtoToMenu(menuDto);
-    for (GroupDto groupDto : menuDto.getGroups()) {
+    for (GroupDto.Post groupDto : menuDto.getGroups()) {
       Group group = menuMapper.groupDtoToGroup(groupDto);
       List<Option> options = menuMapper.optionDtosToOptions(groupDto.getOptions());
       menu = menuService.createMenu(storeId, menu, group, options);
