@@ -15,7 +15,7 @@ public class GroupDto {
     private String title;
     @Pattern(regexp = "^(check|radio)$", message = "check 또는 radio 중 하나를 입력해야 합니다.")
     private String choiceType;
-    private List<OptionDto.Post> options;
+    private List<OptionDto> options;
   }
 
   @Getter
@@ -24,6 +24,6 @@ public class GroupDto {
     private long groupId;
     private String title;
     private String choiceType;
-    private List<OptionDto.Response> options;
+    private List<OptionDto> options;
   }
 }
