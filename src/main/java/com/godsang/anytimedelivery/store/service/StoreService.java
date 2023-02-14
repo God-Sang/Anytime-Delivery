@@ -1,5 +1,6 @@
 package com.godsang.anytimedelivery.store.service;
 
+import com.godsang.anytimedelivery.auth.utils.LoggedInUserInfoUtils;
 import com.godsang.anytimedelivery.category.entity.Category;
 import com.godsang.anytimedelivery.category.entity.CategoryStore;
 import com.godsang.anytimedelivery.category.service.CategoryService;
@@ -10,6 +11,8 @@ import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.deliveryArea.service.DeliveryAreaService;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.repository.StoreRepository;
+import com.godsang.anytimedelivery.user.entity.User;
+import com.godsang.anytimedelivery.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +30,8 @@ public class StoreService {
   private final StoreRepository storeRepository;
   private final CategoryService categoryService;
   private final DeliveryAreaService deliveryAreaService;
+  private final LoggedInUserInfoUtils loggedInUserInfoUtils;
+  private final UserService userService;
 
   /**
    * search stores by category id and page information.
@@ -49,7 +54,8 @@ public class StoreService {
    */
   @Transactional
   public Store createStore(List<Long> categoryIds, List<String> deliveryAreas, Store store) {
-    // TODO session에서 user찾기
+    User user = userService.findUser(loggedInUserInfoUtils.extractUserId());
+    store.setUser(user);
     verifyDuplicatedStoreInfo(store.getRegistrationNumber(), store.getTel(), store.getAddress(), store.getName());
     setCategoryStore(store, categoryIds);
     setDeliveryAreaStore(store, deliveryAreas);
