@@ -1,13 +1,14 @@
 package com.godsang.anytimedelivery.menu.controller;
 
+import com.godsang.anytimedelivery.common.dto.SingleResponseDto;
 import com.godsang.anytimedelivery.menu.dto.GroupDto;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
 import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
-import com.godsang.anytimedelivery.menu.entity.Option;
 import com.godsang.anytimedelivery.menu.mapper.MenuMapper;
 import com.godsang.anytimedelivery.menu.service.MenuService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 @RestController
 @RequestMapping("/owner/stores/{store-id}")
@@ -37,9 +37,8 @@ public class MenuController {
     Menu menu = menuMapper.menuDtoToMenu(menuDto);
     for (GroupDto.Post groupDto : menuDto.getGroups()) {
       Group group = menuMapper.groupDtoToGroup(groupDto);
-      List<Option> options = menuMapper.optionDtosToOptions(groupDto.getOptions());
-      menu = menuService.createMenu(storeId, menu, group, options);
+      menu = menuService.createMenu(storeId, menu, group);
     }
-    return null;
+    return new ResponseEntity<>(new SingleResponseDto<>(menuMapper.menuToMenuDto(menu)), HttpStatus.CREATED);
   }
 }
