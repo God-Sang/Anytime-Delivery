@@ -14,6 +14,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +39,17 @@ public class MenuRepositoryTest {
     Store store = StubData.MockStore.getMockEntity(1L, registrationNumber, "애니타임 치킨", "02-123-1234", "서울특별시 강남구 강남대로 123");
     storeRepository.save(store);
 
+    Menu menu = StubData.MockMenu.getMockMenuEntity("푸다닥 치킨", 30000);
+    Group group = StubData.MockMenu.getMockGroupEntity(title, choiceType);
     List<Option> options = new ArrayList<>();
     for (int i = 0; i < optionName.length; i++) {
-      options.add(StubData.MockMenu.getOption(optionName[i], 5000));
+      options.add(StubData.MockMenu.getOption(optionName[i], 5000, group));
     }
-    Group group = StubData.MockMenu.getMockGroupEntity(title, choiceType, options);
-    Menu menu = StubData.MockMenu.getMockMenuEntity("푸다닥 치킨", 30000);
-    menu.addGroup(group);
-    menu.setStore(store);
     group.setMenu(menu);
+    menu.setStore(store);
 
+    menu.addGroup(group);
+    group.setOptions(options);
     menuRepository.save(menu);
   }
 
