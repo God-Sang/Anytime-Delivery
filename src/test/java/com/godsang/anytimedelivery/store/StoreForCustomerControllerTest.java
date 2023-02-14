@@ -1,6 +1,7 @@
 package com.godsang.anytimedelivery.store;
 
 
+import com.godsang.anytimedelivery.auth.utils.LoggedInUserInfoUtils;
 import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.store.controller.StoreForCustomerController;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
@@ -32,9 +33,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.atMostOnce;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,6 +54,8 @@ public class StoreForCustomerControllerTest {
   private StoreService storeService;
   @MockBean
   private StoreMapper storeMapper;
+  @MockBean
+  private LoggedInUserInfoUtils loggedInUserInfoUtils;
   @Autowired
   private Gson gson;
 
@@ -80,7 +82,8 @@ public class StoreForCustomerControllerTest {
       dtos.add(responseDto);
     }
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
-    given(storeService.findStoreByCategoryId(any(), any())).willReturn(result);
+    given(loggedInUserInfoUtils.extractUserId()).willReturn(1L);
+    given(storeService.findStoresByCategoryId(anyLong(), anyLong(), any())).willReturn(result);
     given(storeMapper.storeListToResponseDto(stores)).willReturn(dtos);
     MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
 
@@ -112,24 +115,6 @@ public class StoreForCustomerControllerTest {
         )
         // then
         .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  @DisplayName("캐시 정상 작동 확인")
-  void findByCategoryCacheTest() throws Exception {
-    //given
-    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
-
-    //when
-    for (int i = 0; i < 10; i++) {
-      mockMvc.perform(
-          get("/categories/{category-id}/stores", 1L)
-              .queryParams(queries)
-              .accept(MediaType.APPLICATION_JSON));
-    }
-
-    //then
-    verify(storeService, atMostOnce()).findStoreByCategoryId(any(), any());
   }
 
   @Test

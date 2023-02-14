@@ -4,24 +4,19 @@ import com.godsang.anytimedelivery.address.entity.Address;
 import com.godsang.anytimedelivery.address.service.AddressService;
 import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
-import com.godsang.anytimedelivery.deliveryArea.repository.DeliveryAreaRepository;
 import com.godsang.anytimedelivery.deliveryArea.service.DeliveryAreaService;
 import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.user.entity.User;
-import com.godsang.anytimedelivery.user.repository.UserRepository;
 import com.godsang.anytimedelivery.user.service.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -45,7 +40,7 @@ public class AddressServiceTest {
     String detailAddress = "105호";
     Address address = StubData.MockAddress.getMockAddress(juso, detailAddress);
     DeliveryArea deliveryArea = new DeliveryArea(juso);
-    User user = StubData.MockUser.getMockEntity();
+    User user = StubData.MockUser.getMockEntity(1L, "ab123@naver.com", "010-1234-1234", "nick");
     given(deliveryAreaService.findExistedDeliveryArea(any())).willReturn(deliveryArea);
     given(userService.findUser(any())).willReturn(user);
 
@@ -65,13 +60,13 @@ public class AddressServiceTest {
     DeliveryArea deliveryArea = new DeliveryArea(juso);
     Address address = StubData.MockAddress.getMockAddress(juso, detailAddress);
     address.setDeliveryArea(deliveryArea);
-    User user = StubData.MockUser.getMockEntity();
+    User user = StubData.MockUser.getMockEntity(1L, "ab123@naver.com", "010-1234-1234", "nick");
     user.setAddress(address);
     given(userService.findUser(any())).willReturn(user);
     addressService.saveAddress(userId, address, detailAddress); //Cache Evict
 
     Address retrievedAddress;
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
       address = addressService.getAddress(userId);
     }
 
@@ -85,7 +80,7 @@ public class AddressServiceTest {
   void retrieveExceptionTest() {
     //given
     Long userId = 9999L;
-    User user = StubData.MockUser.getMockEntity();
+    User user = StubData.MockUser.getMockEntity(1L, "ab123@naver.com", "010-1234-1234", "nick");
     user.setAddress(null);
     given(userService.findUser(any())).willReturn(user);
 

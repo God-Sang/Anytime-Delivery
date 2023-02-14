@@ -1,5 +1,7 @@
 package com.godsang.anytimedelivery.store.service;
 
+import com.godsang.anytimedelivery.address.entity.Address;
+import com.godsang.anytimedelivery.address.service.AddressService;
 import com.godsang.anytimedelivery.auth.utils.LoggedInUserInfoUtils;
 import com.godsang.anytimedelivery.category.entity.Category;
 import com.godsang.anytimedelivery.category.entity.CategoryStore;
@@ -33,17 +35,21 @@ public class StoreService {
   private final DeliveryAreaService deliveryAreaService;
   private final LoggedInUserInfoUtils loggedInUserInfoUtils;
   private final UserService userService;
+  private final AddressService addressService;
 
   /**
-   * search stores by category id and page information.
+   * search stores by category id and deliveryArea id and page information.
    *
-   * @param categoryId 카테고리 아이디
-   * @param pageable   페이지 정보
-   * @return Store Page
+   * @param categoryId
+   * @param userId
+   * @param pageable
+   * @return
    */
-  public Page<Store> findStoreByCategoryId(Long categoryId, Pageable pageable) {
+  public Page<Store> findStoresByCategoryId(Long categoryId, long userId, Pageable pageable) {
+    Address userAddress = addressService.getAddress(userId);
+    Long deliveryAddressId = userAddress.getDeliveryArea().getDeliveryAreaId();
     categoryService.findVerifiedCategoryById(categoryId);
-    return storeRepository.findStoresByCategory(categoryId, pageable);
+    return storeRepository.findStoresByCategoryAndDeliveryArea(categoryId, deliveryAddressId, pageable);
   }
 
   /**

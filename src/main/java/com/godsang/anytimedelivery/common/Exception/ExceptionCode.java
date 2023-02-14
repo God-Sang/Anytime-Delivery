@@ -15,6 +15,7 @@ public enum ExceptionCode {
   PHONE_NUMBER_ALREADY_EXISTS(409, "Phone number already exists."),
   NICKNAME_ALREADY_EXISTS(409, "Nickname already exists."),
   USER_NOT_FOUND(404, "User does not exits"),
+  LOG_IN_REQUIRED(404, "LogIn is required to proceed"),
   
   // Store
   REGISTRATION_NUMBER_ALREADY_EXISTS(409, "Registration number already exists."),

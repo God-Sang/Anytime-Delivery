@@ -8,8 +8,17 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+/**
+ * retrieve user's info from SecurityContext
+ */
 @Component
 public class LoggedInUserInfoUtils {
+
+  /**
+   * Retrieve userId from SecurityContext.
+   *
+   * @return userId or null if a user has not logged in.
+   */
   public Long extractUserId() {
     SecurityContext context = SecurityContextHolder.getContext();
     Authentication authentication = context.getAuthentication();
@@ -17,7 +26,7 @@ public class LoggedInUserInfoUtils {
       UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
       return userDetails.getUserId();
     } catch (ClassCastException e) {
-      throw new BusinessLogicException(ExceptionCode.USER_NOT_FOUND);
+      return null;
     }
   }
 }

@@ -114,7 +114,7 @@ public class StoreIntegrationTest {
     assertThat(deliveryArea.size()).isEqualTo(2);
     assertThat(deliveryArea.get(0).getJuso()).isIn(deliveryAreas);
 
-    Page<Store> storePage = storeRepository.findStoresByCategory(1L, PageRequest.of(0, 10));
+    Page<Store> storePage = storeRepository.findStoresByCategoryAndDeliveryArea(1L, 1L, PageRequest.of(0, 10));
     assertThat(storePage.getContent().get(0).getStoreId()).isEqualTo(2L);
   }
 
