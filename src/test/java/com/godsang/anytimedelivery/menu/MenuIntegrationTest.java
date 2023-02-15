@@ -1,6 +1,5 @@
 package com.godsang.anytimedelivery.menu;
 
-import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
 import com.godsang.anytimedelivery.menu.entity.Menu;
@@ -18,15 +17,11 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
-
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -67,7 +62,7 @@ public class MenuIntegrationTest {
     savedAddress = "서울특별시 강남구 강남대로 123길 12";
     Store store = StubData.MockStore.getMockEntity(1L, savedRegistrationNumber, savedName, savedTel, savedAddress);
     store.setUser(savedUser);
-    Store savedStore =  storeRepository.save(store);
+    Store savedStore = storeRepository.save(store);
     storeId = savedStore.getStoreId();
 
 
@@ -79,6 +74,7 @@ public class MenuIntegrationTest {
         )
         .andReturn().getResponse().getCookie("SESSION");
   }
+
   @Test
   @DisplayName("가게등록 성공")
   void createStoreTest() throws Exception {
