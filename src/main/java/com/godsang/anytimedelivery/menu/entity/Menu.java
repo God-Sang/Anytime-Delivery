@@ -43,10 +43,11 @@ public class Menu {
   }
 
   @Builder
-  private Menu(String name, int price, String description, String photo) {
+  private Menu(String name, int price, String description, String photo, List<Group> groups) {
     this.name = name;
     this.price = price;
     this.description = description;
     this.photo = photo;
+    this.groups = groups;
   }
 }
