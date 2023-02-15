@@ -12,19 +12,33 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface MenuMapper {
-  Option optionDtoToOption(OptionDto optionDto);
+  Option optionDtoToOption(OptionDto.Post optionDto);
 
-  List<Option> optionDtosToOptions(List<OptionDto> optionDtos);
+  List<Option> optionDtosToOptions(List<OptionDto.Post> optionDtos);
 
   Group groupDtoToGroup(GroupDto.Post groupDto);
 
+  List<Group> groupDtosToGroups(List<GroupDto.Post> groupDtos);
+
   Menu menuDtoToMenu(MenuDto.Post menuDto);
 
-  OptionDto optionToOptionDto(Option option);
+  OptionDto.Response optionToOptionDto(Option option);
 
-  List<OptionDto> optionsToOptionDtos(List<Option> options);
+  List<OptionDto.Response> optionsToOptionDtos(List<Option> options);
 
   GroupDto.Response groupToGroupDto(Group group);
 
+  List<GroupDto.Response> groupsToGroupDtos(List<Group> group);
+
   MenuDto.Response menuToMenuDto(Menu menu);
+
+  default Menu bidirectionalMapping(Menu menu) {
+    for (Group group : menu.getGroups()) {
+      group.setMenu(menu);
+      for (Option option : group.getOptions()) {
+        option.setGroup(group);
+      }
+    }
+    return menu;
+  }
 }

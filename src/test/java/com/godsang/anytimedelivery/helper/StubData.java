@@ -1,8 +1,6 @@
 package com.godsang.anytimedelivery.helper;
 
 
-import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
-import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.address.dto.AddressDto;
 import com.godsang.anytimedelivery.address.entity.Address;
 import com.godsang.anytimedelivery.menu.dto.GroupDto;
@@ -21,6 +19,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StubData {
@@ -142,19 +141,47 @@ public class StubData {
           .build();
     }
 
-    public static Group getMockGroupEntity(String title, String choiceType, List<Option> options) {
+    public static Group getMockGroupEntity(String title, String choiceType) {
       return Group.builder()
           .title(title)
           .choiceType(choiceType)
-          .options(options)
           .build();
     }
 
-    public static Option getOption(String name, int price) {
+    public static Option getOption(String name, int price, Group group) {
       return Option.builder()
           .name(name)
           .price(price)
+          .group(group)
           .build();
+    }
+
+    public static List<Option> getOptionList(Group group) {
+      List<Option> options = new ArrayList<>();
+      for (int i = 0; i < 10; i++) {
+        Option option = getOption("매운맛" + i, 1000, group);
+        options.add(option);
+      }
+      return options;
+    }
+
+    public static List<Group> getGroupList(Menu menu) {
+      List<Group> groups = new ArrayList<>();
+      for (int i = 0; i < 5; i++) {
+        Group group = getMockGroupEntity("맛 선택", "radio");
+        List<Option> options = getOptionList(group);
+        group.setOptions(options);
+        group.setMenu(menu);
+        groups.add(group);
+      }
+      return groups;
+    }
+
+    public static Menu getMockMenuEntity() {
+      Menu menu = getMockMenuEntity("떡볶이", 10000);
+      List<Group> groups = getGroupList(menu);
+      menu.setGroups(groups);
+      return menu;
     }
   }
 
@@ -166,8 +193,26 @@ public class StubData {
       super.setPrice(price);
       super.setGroups(groups);
     }
+    public static MenuDto.Post getMenuDto(String name, int price, List<GroupDto.Post> groups) {
+      MenuDto.Post post = new MenuDto.Post();
+      post.setName(name);
+      post.setPrice(price);
+      post.setDescription("설명입니다.");
+      post.setPhoto("사진");
+      post.setGroups(groups);
+      return post;
+    }
+    public static MenuDto.Post getMenuDto() {
+      MenuDto.Post post = new MenuDto.Post();
+      post.setName("떡볶이");
+      post.setPrice(10000);
+      post.setDescription("설명입니다.");
+      post.setPhoto("사진");
+      post.setGroups(getGroupDtoList());
+      return post;
+    }
 
-    public static GroupDto.Post getGroupDto(String title, String choiceType, List<OptionDto> optionDtos) {
+    public static GroupDto.Post getGroupDto(String title, String choiceType, List<OptionDto.Post> optionDtos) {
       GroupDto.Post groupDto = new GroupDto.Post();
       groupDto.setTitle(title);
       groupDto.setChoiceType(choiceType);
@@ -175,11 +220,29 @@ public class StubData {
       return groupDto;
     }
 
-    public static OptionDto getOptionDto(String name, int price) {
-      OptionDto optionDto = new OptionDto();
-      optionDto.setName(name);
-      optionDto.setPrice(price);
-      return optionDto;
+    public static OptionDto.Post getOptionDto(String name, int price) {
+      OptionDto.Post optionPostDto = new OptionDto.Post();
+      optionPostDto.setName(name);
+      optionPostDto.setPrice(price);
+      return optionPostDto;
+    }
+
+    public static List<OptionDto.Post> getOptionDtoList() {
+      List<OptionDto.Post> posts = new ArrayList<>();
+      for (int i = 0; i < 10; i++) {
+        posts.add(StubData.MockMenuPost.getOptionDto("착한맛" + i, 1000));
+      }
+      return posts;
+    }
+
+    public static List<GroupDto.Post> getGroupDtoList() {
+      List<GroupDto.Post> posts = new ArrayList<>();
+      for (int i = 0; i < 5; i++) {
+        List<OptionDto.Post> optionPostDtos = StubData.MockMenuPost.getOptionDtoList();
+        GroupDto.Post post = StubData.MockMenuPost.getGroupDto("맛 선택" + i, "radio", optionPostDtos);
+        posts.add(post);
+      }
+      return posts;
     }
   }
 }

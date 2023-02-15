@@ -34,11 +34,8 @@ public class MenuController {
   @PostMapping
   public ResponseEntity postMenu(@PathVariable("store-id") @Positive long storeId,
                                  @RequestBody @Valid MenuDto.Post menuDto) {
-    Menu menu = menuMapper.menuDtoToMenu(menuDto);
-    for (GroupDto.Post groupDto : menuDto.getGroups()) {
-      Group group = menuMapper.groupDtoToGroup(groupDto);
-      menu = menuService.createMenu(storeId, menu, group);
-    }
+    Menu menu = menuMapper.bidirectionalMapping((menuMapper.menuDtoToMenu(menuDto)));
+    menu = menuService.createMenu(storeId, menu);
     return new ResponseEntity<>(new SingleResponseDto<>(menuMapper.menuToMenuDto(menu)), HttpStatus.CREATED);
   }
 }
