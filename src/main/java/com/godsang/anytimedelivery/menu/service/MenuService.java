@@ -30,14 +30,12 @@ public class MenuService {
    * @Return Menu
    */
   @Transactional
-  public Menu createMenu(long storeId, Menu menu, Group group) {
+  public Menu createMenu(long storeId, Menu menu) {
     Store store = storeService.findStoreById(storeId);
     verifyStoreOwner(store);
     verifyStoreHasSameMenu(store, menu.getName());
 
     menu.setStore(store);
-    menu.addGroup(group);
-    group.setMenu(menu);
     return menuRepository.save(menu);
   }
 
