@@ -18,7 +18,7 @@ import javax.persistence.ManyToOne;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity(name = "OPTIONZ") // option, options는 에약어
+@Entity(name = "OPTIONZ")
 public class Option {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
