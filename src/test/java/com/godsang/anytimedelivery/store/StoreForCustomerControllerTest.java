@@ -1,13 +1,15 @@
 package com.godsang.anytimedelivery.store;
 
 
-import com.godsang.anytimedelivery.auth.utils.LoggedInUserInfoUtils;
 import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
+import com.godsang.anytimedelivery.helper.annotation.WithMockOwner;
 import com.godsang.anytimedelivery.store.controller.StoreForCustomerController;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.mapper.StoreMapper;
 import com.godsang.anytimedelivery.store.service.StoreService;
+import com.godsang.anytimedelivery.user.entity.Role;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
 
@@ -47,6 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = StoreForCustomerController.class,
     includeFilters = @ComponentScan.Filter(classes = {EnableWebSecurity.class}))
 @MockBean(JpaMetamodelMappingContext.class)
+@WithMockCustomUser(role = Role.ROLE_CUSTOMER)
 public class StoreForCustomerControllerTest {
   @Autowired
   private MockMvc mockMvc;
@@ -54,8 +56,6 @@ public class StoreForCustomerControllerTest {
   private StoreService storeService;
   @MockBean
   private StoreMapper storeMapper;
-  @MockBean
-  private LoggedInUserInfoUtils loggedInUserInfoUtils;
   @Autowired
   private Gson gson;
 
@@ -69,7 +69,6 @@ public class StoreForCustomerControllerTest {
 
   @Test
   @DisplayName("유효한 입력")
-  @WithMockUser(username = "tester", roles = {"CUSTOMER"})
   void findByCategoryTest() throws Exception {
     //given
     List<Store> stores = new ArrayList<>();
@@ -82,7 +81,7 @@ public class StoreForCustomerControllerTest {
       dtos.add(responseDto);
     }
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
-    given(loggedInUserInfoUtils.extractUserId()).willReturn(1L);
+
     given(storeService.findStoresByCategoryId(anyLong(), anyLong(), any())).willReturn(result);
     given(storeMapper.storeListToResponseDto(stores)).willReturn(dtos);
     MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
@@ -102,7 +101,6 @@ public class StoreForCustomerControllerTest {
   @DisplayName("유효하지 않은 입력")
   @ParameterizedTest
   @MethodSource("provideInvalidStoreGetInputs")
-  @WithMockUser(username = "tester", roles = {"CUSTOMER"})
   void findByCategoryFailTest(Long categoryId, Integer page, Integer size) throws Exception {
     //given
     MultiValueMap<String, String> queries = StubData.Query.getPageQuery(page, size);
@@ -118,7 +116,7 @@ public class StoreForCustomerControllerTest {
   }
 
   @Test
-  @WithMockUser(roles = "OWNER")
+  @WithMockOwner
   @DisplayName("OWNER 권한으로 store 조회 시 failure")
   void requestWithOwnerTest() throws Exception {
     // given

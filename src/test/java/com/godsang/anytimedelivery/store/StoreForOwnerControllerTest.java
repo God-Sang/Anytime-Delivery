@@ -1,10 +1,12 @@
 package com.godsang.anytimedelivery.store;
 
 import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
 import com.godsang.anytimedelivery.store.controller.StoreForOwnerController;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.mapper.StoreMapper;
 import com.godsang.anytimedelivery.store.service.StoreService;
+import com.godsang.anytimedelivery.user.entity.Role;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +22,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = StoreForOwnerController.class,
     includeFilters = @ComponentScan.Filter(classes = {EnableWebSecurity.class}))
 @MockBean(JpaMetamodelMappingContext.class)
-@WithMockUser(roles = "OWNER")
+@WithMockCustomUser(role = Role.ROLE_OWNER)
 public class StoreForOwnerControllerTest {
   @Autowired
   private MockMvc mockMvc;
