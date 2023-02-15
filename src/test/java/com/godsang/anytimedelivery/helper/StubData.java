@@ -121,9 +121,18 @@ public class StubData {
           .detailAddress(detailAddress)
           .build();
     }
+  }
+
+  public static class MockAddressDto extends AddressDto {
+    @Builder
+    private MockAddressDto(String address, String detailAddress, String deliveryArea) {
+      super.setAddress(address);
+      super.setDetailAddress(detailAddress);
+      super.setDeliveryArea(deliveryArea);
+    }
 
     public static AddressDto getMockAddressPostRequestDto(String address, String detail, String deliveryArea) {
-      return AddressDto.builder()
+      return MockAddressDto.builder()
           .address(address)
           .detailAddress(detail)
           .deliveryArea(deliveryArea)
