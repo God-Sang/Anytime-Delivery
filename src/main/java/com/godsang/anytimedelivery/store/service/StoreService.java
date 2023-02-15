@@ -2,7 +2,6 @@ package com.godsang.anytimedelivery.store.service;
 
 import com.godsang.anytimedelivery.address.entity.Address;
 import com.godsang.anytimedelivery.address.service.AddressService;
-import com.godsang.anytimedelivery.auth.utils.LoggedInUserInfoUtils;
 import com.godsang.anytimedelivery.category.entity.Category;
 import com.godsang.anytimedelivery.category.entity.CategoryStore;
 import com.godsang.anytimedelivery.category.service.CategoryService;
@@ -33,17 +32,16 @@ public class StoreService {
   private final StoreRepository storeRepository;
   private final CategoryService categoryService;
   private final DeliveryAreaService deliveryAreaService;
-  private final LoggedInUserInfoUtils loggedInUserInfoUtils;
   private final UserService userService;
   private final AddressService addressService;
 
   /**
    * search stores by category id and deliveryArea id and page information.
    *
-   * @param categoryId
-   * @param userId
-   * @param pageable
-   * @return
+   * @param categoryId 카테고리 아이디
+   * @param userId 사용자 아이디
+   * @param pageable 페이지 정보
+   * @return Store page
    */
   public Page<Store> findStoresByCategoryId(Long categoryId, long userId, Pageable pageable) {
     Address userAddress = addressService.getAddress(userId);
@@ -60,8 +58,8 @@ public class StoreService {
    * @Return Store
    */
   @Transactional
-  public Store createStore(List<Long> categoryIds, List<String> deliveryAreas, Store store) {
-    User user = userService.findUser(loggedInUserInfoUtils.extractUserId());
+  public Store createStore(List<Long> categoryIds, List<String> deliveryAreas, Store store, long userId) {
+    User user = userService.findUser(userId);
     store.setUser(user);
     verifyDuplicatedStoreInfo(store.getRegistrationNumber(), store.getTel(), store.getAddress(), store.getName());
     setCategoryStore(store, categoryIds);

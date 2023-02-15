@@ -1,9 +1,7 @@
 package com.godsang.anytimedelivery.menu.service;
 
-import com.godsang.anytimedelivery.auth.utils.LoggedInUserInfoUtils;
 import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
 import com.godsang.anytimedelivery.common.Exception.ExceptionCode;
-import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
 import com.godsang.anytimedelivery.menu.repository.MenuRepository;
 import com.godsang.anytimedelivery.store.entity.Store;
@@ -18,21 +16,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class MenuService {
   private final MenuRepository menuRepository;
   private final StoreService storeService;
-  private final LoggedInUserInfoUtils loggedInUserInfoUtils;
 
   /**
    * 메뉴 등록
    *
    * @Param storeId 가게 아아디
+   * @Param userId 사장님 아이디
    * @Param menu 메뉴
-   * @Param group 옵션 그룹
-   * @Param options 메뉴 옵션
    * @Return Menu
    */
   @Transactional
-  public Menu createMenu(long storeId, Menu menu) {
+  public Menu createMenu(long storeId, long userId, Menu menu) {
     Store store = storeService.findStoreById(storeId);
-    verifyStoreOwner(store);
+    verifyStoreOwner(store, userId);
     verifyStoreHasSameMenu(store, menu.getName());
 
     menu.setStore(store);
@@ -44,9 +40,9 @@ public class MenuService {
    *
    * @throws BusinessLogicException when owner does not match.
    * @Param store 가게
+   * @Param userId 사장님 아이디
    */
-  private void verifyStoreOwner(Store store) {
-    long userId = loggedInUserInfoUtils.extractUserId();
+  private void verifyStoreOwner(Store store, long userId) {
     User storeOwner = store.getUser();
     if (userId != storeOwner.getUserId()) {
       throw new BusinessLogicException(ExceptionCode.OWNER_NOT_MATCHED);
