@@ -20,7 +20,7 @@ public class Address {
   @Column(nullable = false)
   private String address;
   private String detailAddress;
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.LAZY)
   private DeliveryArea deliveryArea;
 
   public void setDeliveryArea(DeliveryArea deliveryArea) {
