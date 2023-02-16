@@ -41,4 +41,5 @@ public interface MenuMapper {
     }
     return menu;
   }
+  List<MenuDto.Response> menusToMenuDtos(List<Menu> menus);
 }
