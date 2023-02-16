@@ -1,14 +1,16 @@
 package com.godsang.anytimedelivery.menu;
 
 import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
+import com.godsang.anytimedelivery.menu.entity.ChoiceType;
 import com.godsang.anytimedelivery.menu.entity.Menu;
 import com.godsang.anytimedelivery.menu.repository.MenuRepository;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.repository.StoreRepository;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
-import com.godsang.anytimedelivery.user.service.UserService;
+import com.godsang.anytimedelivery.user.repository.UserRepository;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -21,8 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.Cookie;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,64 +32,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
+@WithMockCustomUser(role = Role.ROLE_OWNER)
 public class MenuIntegrationTest {
   @Autowired
   private MockMvc mockMvc;
   @Autowired
   private Gson gson;
   @Autowired
-  private UserService userService;
+  private UserRepository userRepository;
   @Autowired
   private StoreRepository storeRepository;
   @Autowired
   private MenuRepository menuRepository;
-  private String savedRegistrationNumber;
-  private String savedName;
-  private String savedTel;
-  private String savedAddress;
-  private Cookie session;
   private Long storeId;
 
   @BeforeAll
-  void saveEntity() throws Exception {
+  void saveEntity() {
     User user = StubData.MockUser.getMockEntity(Role.ROLE_OWNER);
-    String password = user.getPassword();
-    User savedUser = userService.createUser(user, "owner");
+    userRepository.save(user);
 
-    savedRegistrationNumber = "123-12-12345";
-    savedName = "애니타임 치킨";
-    savedTel = "02-1234-5678";
-    savedAddress = "서울특별시 강남구 강남대로 123길 12";
+    String savedRegistrationNumber = "123-12-12345";
+    String savedName = "애니타임 치킨";
+    String savedTel = "02-1234-5678";
+    String savedAddress = "서울특별시 강남구 강남대로 123길 12";
     Store store = StubData.MockStore.getMockEntity(1L, savedRegistrationNumber, savedName, savedTel, savedAddress);
-    store.setUser(savedUser);
+    store.setUser(user);
     Store savedStore = storeRepository.save(store);
     storeId = savedStore.getStoreId();
-
-
-    session = mockMvc.perform(
-            post("/users/login")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .param("email", user.getEmail())
-                .param("password", password)
-        )
-        .andReturn().getResponse().getCookie("SESSION");
   }
 
   @Test
-  @DisplayName("가게등록 성공")
+  @DisplayName("메뉴등록 성공")
   void createStoreTest() throws Exception {
     // given
-    String registrationNumber = "321-21-54321";
-    String name = "오빠닥";
-    String tel = "031-123-1234";
-    String address = "경기도 성남시 분당구 정자동 123";
     MenuDto.Post post = StubData.MockMenuPost.getMenuDto();
     String content = gson.toJson(post);
 
     // when
     mockMvc.perform(
-            post("/owner/stores/" + storeId)
-                .cookie(session)
+            post("/owner/stores/{store-id}", storeId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
@@ -102,6 +83,7 @@ public class MenuIntegrationTest {
 
     Menu menu = menuRepository.findById(1L).get();
     assertThat(menu.getStore().getStoreId()).isEqualTo(storeId);
+    assertThat(menu.getGroups().get(0).getChoiceType()).isEqualTo(ChoiceType.RADIO);
 
     String optionName = menu.getGroups().get(0).getOptions().get(0).getName();
     assertThat(optionName).isEqualTo(post.getGroups().get(0).getOptions().get(0).getName());
