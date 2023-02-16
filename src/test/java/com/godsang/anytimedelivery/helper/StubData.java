@@ -9,6 +9,11 @@ import com.godsang.anytimedelivery.menu.dto.OptionDto;
 import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
 import com.godsang.anytimedelivery.menu.entity.Option;
+import com.godsang.anytimedelivery.order.entity.Order;
+import com.godsang.anytimedelivery.order.entity.OrderGroup;
+import com.godsang.anytimedelivery.order.entity.OrderMenu;
+import com.godsang.anytimedelivery.order.entity.OrderOption;
+import com.godsang.anytimedelivery.order.entity.OrderStatus;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.dto.UserDto;
@@ -192,6 +197,12 @@ public class StubData {
       menu.setGroups(groups);
       return menu;
     }
+
+    public static Menu getMockMenuEntity(Store store) {
+      Menu menu = getMockMenuEntity();
+      menu.setStore(store);
+      return menu;
+    }
   }
 
 
@@ -252,6 +263,37 @@ public class StubData {
         posts.add(post);
       }
       return posts;
+    }
+  }
+  public static class MockOrder {
+    public static Order getMockOrder(Store store, User user, OrderStatus orderStatus) {
+      return Order.builder()
+          .status(OrderStatus.IN_CART)
+          .store(store)
+          .user(user)
+          .build();
+    }
+
+    public static OrderMenu getMockOrderMenu(Menu menu, Order order, int amount) {
+      return OrderMenu.builder()
+          .amount(amount)
+          .order(order)
+          .menu(menu)
+          .build();
+    }
+
+    public static OrderGroup getMockOrderGroup(Group group, OrderMenu orderMenu) {
+      return OrderGroup.builder()
+          .group(group)
+          .orderMenu(orderMenu)
+          .build();
+    }
+
+    public static OrderOption getMockOrderOption(Option option, OrderGroup orderGroup) {
+      return OrderOption.builder()
+          .option(option)
+          .orderGroup(orderGroup)
+          .build();
     }
   }
 }
