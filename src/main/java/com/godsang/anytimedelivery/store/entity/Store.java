@@ -2,6 +2,7 @@ package com.godsang.anytimedelivery.store.entity;
 
 import com.godsang.anytimedelivery.category.entity.CategoryStore;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
+import com.godsang.anytimedelivery.menu.entity.Menu;
 import com.godsang.anytimedelivery.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,6 +49,8 @@ public class Store {
   private List<DeliveryAreaStore> deliveryAreaStores = new ArrayList<>();
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
+  @OneToMany(mappedBy = "store", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  private List<Menu> menus;
 
   public void addCategoryStore(CategoryStore categoryStore) {
     categoryStores.add(categoryStore);
