@@ -93,8 +93,7 @@ public class MenuMapperTest {
   @Test
   void optionToOptionDtoTest() {
     //given
-    Group group = StubData.MockMenu.getMockGroupEntity("맛 선택", ChoiceType.RADIO);
-    Option option = StubData.MockMenu.getOption("매운맛", 1000, group);
+    Option option = StubData.MockMenu.getOption("매운맛", 1000);
 
     //when
     OptionDto.Response response = menuMapper.optionToOptionDto(option);

@@ -32,9 +32,8 @@ public class Option {
   private Group group;
 
   @Builder
-  private Option(String name, int price, Group group) {
+  private Option(String name, int price) {
     this.name = name;
     this.price = price;
-    this.group = group;
   }
 }

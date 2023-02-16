@@ -158,18 +158,18 @@ public class StubData {
           .build();
     }
 
-    public static Option getOption(String name, int price, Group group) {
+    public static Option getOption(String name, int price) {
       return Option.builder()
           .name(name)
           .price(price)
-          .group(group)
           .build();
     }
 
     public static List<Option> getOptionList(Group group) {
       List<Option> options = new ArrayList<>();
       for (int i = 0; i < 10; i++) {
-        Option option = getOption("매운맛" + i, 1000, group);
+        Option option = getOption("매운맛" + i, 1000);
+        option.setGroup(group);
         options.add(option);
       }
       return options;
