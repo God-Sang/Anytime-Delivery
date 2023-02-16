@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MenuService {
@@ -60,5 +62,16 @@ public class MenuService {
     if (menuRepository.existsByNameAndStore(name, store)) {
       throw new BusinessLogicException(ExceptionCode.MENU_ALREADY_EXISTS);
     }
+  }
+
+  /**
+   * 가게의 메뉴 리스트 조회
+   * @Param storeId 가게 아이디
+   * @Return menus
+   **/
+  public List<Menu> findStoreMenus(long storeId) {
+    Store store = storeService.findStoreById(storeId);
+    List<Menu> menus = store.getMenus();
+    return menus;
   }
 }
