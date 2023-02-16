@@ -5,8 +5,9 @@ import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.deliveryArea.repository.DeliveryAreaRepository;
 import com.godsang.anytimedelivery.deliveryArea.service.DeliveryAreaService;
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
+import com.godsang.anytimedelivery.helper.stub.MockDto;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.repository.StoreRepository;
@@ -224,17 +225,17 @@ public class StoreIntegrationTest {
   }
 
   private StoreDto.Post getPostDto(String registrationNumber, String name, String tel, String address, List<Long> categoryIds, List<String> deliveryAreas) {
-    return StubData.MockStorePost.builder()
-        .registrationNumber(registrationNumber)
-        .name(name)
-        .tel(tel)
-        .address(address)
-        .deliveryFee(1000)
-        .deliveryTime(30)
-        .openTime("00:00")
-        .closeTime("23:59")
-        .categoryIds(categoryIds)
-        .deliveryAreas(deliveryAreas)
-        .build();
+    return MockDto.StorePost.get(
+        registrationNumber,
+        name,
+        tel,
+        address,
+        1000,
+        30,
+        "00:00",
+        "23:59",
+        categoryIds,
+        deliveryAreas
+    );
   }
 }

@@ -6,7 +6,7 @@ import com.godsang.anytimedelivery.category.repository.CategoryRepository;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.deliveryArea.repository.DeliveryAreaRepository;
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.repository.StoreRepository;
 import org.junit.jupiter.api.BeforeEach;

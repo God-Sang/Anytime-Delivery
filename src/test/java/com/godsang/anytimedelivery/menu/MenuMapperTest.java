@@ -1,6 +1,7 @@
 package com.godsang.anytimedelivery.menu;
 
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
+import com.godsang.anytimedelivery.helper.stub.MockDto;
 import com.godsang.anytimedelivery.menu.dto.GroupDto;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
 import com.godsang.anytimedelivery.menu.dto.OptionDto;
@@ -22,7 +23,7 @@ public class MenuMapperTest {
   @Test
   void optionDtoToOptionTest() {
     //given
-    OptionDto.Post optionPostDto = StubData.MockMenuPost.getOptionDto("착한맛", 1000);
+    OptionDto.Post optionPostDto = MockDto.MenuPost.getOption("착한맛", 1000);
 
     //when
     Option option = menuMapper.optionDtoToOption(optionPostDto);
@@ -34,28 +35,28 @@ public class MenuMapperTest {
   @Test
   void optionDtosToOptionsTest() {
     //given
-    List<OptionDto.Post> posts = StubData.MockMenuPost.getOptionDtoList();
+    List<OptionDto.Post> posts = MockDto.MenuPost.getOptions();
 
     //when
     List<Option> options = menuMapper.optionDtosToOptions(posts);
 
     //then
-    assertThat(options.get(9).getName())
-        .isEqualTo(posts.get(9).getName());
+    assertThat(options.get(1).getName())
+        .isEqualTo(posts.get(1).getName());
   }
 
   @Test
   void groupDtoToGroupTest() {
     //given
-    List<OptionDto.Post> optionPostDtos = StubData.MockMenuPost.getOptionDtoList();
-    GroupDto.Post post = StubData.MockMenuPost.getGroupDto("맛 선택", "RADIO", optionPostDtos);
+    List<OptionDto.Post> optionPostDtos = MockDto.MenuPost.getOptions();
+    GroupDto.Post post = MockDto.MenuPost.getGroup("맛 선택", "RADIO", optionPostDtos);
 
     //when
     Group group = menuMapper.groupDtoToGroup(post);
 
     //then
-    assertThat(group.getOptions().get(9).getName())
-        .isEqualTo(optionPostDtos.get(9).getName());
+    assertThat(group.getOptions().get(1).getName())
+        .isEqualTo(optionPostDtos.get(1).getName());
     assertThat(group.getTitle())
         .isEqualTo(post.getTitle());
   }
@@ -63,37 +64,36 @@ public class MenuMapperTest {
   @Test
   void groupDtosToGroupsTest() {
     //given
-    List<GroupDto.Post> posts = StubData.MockMenuPost.getGroupDtoList();
+    List<GroupDto.Post> posts = MockDto.MenuPost.getGroupPost("RADIO");
 
     //when
     List<Group> groups = menuMapper.groupDtosToGroups(posts);
 
     //then
-    assertThat(groups.get(4).getTitle()).isEqualTo(posts.get(4).getTitle());
-    assertThat(groups.get(4).getOptions().get(9).getName())
-        .isEqualTo(posts.get(4).getOptions().get(9).getName());
+    assertThat(groups.get(2).getTitle()).isEqualTo(posts.get(2).getTitle());
+    assertThat(groups.get(2).getOptions().get(1).getName())
+        .isEqualTo(posts.get(2).getOptions().get(1).getName());
   }
 
   @Test
   void menuDtoToMenuTest() {
     //given
-    List<GroupDto.Post> groupDtos = StubData.MockMenuPost.getGroupDtoList();
-    MenuDto.Post post = StubData.MockMenuPost.getMenuDto("떡볶이", 10000, groupDtos);
+    MenuDto.Post post = MockDto.MenuPost.getOption("떡볶이", 10000, "CHECK");
 
     //when
     Menu menu = menuMapper.menuDtoToMenu(post);
 
     //then
     assertThat(menu.getName()).isEqualTo(post.getName());
-    assertThat(menu.getGroups().get(4).getTitle()).isEqualTo(groupDtos.get(4).getTitle());
-    assertThat(menu.getGroups().get(4).getOptions().get(9).getName())
-        .isEqualTo(groupDtos.get(4).getOptions().get(9).getName());
+    assertThat(menu.getGroups().get(1).getTitle()).isEqualTo(post.getGroups().get(1).getTitle());
+    assertThat(menu.getGroups().get(2).getOptions().get(1).getName())
+        .isEqualTo(post.getGroups().get(2).getOptions().get(1).getName());
   }
 
   @Test
   void optionToOptionDtoTest() {
     //given
-    Option option = StubData.MockMenu.getOption("매운맛", 1000);
+    Option option = StubData.MockMenu.getMockOption("매운맛", 1000);
 
     //when
     OptionDto.Response response = menuMapper.optionToOptionDto(option);
@@ -105,7 +105,7 @@ public class MenuMapperTest {
   @Test
   void optionsToOptionDtosTest() {
     //given
-    Group group = StubData.MockMenu.getMockGroupEntity("맛 선택", ChoiceType.RADIO);
+    Group group = StubData.MockMenu.getMockGroup("맛 선택", ChoiceType.RADIO);
     List<Option> options = StubData.MockMenu.getOptionList(group);
 
     //when
@@ -119,8 +119,8 @@ public class MenuMapperTest {
   @Test
   void groupToGroupDtoTest() {
     //given
-    Menu menu = StubData.MockMenu.getMockMenuEntity("떡볶이", 10000);
-    Group group = StubData.MockMenu.getMockGroupEntity("맛 선택", ChoiceType.RADIO);
+    Menu menu = StubData.MockMenu.getMockMenu("떡볶이", 10000);
+    Group group = StubData.MockMenu.getMockGroup("맛 선택", ChoiceType.RADIO);
     group.setMenu(menu);
     group.setOptions(StubData.MockMenu.getOptionList(group));
 
@@ -136,7 +136,7 @@ public class MenuMapperTest {
   @Test
   void groupsToGroupDtosTest() {
     //given
-    Menu menu = StubData.MockMenu.getMockMenuEntity("떡볶이", 10000);
+    Menu menu = StubData.MockMenu.getMockMenu("떡볶이", 10000);
     List<Group> groups = StubData.MockMenu.getGroupList(menu);
 
     //when
@@ -151,7 +151,7 @@ public class MenuMapperTest {
   @Test
   void menuToMenuDtoTest() {
     //given
-    Menu menu = StubData.MockMenu.getMockMenuEntity();
+    Menu menu = StubData.MockMenu.getMockMenu();
 
     //when
     MenuDto.Response response = menuMapper.menuToMenuDto(menu);
@@ -166,7 +166,7 @@ public class MenuMapperTest {
   @Test
   void bidirectionalMappingTest() {
     //given
-    Menu uniDirectionalMenu = menuMapper.menuDtoToMenu(StubData.MockMenuPost.getMenuDto());
+    Menu uniDirectionalMenu = menuMapper.menuDtoToMenu(MockDto.MenuPost.getOption());
 
     //when
     Menu bidirectionalMenu = menuMapper.bidirectionalMapping(uniDirectionalMenu);

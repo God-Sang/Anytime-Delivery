@@ -4,8 +4,8 @@ import com.godsang.anytimedelivery.address.controller.AddressController;
 import com.godsang.anytimedelivery.address.dto.AddressDto;
 import com.godsang.anytimedelivery.address.mapper.AddressMapper;
 import com.godsang.anytimedelivery.address.service.AddressService;
-import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
+import com.godsang.anytimedelivery.helper.stub.MockDto;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
@@ -59,7 +59,7 @@ public class AddressControllerTest {
   @MethodSource("provideValidPost")
   void registerValidTest(String address, String detail, String deliveryArea) throws Exception {
     // given
-    AddressDto request = StubData.MockAddressDto.getMockAddressPostRequestDto(address, detail, deliveryArea);
+    AddressDto request = MockDto.AddressPost.get(address, detail, deliveryArea);
     String content = gson.toJson(request);
 
     mockMvc.perform(
@@ -75,7 +75,7 @@ public class AddressControllerTest {
   @MethodSource("provideInvalidPost")
   void registerInValidTest(String address, String detail, String deliveryArea) throws Exception {
     // given
-    AddressDto request = StubData.MockAddressDto.getMockAddressPostRequestDto(address, detail, deliveryArea);
+    AddressDto request = MockDto.AddressPost.get(address, detail, deliveryArea);
     String content = gson.toJson(request);
 
     mockMvc.perform(

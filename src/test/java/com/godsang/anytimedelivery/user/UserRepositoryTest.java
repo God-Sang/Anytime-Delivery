@@ -1,6 +1,6 @@
 package com.godsang.anytimedelivery.user;
 
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeAll;

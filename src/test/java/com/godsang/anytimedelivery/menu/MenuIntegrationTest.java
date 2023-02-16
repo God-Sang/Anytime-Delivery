@@ -1,7 +1,8 @@
 package com.godsang.anytimedelivery.menu;
 
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
+import com.godsang.anytimedelivery.helper.stub.MockDto;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
 import com.godsang.anytimedelivery.menu.entity.ChoiceType;
 import com.godsang.anytimedelivery.menu.entity.Menu;
@@ -74,7 +75,7 @@ public class MenuIntegrationTest {
   @Order(100)
   void createStoreTest() throws Exception {
     // given
-    MenuDto.Post post = StubData.MockMenuPost.getMenuDto();
+    MenuDto.Post post = MockDto.MenuPost.getOption("치킨", 20000, ChoiceType.RADIO.name());
     String content = gson.toJson(post);
 
     // when
@@ -105,7 +106,7 @@ public class MenuIntegrationTest {
   void findMenusTest() throws Exception {
     // given
     Store store = storeService.findStoreById(storeId);
-    Menu menu = StubData.MockMenu.getMockMenuEntity();
+    Menu menu = StubData.MockMenu.getMockMenu();
     menu.setStore(store);
     menuRepository.save(menu);
 

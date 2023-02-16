@@ -1,6 +1,6 @@
 package com.godsang.anytimedelivery.menu;
 
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.menu.entity.ChoiceType;
 import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
@@ -39,15 +39,15 @@ public class MenuRepositoryTest {
     Store store = StubData.MockStore.getMockEntity(1L, registrationNumber, "애니타임 치킨", "02-123-1234", "서울특별시 강남구 강남대로 123");
     storeRepository.save(store);
 
-    Group group = StubData.MockMenu.getMockGroupEntity(title, choiceType);
+    Group group = StubData.MockMenu.getMockGroup(title, choiceType);
     List<Option> options = new ArrayList<>();
     for (int i = 0; i < optionName.length; i++) {
-      Option option = StubData.MockMenu.getOption(optionName[i], 5000);
+      Option option = StubData.MockMenu.getMockOption(optionName[i], 5000);
       option.setGroup(group);
       options.add(option);
 
     }
-    Menu menu = StubData.MockMenu.getMockMenuEntity("푸다닥 치킨", 30000);
+    Menu menu = StubData.MockMenu.getMockMenu("푸다닥 치킨", 30000);
     List<Group> groups = new ArrayList<>();
     group.setMenu(menu);
     group.setOptions(options);
