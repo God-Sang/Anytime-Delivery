@@ -115,6 +115,9 @@ public class MenuIntegrationTest {
             get("/categories/{category-id}/stores/{store-id}/menu", 1L, storeId)
                 .accept(MediaType.APPLICATION_JSON)
         )
-        .andExpect(jsonPath("$.data[0].menuId").value(2));
+        .andExpect(jsonPath("$.data[0].menuId").value(2))
+        .andExpect(jsonPath("$.data[0].groups[1].choiceType").value("RADIO"))
+        .andExpect(jsonPath("$.data[0].groups[1].options[3].price").value(1000));
+
   }
 }
