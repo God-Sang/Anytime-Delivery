@@ -9,6 +9,8 @@ import lombok.Setter;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,15 +31,16 @@ public class Group {
   private Long groupId;
   @Column(nullable = false)
   private String title;
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private String choiceType;
+  private ChoiceType choiceType;
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   private Menu menu;
   @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Option> options = new ArrayList<>();
 
   @Builder
-  private Group(String title, String choiceType, List<Option> options) {
+  private Group(String title, ChoiceType choiceType, List<Option> options) {
     this.title = title;
     this.choiceType = choiceType;
     this.options = options;

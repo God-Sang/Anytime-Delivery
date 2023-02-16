@@ -6,6 +6,7 @@ import com.godsang.anytimedelivery.address.entity.Address;
 import com.godsang.anytimedelivery.menu.dto.GroupDto;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
 import com.godsang.anytimedelivery.menu.dto.OptionDto;
+import com.godsang.anytimedelivery.menu.entity.ChoiceType;
 import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
 import com.godsang.anytimedelivery.menu.entity.Option;
@@ -150,7 +151,7 @@ public class StubData {
           .build();
     }
 
-    public static Group getMockGroupEntity(String title, String choiceType) {
+    public static Group getMockGroupEntity(String title, ChoiceType choiceType) {
       return Group.builder()
           .title(title)
           .choiceType(choiceType)
@@ -177,7 +178,7 @@ public class StubData {
     public static List<Group> getGroupList(Menu menu) {
       List<Group> groups = new ArrayList<>();
       for (int i = 0; i < 5; i++) {
-        Group group = getMockGroupEntity("맛 선택", "radio");
+        Group group = getMockGroupEntity("맛 선택", ChoiceType.RADIO);
         List<Option> options = getOptionList(group);
         group.setOptions(options);
         group.setMenu(menu);
@@ -248,7 +249,7 @@ public class StubData {
       List<GroupDto.Post> posts = new ArrayList<>();
       for (int i = 0; i < 5; i++) {
         List<OptionDto.Post> optionPostDtos = StubData.MockMenuPost.getOptionDtoList();
-        GroupDto.Post post = StubData.MockMenuPost.getGroupDto("맛 선택" + i, "radio", optionPostDtos);
+        GroupDto.Post post = StubData.MockMenuPost.getGroupDto("맛 선택" + i, "RADIO", optionPostDtos);
         posts.add(post);
       }
       return posts;

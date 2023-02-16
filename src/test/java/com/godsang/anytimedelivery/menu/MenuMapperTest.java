@@ -4,22 +4,20 @@ import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.menu.dto.GroupDto;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
 import com.godsang.anytimedelivery.menu.dto.OptionDto;
+import com.godsang.anytimedelivery.menu.entity.ChoiceType;
 import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
 import com.godsang.anytimedelivery.menu.entity.Option;
 import com.godsang.anytimedelivery.menu.mapper.MenuMapper;
+import com.godsang.anytimedelivery.menu.mapper.MenuMapperImpl;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@SpringBootTest
 public class MenuMapperTest {
-  @Autowired
-  private MenuMapper menuMapper;
+  private final MenuMapper menuMapper = new MenuMapperImpl();
 
   @Test
   void optionDtoToOptionTest() {
@@ -50,7 +48,7 @@ public class MenuMapperTest {
   void groupDtoToGroupTest() {
     //given
     List<OptionDto.Post> optionPostDtos = StubData.MockMenuPost.getOptionDtoList();
-    GroupDto.Post post = StubData.MockMenuPost.getGroupDto("맛 선택", "radio", optionPostDtos);
+    GroupDto.Post post = StubData.MockMenuPost.getGroupDto("맛 선택", "RADIO", optionPostDtos);
 
     //when
     Group group = menuMapper.groupDtoToGroup(post);
@@ -95,7 +93,7 @@ public class MenuMapperTest {
   @Test
   void optionToOptionDtoTest() {
     //given
-    Group group = StubData.MockMenu.getMockGroupEntity("맛 선택", "radio");
+    Group group = StubData.MockMenu.getMockGroupEntity("맛 선택", ChoiceType.RADIO);
     Option option = StubData.MockMenu.getOption("매운맛", 1000, group);
 
     //when
@@ -108,7 +106,7 @@ public class MenuMapperTest {
   @Test
   void optionsToOptionDtosTest() {
     //given
-    Group group = StubData.MockMenu.getMockGroupEntity("맛 선택", "radio");
+    Group group = StubData.MockMenu.getMockGroupEntity("맛 선택", ChoiceType.RADIO);
     List<Option> options = StubData.MockMenu.getOptionList(group);
 
     //when
@@ -123,8 +121,8 @@ public class MenuMapperTest {
   void groupToGroupDtoTest() {
     //given
     Menu menu = StubData.MockMenu.getMockMenuEntity("떡볶이", 10000);
-    Group group = StubData.MockMenu.getMockGroupEntity("맛 선택", "radio");
-    group.getMenu();
+    Group group = StubData.MockMenu.getMockGroupEntity("맛 선택", ChoiceType.RADIO);
+    group.setMenu(menu);
     group.setOptions(StubData.MockMenu.getOptionList(group));
 
     //when

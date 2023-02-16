@@ -13,7 +13,7 @@ public class GroupDto {
   public static class Post {
     @NotBlank
     private String title;
-    @Pattern(regexp = "^(check|radio)$", message = "check 또는 radio 중 하나를 입력해야 합니다.")
+    @Pattern(regexp = "^(CHECK|RADIO)$", message = "CHECK 또는 RADIO 중 하나를 입력해야 합니다.")
     private String choiceType;
     private List<OptionDto.Post> options;
   }
