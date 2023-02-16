@@ -22,7 +22,7 @@ import javax.persistence.ManyToOne;
 public class Option {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long optionsId;
+  private Long optionId;
   @Column(nullable = false)
   private String name;
   @Column(nullable = false)
