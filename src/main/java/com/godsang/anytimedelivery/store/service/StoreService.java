@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,8 +40,8 @@ public class StoreService {
    * search stores by category id and deliveryArea id and page information.
    *
    * @param categoryId 카테고리 아이디
-   * @param userId 사용자 아이디
-   * @param pageable 페이지 정보
+   * @param userId     사용자 아이디
+   * @param pageable   페이지 정보
    * @return Store page
    */
   public Page<Store> findStoresByCategoryId(Long categoryId, long userId, Pageable pageable) {
@@ -97,6 +98,22 @@ public class StoreService {
     verifyTelExists(tel);
     verifyAddressExists(address);
     verifyNameExists(name);
+  }
+
+  /**
+   * 가게가 영업시간인지 확인
+   *
+   * @param store
+   */
+  @Transactional
+  public void verifyOpen(Store store) {
+    LocalTime now = LocalTime.now();
+    LocalTime open = store.getOpenTime();
+    LocalTime close = store.getCloseTime();
+    if (!(open.isBefore(close) && now.isAfter(open) && now.isBefore(close)) ||
+        !(open.isAfter(close) && (now.isAfter(open) || now.isBefore(close)))) {
+      throw new BusinessLogicException(ExceptionCode.STORE_CLOSED);
+    }
   }
 
   /**
