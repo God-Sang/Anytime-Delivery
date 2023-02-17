@@ -6,7 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Getter
 @Builder
@@ -21,6 +28,7 @@ public class Address {
   private String address;
   private String detailAddress;
   @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "delivery_area_id")
   private DeliveryArea deliveryArea;
 
   public void setDeliveryArea(DeliveryArea deliveryArea) {
