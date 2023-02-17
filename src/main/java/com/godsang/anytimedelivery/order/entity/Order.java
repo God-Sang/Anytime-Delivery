@@ -1,5 +1,7 @@
 package com.godsang.anytimedelivery.order.entity;
 
+import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
+import com.godsang.anytimedelivery.common.Exception.ExceptionCode;
 import com.godsang.anytimedelivery.common.audit.BaseEntity;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.entity.User;
@@ -29,7 +31,7 @@ public class Order extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long orderId;
   @Enumerated(EnumType.STRING)
-  private OrderStatus status;
+  private OrderStatus status = OrderStatus.WAIT;
   private String request;
   @Column(nullable = false)
   private int foodTotalPrice;
@@ -45,8 +47,9 @@ public class Order extends BaseEntity {
   private List<OrderMenu> orderMenus = new ArrayList<>();
 
   @Builder
-  private Order(OrderStatus status, String request, Integer deliveryFee, Short deliveryTime,
-               User user, Store store) {
+  private Order(Long orderId, OrderStatus status, String request, Integer deliveryFee, Short deliveryTime,
+                User user, Store store) {
+    this.orderId = orderId;
     this.status = status;
     this.request = request;
     this.deliveryFee = deliveryFee;
@@ -61,5 +64,26 @@ public class Order extends BaseEntity {
 
   public void addFoodTotalPrice(int price) {
     this.foodTotalPrice += price;
+  }
+
+  public void changeStateToAccepted() {
+    if (this.status != OrderStatus.WAIT) {
+      throw new BusinessLogicException(ExceptionCode.INVALID_ORDER_STATES_CHANGE);
+    }
+    this.status = OrderStatus.ACCEPTED;
+  }
+
+  public void changeStatesToDelivered() {
+    if (this.status != OrderStatus.ACCEPTED) {
+      throw new BusinessLogicException(ExceptionCode.INVALID_ORDER_STATES_CHANGE);
+    }
+    this.status = OrderStatus.DELIVERED;
+  }
+
+  public void changeStatesToCanceled() {
+    if (this.status == OrderStatus.DELIVERED) {
+      throw new BusinessLogicException(ExceptionCode.INVALID_ORDER_STATES_CHANGE);
+    }
+    this.status = OrderStatus.CANCELED;
   }
 }
