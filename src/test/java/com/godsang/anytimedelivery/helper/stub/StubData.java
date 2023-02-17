@@ -2,6 +2,8 @@ package com.godsang.anytimedelivery.helper.stub;
 
 
 import com.godsang.anytimedelivery.address.entity.Address;
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.menu.entity.ChoiceType;
 import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
@@ -71,6 +73,18 @@ public class StubData {
           .deliveryFee(1000)
           .deliveryTime(30)
           .build();
+    }
+
+    public static Store getMockEntityWithDeliveryArea() {
+      Store store = getMockEntity();
+      List<DeliveryAreaStore> deliveryAreaStores = new ArrayList<>();
+      for (int i = 1; i <= 5; i++) {
+        DeliveryArea deliveryArea = new DeliveryArea((long) i, "서울시 저쪽구 이쪽" + i + "동");
+        DeliveryAreaStore deliveryAreaStore = new DeliveryAreaStore(store, deliveryArea);
+        deliveryAreaStores.add(deliveryAreaStore);
+      }
+      store.setDeliveryAreaStores(deliveryAreaStores);
+      return store;
     }
   }
 
@@ -144,8 +158,20 @@ public class StubData {
     }
   }
   public static class MockOrder {
-    public static Order getMockOrder(Store store, User user, OrderStatus orderStatus) {
+    public static Order getMockOrder(OrderStatus orderStatus) {
+      Store store = MockStore.getMockEntity();
+      User user = MockUser.getMockEntity(Role.ROLE_CUSTOMER);
+      Order order = getMockOrder(1L, store, user, orderStatus);
+      OrderMenu orderMenu = getMockOrderMenu(MockMenu.getMockMenu(), order, 1);
+      OrderGroup orderGroup = getMockOrderGroup(MockMenu.getMockGroup("맛 선택", ChoiceType.CHECK), orderMenu);
+      orderGroup.addOrderOption(getMockOrderOption(MockMenu.getMockOption("매운맛", 10000), orderGroup));
+      orderMenu.addOrderGroup(orderGroup);
+      order.addOrderMenu(orderMenu);
+      return order;
+    }
+    public static Order getMockOrder(Long orderId, Store store, User user, OrderStatus orderStatus) {
       return Order.builder()
+          .orderId(orderId)
           .status(orderStatus)
           .store(store)
           .user(user)
