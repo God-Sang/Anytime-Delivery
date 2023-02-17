@@ -1,6 +1,7 @@
 package com.godsang.anytimedelivery.order.entity;
 
 import com.godsang.anytimedelivery.menu.entity.Option;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.persistence.ManyToOne;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderOption {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +25,7 @@ public class OrderOption {
   private OrderGroup orderGroup;
 
   @Builder
-  public OrderOption(Option option, OrderGroup orderGroup) {
+  private OrderOption(Option option, OrderGroup orderGroup) {
     this.option = option;
     this.orderGroup = orderGroup;
   }

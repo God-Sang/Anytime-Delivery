@@ -1,7 +1,8 @@
 package com.godsang.anytimedelivery.user;
 
 import com.godsang.anytimedelivery.common.Exception.ExceptionCode;
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
+import com.godsang.anytimedelivery.helper.stub.MockDto;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
@@ -138,11 +139,6 @@ public class SignupIntegrationTest {
   }
 
   private UserDto.Post getPostDto(String email, String phone, String nickName) {
-    return StubData.MockUserPost.builder()
-        .email(email)
-        .password("1q2w3e4r@")
-        .phone(phone)
-        .nickName(nickName)
-        .build();
+    return MockDto.UserPost.get(email, "1q2w3e4r@", phone, nickName);
   }
 }

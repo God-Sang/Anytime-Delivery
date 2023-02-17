@@ -1,7 +1,7 @@
 package com.godsang.anytimedelivery.helper.annotation;
 
 import com.godsang.anytimedelivery.auth.details.UserDetailsImpl;
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,7 +1,7 @@
 package com.godsang.anytimedelivery.user;
 
 
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.service.UserService;

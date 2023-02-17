@@ -1,8 +1,7 @@
 package com.godsang.anytimedelivery.user;
 
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.MockDto;
 import com.godsang.anytimedelivery.user.controller.UserController;
-import com.godsang.anytimedelivery.user.dto.UserDto;
 import com.godsang.anytimedelivery.user.mapper.UserMapper;
 import com.godsang.anytimedelivery.user.service.UserService;
 import com.google.gson.Gson;
@@ -51,7 +50,7 @@ public class UserControllerTest {
   @DisplayName("회원가입 성공")
   void signupSuccessTest() throws Exception {
     // given
-    String content = gson.toJson(getPostDto());
+    String content = gson.toJson(MockDto.UserPost.get(email, password, phone, nickName));
 
     // when
     mockMvc.perform(
@@ -70,7 +69,7 @@ public class UserControllerTest {
   void invalidEmailTest(String invalidEmail) throws Exception {
     // given
     email = invalidEmail;
-    String content = gson.toJson(getPostDto());
+    String content = gson.toJson(MockDto.UserPost.get(email, password, phone, nickName));
 
     // when
     mockMvc.perform(
@@ -89,7 +88,7 @@ public class UserControllerTest {
   void invalidPasswordTest(String invalidPassword) throws Exception {
     // given
     password = invalidPassword;
-    String content = gson.toJson(getPostDto());
+    String content = gson.toJson(MockDto.UserPost.get(email, password, phone, nickName));
 
     // when
     mockMvc.perform(
@@ -108,7 +107,7 @@ public class UserControllerTest {
   void invalidPhoneNumberTest(String invalidPhone) throws Exception {
     // given
     phone = invalidPhone;
-    String content = gson.toJson(getPostDto());
+    String content = gson.toJson(MockDto.UserPost.get(email, password, phone, nickName));
 
     // when
     mockMvc.perform(
@@ -127,7 +126,7 @@ public class UserControllerTest {
   void invalidNickNameTest(String invalidNickName) throws Exception {
     // given
     nickName = invalidNickName;
-    String content = gson.toJson(getPostDto());
+    String content = gson.toJson(MockDto.UserPost.get(email, password, phone, nickName));
 
     // when
     mockMvc.perform(
@@ -138,14 +137,5 @@ public class UserControllerTest {
         )
         // then
         .andExpect(status().isBadRequest());
-  }
-
-  private UserDto.Post getPostDto() {
-    return StubData.MockUserPost.builder()
-        .email(email)
-        .password(password)
-        .phone(phone)
-        .nickName(nickName)
-        .build();
   }
 }

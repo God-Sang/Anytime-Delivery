@@ -1,6 +1,6 @@
 package com.godsang.anytimedelivery.order;
 
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.menu.entity.Menu;
 import com.godsang.anytimedelivery.menu.repository.MenuRepository;
 import com.godsang.anytimedelivery.order.entity.Order;
@@ -50,7 +50,7 @@ public class OrderRepositoryTest {
   @BeforeAll
   void init() {
     store = storeRepository.save(StubData.MockStore.getMockEntity());
-    menu = menuRepository.save(StubData.MockMenu.getMockMenuEntity(store));
+    menu = menuRepository.save(StubData.MockMenu.getMockMenu(store));
     user = userRepository.save(StubData.MockUser.getMockEntity(Role.ROLE_CUSTOMER));
   }
 
@@ -58,11 +58,7 @@ public class OrderRepositoryTest {
   @DisplayName("연관 관계 매핑 테스트")
   void test() {
     Order order = StubData.MockOrder.getMockOrder(store, user, OrderStatus.IN_CART);
-
-    int sumOfPrice = 0;
-
     OrderMenu orderMenu = StubData.MockOrder.getMockOrderMenu(menu, order, 1);
-
     order.addFoodTotalPrice(menu.getPrice());
 
     for (int i = 0; i < numberOfGroups; i++) {

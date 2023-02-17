@@ -1,7 +1,7 @@
 package com.godsang.anytimedelivery.store;
 
-import com.godsang.anytimedelivery.helper.StubData;
 import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
+import com.godsang.anytimedelivery.helper.stub.MockDto;
 import com.godsang.anytimedelivery.store.controller.StoreForOwnerController;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.mapper.StoreMapper;
@@ -257,17 +257,16 @@ public class StoreForOwnerControllerTest {
   }
 
   private StoreDto.Post getPostDto() {
-    return StubData.MockStorePost.builder()
-        .registrationNumber(registrationNumber)
-        .name(name)
-        .address("서울특별시 강남구 강남대로 123길 101호")
-        .tel(tel)
-        .deliveryFee(deliveryFee)
-        .deliveryTime(deliveryTime)
-        .openTime(openTime)
-        .closeTime("23:59")
-        .categoryIds(categoryIds)
-        .deliveryAreas(deliveryAreas)
-        .build();
+    return MockDto.StorePost.get(
+        registrationNumber,
+        name,
+        tel,
+        "서울특별시 강남구 강남대로 123길 101호",
+        deliveryFee,
+        deliveryTime,
+        openTime,
+        "23:59",
+        categoryIds,
+        deliveryAreas);
   }
 }
