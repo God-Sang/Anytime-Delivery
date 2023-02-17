@@ -31,6 +31,10 @@ public class Option {
   @JoinColumn(name = "group_id")
   private Group group;
 
+  public Option(Long optionId) {
+    this.optionId = optionId;
+  }
+
   @Builder
   private Option(String name, int price) {
     this.name = name;
