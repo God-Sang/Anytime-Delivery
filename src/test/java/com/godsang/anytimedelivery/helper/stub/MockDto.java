@@ -4,6 +4,7 @@ import com.godsang.anytimedelivery.address.dto.AddressDto;
 import com.godsang.anytimedelivery.menu.dto.GroupDto;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
 import com.godsang.anytimedelivery.menu.dto.OptionDto;
+import com.godsang.anytimedelivery.order.dto.OrderDto;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import org.springframework.util.LinkedMultiValueMap;
@@ -119,6 +120,7 @@ public class MockDto {
       groupPost.setOptions(options);
       return groupPost;
     }
+
     private static List<List<OptionDto.Post>> getOptionList() {
       List<List<OptionDto.Post>> optionPost = new ArrayList<>();
       optionPost.add(getOptions(Map.of("간장맛", 0, "마늘맛", 0, "민트맛", 0)));
@@ -148,6 +150,35 @@ public class MockDto {
       postDto.setName(name);
       postDto.setPrice(price);
       return postDto;
+    }
+  }
+
+  public static class OrderPost {
+    public static OrderDto.Post get() {
+      List<OrderDto.OrderMenuDto> menus = new ArrayList<>();
+      for (int m = 0; m < 3; m++) {
+        List<OrderDto.OrderGroupDto> groups = new ArrayList<>();
+        for (int i = m; i < m + 3; i++) {
+          List<Long> optionIds = List.of(1L, 2L, 3L, 4L);
+          OrderDto.OrderGroupDto groupDto = OrderDto.OrderGroupDto.builder()
+              .groupId(1L)
+              .optionIds(optionIds)
+              .build();
+          groups.add(groupDto);
+        }
+        OrderDto.OrderMenuDto menuDto = OrderDto.OrderMenuDto.builder()
+            .menuId(1L)
+            .amount(3)
+            .groups(groups)
+            .build();
+        menus.add(menuDto);
+      }
+      OrderDto.Post post = OrderDto.Post.builder()
+          .request("많이 주세요")
+          .storeId(1L)
+          .menus(menus)
+          .build();
+      return post;
     }
   }
 }
