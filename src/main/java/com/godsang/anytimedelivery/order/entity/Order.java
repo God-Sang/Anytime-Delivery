@@ -3,6 +3,7 @@ package com.godsang.anytimedelivery.order.entity;
 import com.godsang.anytimedelivery.common.audit.BaseEntity;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.entity.User;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ import java.util.List;
 
 @Entity(name = "ORDERS")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order extends BaseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +45,7 @@ public class Order extends BaseEntity {
   private List<OrderMenu> orderMenus = new ArrayList<>();
 
   @Builder
-  public Order(OrderStatus status, String request, Integer deliveryFee, Short deliveryTime,
+  private Order(OrderStatus status, String request, Integer deliveryFee, Short deliveryTime,
                User user, Store store) {
     this.status = status;
     this.request = request;

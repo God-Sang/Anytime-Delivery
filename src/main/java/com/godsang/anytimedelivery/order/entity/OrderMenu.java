@@ -1,6 +1,7 @@
 package com.godsang.anytimedelivery.order.entity;
 
 import com.godsang.anytimedelivery.menu.entity.Menu;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderMenu {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,7 @@ public class OrderMenu {
   private List<OrderGroup> orderGroups = new ArrayList<>();
 
   @Builder
-  public OrderMenu(Integer amount, Order order, Menu menu) {
+  private OrderMenu(Integer amount, Order order, Menu menu) {
     this.amount = amount;
     this.order = order;
     this.menu = menu;

@@ -24,7 +24,7 @@ import javax.validation.constraints.Positive;
 @RequestMapping("/owner/stores/{store-id}")
 @RequiredArgsConstructor
 @Validated
-public class MenuController {
+public class MenuForOwnerController {
   private final MenuService menuService;
   private final MenuMapper menuMapper;
 

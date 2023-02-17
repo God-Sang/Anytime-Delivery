@@ -5,7 +5,7 @@ import com.godsang.anytimedelivery.address.service.AddressService;
 import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import com.godsang.anytimedelivery.deliveryArea.service.DeliveryAreaService;
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -45,9 +45,7 @@ public class AddressServiceTest {
     given(userService.findUser(any())).willReturn(user);
 
     //when & then
-    assertThatNoException().isThrownBy(() -> {
-      addressService.saveAddress(1L, address, juso);
-    });
+    assertThatNoException().isThrownBy(() -> addressService.saveAddress(1L, address, juso));
   }
 
   @Test

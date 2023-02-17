@@ -5,13 +5,15 @@ import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.deliveryArea.repository.DeliveryAreaRepository;
 import com.godsang.anytimedelivery.deliveryArea.service.DeliveryAreaService;
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
+import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
+import com.godsang.anytimedelivery.helper.stub.MockDto;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.repository.StoreRepository;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
-import com.godsang.anytimedelivery.user.service.UserService;
+import com.godsang.anytimedelivery.user.repository.UserRepository;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.Cookie;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -38,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Transactional
+@WithMockCustomUser(role = Role.ROLE_OWNER)
 public class StoreIntegrationTest {
   private final List<Long> categoryIds = List.of(1L, 2L);
   private final List<String> deliveryAreas = List.of("성남시 분당구 정자동", "성남시 분당구 분당동");
@@ -50,36 +52,26 @@ public class StoreIntegrationTest {
   @Autowired
   private DeliveryAreaRepository deliveryAreaRepository;
   @Autowired
-  private UserService userService;
+  private UserRepository userRepository;
   @Autowired
   private Gson gson;
   private String savedRegistrationNumber;
   private String savedName;
   private String savedTel;
   private String savedAddress;
-  private Cookie session;
 
   @BeforeAll
-  void saveEntity() throws Exception {
+  void saveEntity() {
+    User user = StubData.MockUser.getMockEntity(Role.ROLE_OWNER);
+    userRepository.save(user);
+
     savedRegistrationNumber = "123-12-12345";
     savedName = "애니타임 치킨";
     savedTel = "02-1234-5678";
     savedAddress = "서울특별시 강남구 강남대로 123길 12";
     Store store = StubData.MockStore.getMockEntity(1L, savedRegistrationNumber, savedName, savedTel, savedAddress);
+    store.setUser(user);
     storeRepository.save(store);
-
-    User user = StubData.MockUser.getMockEntity(Role.ROLE_OWNER);
-    String password = user.getPassword();
-    userService.createUser(user, "owner");
-
-    session = mockMvc.perform(
-            post("/users/login")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .param("email", user.getEmail())
-                .param("password", password)
-        )
-        .andReturn().getResponse().getCookie("SESSION");
-
   }
 
   @Test
@@ -95,7 +87,6 @@ public class StoreIntegrationTest {
     // when
     mockMvc.perform(
             post("/owner/stores")
-                .cookie(session)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
@@ -130,7 +121,6 @@ public class StoreIntegrationTest {
     // when
     mockMvc.perform(
             post("/owner/stores")
-                .cookie(session)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
@@ -152,7 +142,6 @@ public class StoreIntegrationTest {
     // when
     mockMvc.perform(
             post("/owner/stores")
-                .cookie(session)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
@@ -174,7 +163,6 @@ public class StoreIntegrationTest {
     // when
     mockMvc.perform(
             post("/owner/stores")
-                .cookie(session)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
@@ -196,7 +184,6 @@ public class StoreIntegrationTest {
     // when
     mockMvc.perform(
             post("/owner/stores")
-                .cookie(session)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
@@ -227,7 +214,6 @@ public class StoreIntegrationTest {
     // when
     mockMvc.perform(
         post("/owner/stores")
-            .cookie(session)
             .accept(MediaType.APPLICATION_JSON)
             .contentType(MediaType.APPLICATION_JSON)
             .content(content)
@@ -239,17 +225,17 @@ public class StoreIntegrationTest {
   }
 
   private StoreDto.Post getPostDto(String registrationNumber, String name, String tel, String address, List<Long> categoryIds, List<String> deliveryAreas) {
-    return StubData.MockStorePost.builder()
-        .registrationNumber(registrationNumber)
-        .name(name)
-        .tel(tel)
-        .address(address)
-        .deliveryFee(1000)
-        .deliveryTime(30)
-        .openTime("00:00")
-        .closeTime("23:59")
-        .categoryIds(categoryIds)
-        .deliveryAreas(deliveryAreas)
-        .build();
+    return MockDto.StorePost.get(
+        registrationNumber,
+        name,
+        tel,
+        address,
+        1000,
+        30,
+        "00:00",
+        "23:59",
+        categoryIds,
+        deliveryAreas
+    );
   }
 }

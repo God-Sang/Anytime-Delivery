@@ -22,7 +22,7 @@ import javax.persistence.ManyToOne;
 public class Option {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long optionsId;
+  private Long optionId;
   @Column(nullable = false)
   private String name;
   @Column(nullable = false)
@@ -32,9 +32,8 @@ public class Option {
   private Group group;
 
   @Builder
-  private Option(String name, int price, Group group) {
+  private Option(String name, int price) {
     this.name = name;
     this.price = price;
-    this.group = group;
   }
 }

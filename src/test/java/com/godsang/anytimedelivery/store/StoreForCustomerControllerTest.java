@@ -1,9 +1,10 @@
 package com.godsang.anytimedelivery.store;
 
 
-import com.godsang.anytimedelivery.helper.StubData;
+import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
 import com.godsang.anytimedelivery.helper.annotation.WithMockOwner;
+import com.godsang.anytimedelivery.helper.stub.MockDto;
 import com.godsang.anytimedelivery.store.controller.StoreForCustomerController;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.store.entity.Store;
@@ -84,7 +85,7 @@ public class StoreForCustomerControllerTest {
 
     given(storeService.findStoresByCategoryId(anyLong(), anyLong(), any())).willReturn(result);
     given(storeMapper.storeListToResponseDto(stores)).willReturn(dtos);
-    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
+    MultiValueMap<String, String> queries = MockDto.Query.getPageQuery(1, 10);
 
     //when
     mockMvc.perform(
@@ -103,7 +104,7 @@ public class StoreForCustomerControllerTest {
   @MethodSource("provideInvalidStoreGetInputs")
   void findByCategoryFailTest(Long categoryId, Integer page, Integer size) throws Exception {
     //given
-    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(page, size);
+    MultiValueMap<String, String> queries = MockDto.Query.getPageQuery(page, size);
 
     //when
     mockMvc.perform(
@@ -120,7 +121,7 @@ public class StoreForCustomerControllerTest {
   @DisplayName("OWNER 권한으로 store 조회 시 failure")
   void requestWithOwnerTest() throws Exception {
     // given
-    MultiValueMap<String, String> queries = StubData.Query.getPageQuery(1, 10);
+    MultiValueMap<String, String> queries = MockDto.Query.getPageQuery(1, 10);
 
     // when
     mockMvc.perform(
