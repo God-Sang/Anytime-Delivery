@@ -8,6 +8,8 @@ import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.service.StoreService;
 import com.godsang.anytimedelivery.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,7 @@ public class MenuService {
    * @Return Menu
    */
   @Transactional
+  @CacheEvict(cacheNames = "menu", key = "#storeId")
   public Menu createMenu(long storeId, long userId, Menu menu) {
     Store store = storeService.findStoreById(storeId);
     verifyStoreOwner(store, userId);
@@ -66,12 +69,13 @@ public class MenuService {
 
   /**
    * 가게의 메뉴 리스트 조회
+   *
    * @Param storeId 가게 아이디
    * @Return menus
    **/
+  @Cacheable(cacheNames = "menu", key = "#storeId")
   public List<Menu> findStoreMenus(long storeId) {
-    Store store = storeService.findStoreById(storeId);
-    List<Menu> menus = store.getMenus();
-    return menus;
+    storeService.findStoreById(storeId);
+    return menuRepository.findMenusByStoreId(storeId);
   }
 }
