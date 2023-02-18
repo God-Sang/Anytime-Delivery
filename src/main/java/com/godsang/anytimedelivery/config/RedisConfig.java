@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -71,7 +70,7 @@ public class RedisConfig {
   public RedisCacheManager redisCacheManager() {
     RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
         .defaultCacheConfig()
-        .disableCachingNullValues()
+        .disableCachingNullValues() // Null 금지
         .serializeKeysWith(
             RedisSerializationContext.SerializationPair
                 .fromSerializer(new StringRedisSerializer()))
@@ -79,7 +78,7 @@ public class RedisConfig {
             RedisSerializationContext.SerializationPair
                 .fromSerializer(new GenericJackson2JsonRedisSerializer())
         )
-        .entryTtl(Duration.ofDays(3L));
+        .entryTtl(Duration.ofDays(1)); // TTL 1일
 
     return RedisCacheManager.RedisCacheManagerBuilder
         .fromConnectionFactory(redisCacheConnectionFactory())
