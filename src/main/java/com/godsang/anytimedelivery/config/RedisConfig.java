@@ -1,7 +1,6 @@
 package com.godsang.anytimedelivery.config;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -54,19 +53,6 @@ public class RedisConfig {
   }
 
   @Bean
-  public RedisTemplate<String, Object> redisTemplate(ObjectMapper objectMapper) {
-    GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
-    RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-    redisTemplate.setConnectionFactory(redisCacheConnectionFactory());
-    redisTemplate.setKeySerializer(new StringRedisSerializer());
-    redisTemplate.setValueSerializer(serializer);
-    redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-    redisTemplate.setHashValueSerializer(serializer);
-    redisTemplate.setEnableTransactionSupport(true);
-    return redisTemplate;
-  }
-
-  @Bean
   public RedisCacheManager redisCacheManager() {
     RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
         .defaultCacheConfig()
@@ -84,5 +70,12 @@ public class RedisConfig {
         .fromConnectionFactory(redisCacheConnectionFactory())
         .cacheDefaults(redisCacheConfiguration)
         .build();
+  }
+
+  @Bean
+  public RedisTemplate<String, Object> redisTemplate() {
+    RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+    redisTemplate.setConnectionFactory(redisCacheConnectionFactory());
+    return redisTemplate;
   }
 }
