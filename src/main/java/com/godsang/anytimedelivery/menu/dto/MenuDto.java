@@ -20,6 +20,5 @@ public class MenuDto {
     private long menuId;
     private String description;
     private String photo;
-    private List<GroupDto.Response> groups;
   }
 }
