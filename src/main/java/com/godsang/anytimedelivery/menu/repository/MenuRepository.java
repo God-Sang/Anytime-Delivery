@@ -12,4 +12,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
 
   @Query("select m from Menu m where m.store.storeId = ?1")
   List<Menu> findMenusByStoreId(long storeId);
+
+  boolean existsByMenuId(long menuId);
 }
