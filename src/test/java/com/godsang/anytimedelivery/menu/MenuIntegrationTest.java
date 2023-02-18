@@ -1,5 +1,6 @@
 package com.godsang.anytimedelivery.menu;
 
+import com.godsang.anytimedelivery.helper.annotation.WithMockCustomer;
 import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
 import com.godsang.anytimedelivery.helper.stub.MockDto;
@@ -104,7 +105,7 @@ public class MenuIntegrationTest {
 
   @Test
   @DisplayName("가게의 메뉴 조회")
-  @WithMockCustomUser(role = Role.ROLE_CUSTOMER)
+  @WithMockCustomer
   @Order(200)
   void findMenusTest() throws Exception {
     // when
@@ -116,5 +117,21 @@ public class MenuIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.data[0].menuId").value(1L))
         .andExpect(jsonPath("$.data[4].menuId").value(5L));
+  }
+
+  @Test
+  @DisplayName("메뉴의 옵션 조회")
+  @WithMockCustomer
+  @Order(300)
+  void findOptionsTest() throws Exception {
+    // when
+    mockMvc.perform(
+            get("/categories/{category-id}/stores/{store-id}/menu/{menu-id}", 1L, storeId, 1L)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data[0].groupId").value(1L))
+        .andExpect(jsonPath("$.data[0].options[0].optionId").value(1L));
   }
 }
