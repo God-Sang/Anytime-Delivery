@@ -52,6 +52,16 @@ public class RedisConfig {
     return new LettuceConnectionFactory(redisStandaloneConfiguration);
   }
 
+  /**
+   * Cache Manager for Redis Cache
+   * defaultCacheConfig: default 설정을 사용, 추가적으로 customizing
+   * disableCachingNullValues: null값 caching 불가
+   * entryTtl: cache의 Time To Live 설정
+   * serializeKeysWith: key를 직렬화, 역직렬화할 때 사용할 serializer 설정
+   * serializeValuesWith: value를 직렬화, 역직렬화할 때 사용할 serializer 설정
+   * default valueSerializer는 'JdkSerializationRedisSerializer'이지만 human-readable하지 못함
+   * json format이고 다양한 class type으로 직렬화할 수 있는 GenericJackson2JsonRedisSerializer 사용
+   */
   @Bean
   public RedisCacheManager redisCacheManager() {
     RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
