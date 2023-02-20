@@ -56,7 +56,7 @@ public class RedisConfig {
   public RedisCacheManager redisCacheManager() {
     RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
         .defaultCacheConfig()
-        .disableCachingNullValues() // Null 금지
+        .disableCachingNullValues()
         .serializeKeysWith(
             RedisSerializationContext.SerializationPair
                 .fromSerializer(new StringRedisSerializer()))
@@ -64,7 +64,7 @@ public class RedisConfig {
             RedisSerializationContext.SerializationPair
                 .fromSerializer(new GenericJackson2JsonRedisSerializer())
         )
-        .entryTtl(Duration.ofDays(1)); // TTL 1일
+        .entryTtl(Duration.ofSeconds(3600));
 
     return RedisCacheManager.RedisCacheManagerBuilder
         .fromConnectionFactory(redisCacheConnectionFactory())
