@@ -90,10 +90,7 @@ public class OrderService {
   @Transactional(readOnly = true)
   private Store verifyStoreOwner(Long storeId, Long userId) {
     Store store = storeService.findStoreById(storeId);
-    Long ownerId = store.getUser().getUserId();
-    if (!ownerId.equals(userId)) {
-      throw new BusinessLogicException(ExceptionCode.STORE_NOT_YOURS);
-    }
+    storeService.verifyStoreOwner(store, userId);
     return store;
   }
 
@@ -105,10 +102,7 @@ public class OrderService {
 
   private Order findVerifiedOrder(Long orderId) {
     Optional<Order> optionalOrder = orderRepository.findById(orderId);
-    if (optionalOrder.isEmpty()) {
-      throw new BusinessLogicException(ExceptionCode.ORDER_NOT_EXIST);
-    }
-    return optionalOrder.get();
+    return optionalOrder.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ORDER_NOT_EXIST));
   }
 
   @Transactional(readOnly = true)

@@ -26,10 +26,7 @@ public class DeliveryAreaService {
 
   public DeliveryArea findUserDeliveryArea(Long userId) {
     Optional<DeliveryArea> deliveryArea = deliveryAreaRepository.findUserDeliveryArea(userId);
-    if (deliveryArea.isEmpty()) {
-      throw new BusinessLogicException(ExceptionCode.ADDRESS_NOT_EXIST);
-    }
-    return deliveryArea.get();
+    return deliveryArea.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_EXIST));
   }
 
   private DeliveryArea createDeliveryArea(String juso) {
