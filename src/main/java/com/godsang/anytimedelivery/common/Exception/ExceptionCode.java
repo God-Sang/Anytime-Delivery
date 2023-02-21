@@ -22,6 +22,7 @@ public enum ExceptionCode {
   ADDRESS_ALREADY_EXISTS(409, "Address already exists."),
   NAME_ALREADY_EXISTS(409, "Name already exists."),
   STORE_NOT_FOUND(404, "Store not found."),
+  STORE_NOT_YOURS(403, "It is not your store"),
 
   //Address
   ADDRESS_NOT_EXIST(404, "User has no address yet"),
