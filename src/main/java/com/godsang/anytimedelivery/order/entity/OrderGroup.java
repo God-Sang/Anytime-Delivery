@@ -32,7 +32,7 @@ public class OrderGroup {
   @ManyToOne(optional = false)
   @JoinColumn(name = "group_id")
   private Group group;
-  @BatchSize(size = 10)
+  @BatchSize(size = 500)
   @OneToMany(mappedBy = "orderGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<OrderOption> orderOptions = new ArrayList<>();
 

@@ -48,9 +48,9 @@ public class Order extends BaseEntity {
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "store_id")
   private Store store;
+  @BatchSize(size = 500)
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "order_id")
-  @BatchSize(size = 10)
   private List<OrderMenu> orderMenus = new ArrayList<>();
 
   @Builder
