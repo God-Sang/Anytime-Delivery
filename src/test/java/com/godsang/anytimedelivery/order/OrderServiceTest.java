@@ -15,12 +15,15 @@ import com.godsang.anytimedelivery.order.service.OrderService;
 import com.godsang.anytimedelivery.order.service.PayService;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.store.service.StoreService;
+import com.godsang.anytimedelivery.user.entity.Role;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -123,5 +126,39 @@ public class OrderServiceTest {
 
     assertThrows(BusinessLogicException.class,
         () -> orderService.cancel(1L, 1L));
+  }
+
+  @Test
+  @DisplayName("주문 리스트 조회")
+  void retrieveOrdersTest() {
+    //given
+    Store store = StubData.MockStore.getMockEntity();
+    store.setUser(StubData.MockUser.getMockEntity(Role.ROLE_OWNER));
+    given(storeService.findStoreById(anyLong())).willReturn(store);
+    given(orderRepository.findAllByStoreAndStatus(any(), any(), any()))
+        .willReturn(List.of(StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED)));
+
+    //when
+    assertDoesNotThrow(() -> {
+      List<Order> orders = orderService.retrieveOrders(
+          1L, 1L, OrderStatus.ACCEPTED, PageRequest.of(0, 3));
+    });
+  }
+
+  @Test
+  @DisplayName("주문 리스트 조회 예외 : 본인의 가게가 아닌 경우")
+  void retrieveOrderExceptionTest() {
+    //given
+    Store store = StubData.MockStore.getMockEntity();
+    store.setUser(StubData.MockUser.getMockEntity(Role.ROLE_OWNER));
+    given(storeService.findStoreById(anyLong())).willReturn(store);
+    given(orderRepository.findAllByStoreAndStatus(any(), any(), any()))
+        .willReturn(List.of(StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED)));
+
+    //when
+    assertThrows(BusinessLogicException.class, () -> {
+      List<Order> orders = orderService.retrieveOrders(
+          1L, 2L, OrderStatus.ACCEPTED, PageRequest.of(0, 3));
+    });
   }
 }

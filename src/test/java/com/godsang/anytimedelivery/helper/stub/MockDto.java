@@ -10,6 +10,7 @@ import com.godsang.anytimedelivery.user.dto.UserDto;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -179,6 +180,28 @@ public class MockDto {
           .menus(menus)
           .build();
       return post;
+    }
+  }
+
+  public static class OrderResponse {
+    public static OrderDto.ResponseForList get(Long orderId) {
+      return OrderDto.ResponseForList.builder()
+          .orderId(orderId)
+          .orderTime(LocalDateTime.now())
+          .detailAddress("서울시 행복구 행복동")
+          .detailAddress("205호")
+          .deliveryTime((short) 30)
+          .request("조심히 와주세요")
+          .foodTotalPrice(10000)
+          .build();
+    }
+
+    public static List<OrderDto.ResponseForList> getList() {
+      List<OrderDto.ResponseForList> responses = new ArrayList<>();
+      for (long orderId = 1; orderId <= 5; orderId++) {
+        responses.add(get(orderId));
+      }
+      return responses;
     }
   }
 }
