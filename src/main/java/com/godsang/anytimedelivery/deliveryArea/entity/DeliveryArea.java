@@ -24,9 +24,4 @@ public class DeliveryArea {
   public DeliveryArea(String juso) {
     this.juso = juso;
   }
-
-  public DeliveryArea(Long deliveryAreaId, String juso) {
-    this.deliveryAreaId = deliveryAreaId;
-    this.juso = juso;
-  }
 }

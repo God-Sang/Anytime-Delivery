@@ -87,7 +87,7 @@ public class StubData {
       Store store = getMockEntity();
       List<DeliveryAreaStore> deliveryAreaStores = new ArrayList<>();
       for (int i = 1; i <= 5; i++) {
-        DeliveryArea deliveryArea = new DeliveryArea((long) i, "서울시 저쪽구 이쪽" + i + "동");
+        DeliveryArea deliveryArea = new DeliveryArea("서울시 저쪽구 이쪽" + i + "동");
         DeliveryAreaStore deliveryAreaStore = new DeliveryAreaStore(store, deliveryArea);
         deliveryAreaStores.add(deliveryAreaStore);
       }
@@ -209,7 +209,7 @@ public class StubData {
     }
     public static Order getMockOrder(OrderStatus orderStatus) {
       Store store = MockStore.getMockEntity();
-      User user = MockUser.getMockEntity(Role.ROLE_CUSTOMER);
+      User user = MockUser.getMockEntity();
       Order order = getMockOrder(1L, store, user, orderStatus);
       OrderMenu orderMenu = getMockOrderMenu(MockMenu.getMockMenu(), order, 1);
       OrderGroup orderGroup = getMockOrderGroup(MockMenu.getMockGroup("맛 선택", ChoiceType.CHECK), orderMenu);
