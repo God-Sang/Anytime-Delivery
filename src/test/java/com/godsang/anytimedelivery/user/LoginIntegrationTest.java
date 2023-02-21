@@ -115,6 +115,7 @@ public class LoginIntegrationTest {
     String password = user.getPassword();
     userService.createUser(user, "customer");
 
+    // 로그인 후 세션 얻기
     Cookie session = mockMvc.perform(
             post("/users/login")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
@@ -124,6 +125,7 @@ public class LoginIntegrationTest {
         .andReturn().getResponse().getCookie("SESSION");
 
     doNothing().when(categoryService).deleteCategory(anyString());
+    // 관리자 권한만 가능한 uri delete 요청 -> 성공
     mockMvc.perform(
             delete("/categories")
                 .cookie(session)
@@ -132,14 +134,14 @@ public class LoginIntegrationTest {
         )
         .andExpect(status().isOk());
 
-    // when
+    // when 로그아웃
     mockMvc.perform(
         post("/users/logout")
             .cookie(session)
             .accept(MediaType.APPLICATION_JSON)
     );
 
-    // then
+    // then 관리자 권한만 가능한 uri delete 요청 -> 실패
     mockMvc.perform(
             delete("/categories")
                 .cookie(session)
