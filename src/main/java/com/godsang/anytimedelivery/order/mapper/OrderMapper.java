@@ -11,6 +11,7 @@ import com.godsang.anytimedelivery.order.entity.OrderMenu;
 import com.godsang.anytimedelivery.order.entity.OrderOption;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.entity.User;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,16 +21,11 @@ import java.util.List;
  * OrderDto -> Order 변환 Mapper. 연관관계 객체들을 생성하면서 매핑하기 때문에, @Mapper를 사용하지 않았습니다.
  */
 @Component
-public class OrderMapper {
-  public List<OrderDto.ResponseForList> ordersToResponses(List<Order> orders) {
-    List<OrderDto.ResponseForList> responses = new ArrayList<>();
-    for (Order order : orders) {
-      responses.add(orderToResponseForList(order));
-    }
-    return responses;
-  }
+@Mapper(componentModel = "spring")
+public interface OrderMapper {
+  List<OrderDto.ResponseForList> ordersToResponses(List<Order> orders);
 
-  private OrderDto.ResponseForList orderToResponseForList(Order order) {
+  default OrderDto.ResponseForList orderToResponseForList(Order order) {
     Address address = order.getUser().getAddress();
     return OrderDto.ResponseForList.builder()
         .orderId(order.getOrderId())
@@ -41,7 +37,7 @@ public class OrderMapper {
         .foodTotalPrice(order.getFoodTotalPrice())
         .build();
   }
-  public OrderDto.Response orderToResponse(Order order) {
+  default OrderDto.Response orderToResponse(Order order) {
     return OrderDto.Response.builder()
         .orderId(order.getOrderId())
         .deliveryFee(order.getDeliveryFee())
@@ -54,15 +50,9 @@ public class OrderMapper {
         .build();
   }
 
-  private List<OrderDto.MenuResponse> orderMenusToMenuResponses(List<OrderMenu> orderMenus) {
-    List<OrderDto.MenuResponse> menuResponses = new ArrayList<>();
-    for (OrderMenu orderMenu : orderMenus) {
-      menuResponses.add(orderMenuToMenuResponse(orderMenu));
-    }
-    return menuResponses;
-  }
+  List<OrderDto.MenuResponse> orderMenusToMenuResponses(List<OrderMenu> orderMenus);
 
-  private OrderDto.MenuResponse orderMenuToMenuResponse(OrderMenu orderMenu) {
+  default OrderDto.MenuResponse orderMenuToMenuResponse(OrderMenu orderMenu) {
     return OrderDto.MenuResponse.builder()
         .name(orderMenu.getMenu().getName())
         .price(orderMenu.getMenu().getPrice())
@@ -71,36 +61,24 @@ public class OrderMapper {
         .build();
   }
 
-  private List<OrderDto.GroupResponse> orderGroupsToGroupResponses(List<OrderGroup> orderGroups) {
-    List<OrderDto.GroupResponse> groupResponses = new ArrayList<>();
-    for (OrderGroup orderGroup : orderGroups) {
-      groupResponses.add(orderGroupToGroupResponse(orderGroup));
-    }
-    return groupResponses;
-  }
-  private OrderDto.GroupResponse orderGroupToGroupResponse(OrderGroup orderGroup) {
+  List<OrderDto.GroupResponse> orderGroupsToGroupResponses(List<OrderGroup> orderGroups);
+  default OrderDto.GroupResponse orderGroupToGroupResponse(OrderGroup orderGroup) {
     return OrderDto.GroupResponse.builder()
         .title(orderGroup.getGroup().getTitle())
         .optionResponses(orderOptionsToOptionResponses(orderGroup.getOrderOptions()))
         .build();
   }
 
-  private List<OrderDto.OptionResponse> orderOptionsToOptionResponses(List<OrderOption> orderOptions) {
-    List<OrderDto.OptionResponse> optionResponses = new ArrayList<>();
-    for (OrderOption orderOption : orderOptions) {
-      optionResponses.add(orderOptionToOptionResponse(orderOption));
-    }
-    return optionResponses;
-  }
+  List<OrderDto.OptionResponse> orderOptionsToOptionResponses(List<OrderOption> orderOptions);
 
-  private OrderDto.OptionResponse orderOptionToOptionResponse(OrderOption orderOption) {
+  default OrderDto.OptionResponse orderOptionToOptionResponse(OrderOption orderOption) {
     return OrderDto.OptionResponse.builder()
         .name(orderOption.getOption().getName())
         .price(orderOption.getOption().getPrice())
         .build();
   }
 
-  private OrderDto.Customer userToCustomer(User user) {
+  default OrderDto.Customer userToCustomer(User user) {
     return OrderDto.Customer.builder()
         .nickName(user.getNickName())
         .phone(user.getPhone())
@@ -108,7 +86,7 @@ public class OrderMapper {
         .detailAddress(user.getAddress().getDetailAddress())
         .build();
   }
-  public Order orderDtoToOrder(OrderDto.Post post, Long userId) {
+  default Order orderDtoToOrder(OrderDto.Post post, Long userId) {
     Order order = Order.builder()
         .store(new Store(post.getStoreId()))
         .request(post.getRequest())
@@ -121,7 +99,7 @@ public class OrderMapper {
     return order;
   }
 
-  private OrderMenu orderMenuDtoToOrderMenu(OrderDto.OrderMenuDto orderMenuDto, Order order) {
+  default OrderMenu orderMenuDtoToOrderMenu(OrderDto.OrderMenuDto orderMenuDto, Order order) {
     OrderMenu orderMenu = OrderMenu.builder()
         .menu(new Menu(orderMenuDto.getMenuId()))
         .order(order)
@@ -134,7 +112,7 @@ public class OrderMapper {
     return orderMenu;
   }
 
-  private OrderGroup orderGroupDtoToOrderGroup(OrderDto.OrderGroupDto orderGroupDto, OrderMenu orderMenu) {
+  default OrderGroup orderGroupDtoToOrderGroup(OrderDto.OrderGroupDto orderGroupDto, OrderMenu orderMenu) {
     OrderGroup orderGroup = OrderGroup.builder()
         .orderMenu(orderMenu)
         .group(new Group(orderGroupDto.getGroupId()))
@@ -145,7 +123,7 @@ public class OrderMapper {
     return orderGroup;
   }
 
-  private OrderOption optionIdToOption(Long optionId, OrderGroup orderGroup) {
+  default OrderOption optionIdToOption(Long optionId, OrderGroup orderGroup) {
     return OrderOption.builder()
         .option(new Option(optionId))
         .orderGroup(orderGroup)
