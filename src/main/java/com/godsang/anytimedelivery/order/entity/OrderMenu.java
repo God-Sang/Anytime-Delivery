@@ -29,7 +29,7 @@ public class OrderMenu {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long orderMenuId;
   @Column(nullable = false)
-  private Integer amount;
+  private int amount;
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id")
   private Order order;

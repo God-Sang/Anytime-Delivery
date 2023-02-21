@@ -16,7 +16,7 @@ public class OrderDto {
     private String address;
     private String detailAddress;
     private String request;
-    private Short deliveryTime;
+    private short deliveryTime;
     private LocalDateTime orderTime;
     private int foodTotalPrice;
 
@@ -28,8 +28,8 @@ public class OrderDto {
     private Long orderId;
     private String orderStatus;
     private int foodTotalPrice;
-    private Integer deliveryFee;
-    private Short deliveryTime;
+    private int deliveryFee;
+    private short deliveryTime;
     private Customer customer;
     private LocalDateTime orderTime;
     private List<MenuResponse> menus;
@@ -47,7 +47,7 @@ public class OrderDto {
   @Getter
   @Builder
   public static class MenuResponse {
-    private Integer amount;
+    private int amount;
     private String name;
     private int price;
     private List<GroupResponse> groups;
