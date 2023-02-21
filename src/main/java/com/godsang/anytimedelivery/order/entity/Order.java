@@ -54,10 +54,9 @@ public class Order extends BaseEntity {
   private List<OrderMenu> orderMenus = new ArrayList<>();
 
   @Builder
-  private Order(Long orderId, OrderStatus status, String request, Integer deliveryFee, Short deliveryTime,
+  private Order(Long orderId, String request, Integer deliveryFee, Short deliveryTime,
                 User user, Store store) {
     this.orderId = orderId;
-    this.status = status;
     this.request = request;
     this.deliveryFee = deliveryFee;
     this.deliveryTime = deliveryTime;

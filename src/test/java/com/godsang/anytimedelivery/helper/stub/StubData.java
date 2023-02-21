@@ -174,10 +174,9 @@ public class StubData {
     }
   }
   public static class MockOrder {
-    public static Order getMockOrder(OrderStatus orderStatus, Long userId, Long storeId, Long menuId, Long groupId, Long optionId,
+    public static Order getMockOrder(Long userId, Long storeId, Long menuId, Long groupId, Long optionId,
                                      int numBerOfMenus, int numberOfGroups, int numberOfOptions) {
       Order order = Order.builder()
-          .status(orderStatus)
           .user(new User(userId))
           .request("맛있게 해주세요~")
           .store(new Store(storeId))
@@ -210,7 +209,7 @@ public class StubData {
     public static Order getMockOrder(OrderStatus orderStatus) {
       Store store = MockStore.getMockEntity();
       User user = MockUser.getMockEntity();
-      Order order = getMockOrder(1L, store, user, orderStatus);
+      Order order = getMockOrder(1L, store, user);
       OrderMenu orderMenu = getMockOrderMenu(MockMenu.getMockMenu(), order, 1);
       OrderGroup orderGroup = getMockOrderGroup(MockMenu.getMockGroup("맛 선택", ChoiceType.CHECK), orderMenu);
       orderGroup.addOrderOption(getMockOrderOption(MockMenu.getMockOption("매운맛", 10000), orderGroup));
@@ -218,10 +217,9 @@ public class StubData {
       order.addOrderMenu(orderMenu);
       return order;
     }
-    public static Order getMockOrder(Long orderId, Store store, User user, OrderStatus orderStatus) {
+    public static Order getMockOrder(Long orderId, Store store, User user) {
       return Order.builder()
           .orderId(orderId)
-          .status(orderStatus)
           .store(store)
           .user(user)
           .request("느리게 와주세요")

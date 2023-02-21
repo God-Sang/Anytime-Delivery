@@ -56,7 +56,7 @@ public class OrderRepositoryTest {
     menu = menuRepository.save(StubData.MockMenu.getMockMenu(store));
     user = saveUser();
     for (int i = 0; i < numberOfOrders; i++) {
-      saveOrder(OrderStatus.ACCEPTED);
+      saveOrder();
     }
   }
 
@@ -117,9 +117,9 @@ public class OrderRepositoryTest {
     return userRepository.save(user);
   }
 
-  private Order saveOrder(OrderStatus orderStatus) {
+  private Order saveOrder() {
     Order order = StubData.MockOrder.getMockOrder(
-        orderStatus, user.getUserId(), store.getStoreId(), menu.getMenuId(), menu.getGroups().get(0).getGroupId(),
+        user.getUserId(), store.getStoreId(), menu.getMenuId(), menu.getGroups().get(0).getGroupId(),
         menu.getGroups().get(0).getOptions().get(0).getOptionId(),
         numBerOfMenus, numberOfGroups, numberOfOptions);
     return orderRepository.save(order);
