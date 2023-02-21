@@ -8,15 +8,18 @@ import com.godsang.anytimedelivery.order.entity.OrderStatus;
 import com.godsang.anytimedelivery.order.mapper.OrderMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-
+@SpringBootTest
 public class OrderMapperTest {
-  private OrderMapper orderMapper = new OrderMapper();
+  @Autowired
+  private OrderMapper orderMapper;
   @Test
   @DisplayName("OrderDto -> Order test")
   void orderDtoToOrderTest() {
