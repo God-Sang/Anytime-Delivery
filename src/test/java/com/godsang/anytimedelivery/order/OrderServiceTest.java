@@ -32,12 +32,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class OrderServiceTest {
   @Autowired
   private OrderService orderService;
-  private OrderMapper orderMapper = new OrderMapper();
+  @Autowired
+  private OrderMapper orderMapper;
   @MockBean
   private OrderRepository orderRepository;
   @MockBean
@@ -87,8 +90,10 @@ public class OrderServiceTest {
   void requestExceptionTest_NotDeliveryArea() {
     //given
     Store store = StubData.MockStore.getMockEntityWithDeliveryArea();
+    DeliveryArea deliveryArea = mock(DeliveryArea.class);
+    when(deliveryArea.getDeliveryAreaId()).thenReturn(1111L);
     given(storeService.findStoreById(anyLong())).willReturn(store);
-    given(deliveryAreaService.findUserDeliveryArea(anyLong())).willReturn(new DeliveryArea(1111L, "주소"));
+    given(deliveryAreaService.findUserDeliveryArea(anyLong())).willReturn(deliveryArea);
 
     OrderDto.Post post = MockDto.OrderPost.get();
     Order order = orderMapper.orderDtoToOrder(post, 1L);
@@ -114,8 +119,7 @@ public class OrderServiceTest {
     Order order = StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED);
     given(orderRepository.findById(anyLong())).willReturn(Optional.of(order));
 
-    assertThrows(BusinessLogicException.class,
-        () -> orderService.cancel(1L, 999L));
+    assertThrows(BusinessLogicException.class, () -> orderService.cancel(1L, 999L));
   }
 
   @Test
@@ -124,8 +128,7 @@ public class OrderServiceTest {
     Order order = StubData.MockOrder.getMockOrder(OrderStatus.DELIVERED);
     given(orderRepository.findById(anyLong())).willReturn(Optional.of(order));
 
-    assertThrows(BusinessLogicException.class,
-        () -> orderService.cancel(1L, 1L));
+    assertThrows(BusinessLogicException.class, () -> orderService.cancel(1L, 1L));
   }
 
   @Test
@@ -135,13 +138,11 @@ public class OrderServiceTest {
     Store store = StubData.MockStore.getMockEntity();
     store.setUser(StubData.MockUser.getMockEntity(Role.ROLE_OWNER));
     given(storeService.findStoreById(anyLong())).willReturn(store);
-    given(orderRepository.findAllByStoreAndStatus(any(), any(), any()))
-        .willReturn(List.of(StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED)));
+    given(orderRepository.findAllByStoreAndStatus(any(), any(), any())).willReturn(List.of(StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED)));
 
     //when
     assertDoesNotThrow(() -> {
-      List<Order> orders = orderService.retrieveOrders(
-          1L, 1L, OrderStatus.ACCEPTED, PageRequest.of(0, 3));
+      List<Order> orders = orderService.retrieveOrders(1L, 1L, OrderStatus.ACCEPTED, PageRequest.of(0, 3));
     });
   }
 
@@ -152,13 +153,11 @@ public class OrderServiceTest {
     Store store = StubData.MockStore.getMockEntity();
     store.setUser(StubData.MockUser.getMockEntity(Role.ROLE_OWNER));
     given(storeService.findStoreById(anyLong())).willReturn(store);
-    given(orderRepository.findAllByStoreAndStatus(any(), any(), any()))
-        .willReturn(List.of(StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED)));
+    given(orderRepository.findAllByStoreAndStatus(any(), any(), any())).willReturn(List.of(StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED)));
 
     //when
     assertThrows(BusinessLogicException.class, () -> {
-      List<Order> orders = orderService.retrieveOrders(
-          1L, 2L, OrderStatus.ACCEPTED, PageRequest.of(0, 3));
+      List<Order> orders = orderService.retrieveOrders(1L, 2L, OrderStatus.ACCEPTED, PageRequest.of(0, 3));
     });
   }
 }
