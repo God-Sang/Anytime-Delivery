@@ -27,7 +27,7 @@ import javax.validation.constraints.Positive;
 @Validated
 public class OrderForCustomerController {
   private final OrderService orderService;
-  private final OrderMapper orderMapper = new OrderMapper();
+  private final OrderMapper orderMapper;
 
   @PostMapping
   public ResponseEntity requestOrder(@Valid @RequestBody OrderDto.Post orderPostDto,
