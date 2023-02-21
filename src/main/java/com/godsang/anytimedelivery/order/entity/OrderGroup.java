@@ -5,12 +5,15 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import java.util.ArrayList;
@@ -23,11 +26,14 @@ public class OrderGroup {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long orderGroupId;
-  @ManyToOne(optional = false)
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @JoinColumn(name = "order_menu_id")
   private OrderMenu orderMenu;
   @ManyToOne(optional = false)
+  @JoinColumn(name = "group_id")
   private Group group;
-  @OneToMany(mappedBy = "orderGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+  @BatchSize(size = 10)
+  @OneToMany(mappedBy = "orderGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<OrderOption> orderOptions = new ArrayList<>();
 
   public void addOrderOption(OrderOption orderOption) {
