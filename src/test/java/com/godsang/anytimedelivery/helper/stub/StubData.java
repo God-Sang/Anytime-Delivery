@@ -16,6 +16,7 @@ import com.godsang.anytimedelivery.order.entity.OrderStatus;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -173,6 +174,7 @@ public class StubData {
       return groups;
     }
   }
+
   public static class MockOrder {
     public static Order getMockOrder(Long userId, Long storeId, Long menuId, Long groupId, Long optionId,
                                      int numBerOfMenus, int numberOfGroups, int numberOfOptions) {
@@ -206,25 +208,35 @@ public class StubData {
       }
       return order;
     }
-    public static Order getMockOrder(OrderStatus orderStatus) {
+
+    public static Order getMockOrder(OrderStatus orderStatus, Long orderId) {
       Store store = MockStore.getMockEntity();
       User user = MockUser.getMockEntity();
-      Order order = getMockOrder(1L, store, user);
-      OrderMenu orderMenu = getMockOrderMenu(MockMenu.getMockMenu(), order, 1);
-      OrderGroup orderGroup = getMockOrderGroup(MockMenu.getMockGroup("맛 선택", ChoiceType.CHECK), orderMenu);
-      orderGroup.addOrderOption(getMockOrderOption(MockMenu.getMockOption("매운맛", 10000), orderGroup));
-      orderMenu.addOrderGroup(orderGroup);
-      order.addOrderMenu(orderMenu);
+      Order order = getMockOrder(orderId, store, user);
+      ReflectionTestUtils.setField(order, "status", orderStatus);
+      int numberOfMenus = 3;
+      int numberOfGroups = 3;
+      int numberOfOptions = 3;
+      for (int i = 0; i < numberOfMenus; i++) {
+        OrderMenu orderMenu = getMockOrderMenu(MockMenu.getMockMenu(), order, 1);
+        for (int j = 0; j < numberOfGroups; j++) {
+          OrderGroup orderGroup = getMockOrderGroup(MockMenu.getMockGroup("맛 선택", ChoiceType.CHECK), orderMenu);
+          for (int p = 0; p < numberOfOptions; p++) {
+            orderGroup.addOrderOption(getMockOrderOption(MockMenu.getMockOption("매운맛", 10000), orderGroup));
+          }
+          orderMenu.addOrderGroup(orderGroup);
+        }
+        order.addOrderMenu(orderMenu);
+      }
       return order;
     }
+
     public static Order getMockOrder(Long orderId, Store store, User user) {
       return Order.builder()
           .orderId(orderId)
           .store(store)
           .user(user)
           .request("느리게 와주세요")
-          .deliveryFee(1000)
-          .deliveryTime((short) 60)
           .build();
     }
 
