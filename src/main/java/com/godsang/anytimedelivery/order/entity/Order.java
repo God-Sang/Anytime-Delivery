@@ -23,6 +23,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +39,6 @@ public class Order extends BaseEntity {
   private String request;
   @Column(nullable = false)
   private int foodTotalPrice;
-  @Column
-  private Integer deliveryFee;
-  @Column
-  private Short deliveryTime;
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;
@@ -52,16 +49,16 @@ public class Order extends BaseEntity {
   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
   @JoinColumn(name = "order_id")
   private List<OrderMenu> orderMenus = new ArrayList<>();
+  @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+  private CanceledOrder canceledOrder;
 
   @Builder
-  private Order(Long orderId, String request, Integer deliveryFee, Short deliveryTime,
-                User user, Store store) {
+  private Order(Long orderId, String request, int foodTotalPrice, User user, Store store) {
     this.orderId = orderId;
     this.request = request;
-    this.deliveryFee = deliveryFee;
-    this.deliveryTime = deliveryTime;
     this.user = user;
     this.store = store;
+    this.foodTotalPrice = foodTotalPrice;
   }
 
   public void addOrderMenu(OrderMenu orderMenu) {
@@ -72,22 +69,42 @@ public class Order extends BaseEntity {
     this.foodTotalPrice += price;
   }
 
-  public void changeStateToAccepted() {
+  public void setCanceledOrder(CanceledOrder canceledOrder) {
+    this.canceledOrder = canceledOrder;
+  }
+
+  public void changeStatus(OrderStatus orderStatus) {
+    switch (orderStatus) {
+      case ACCEPTED:
+        changeStatusToAccepted();
+        break;
+      case DELIVERED:
+        changeStatusToDelivered();
+        break;
+      case CANCELED:
+        changeStatusToCanceled();
+        break;
+      default:
+        throw new BusinessLogicException(ExceptionCode.UNABLE_TO_CHANGE_TO_WAIT);
+    }
+  }
+
+  private void changeStatusToAccepted() {
     if (this.status != OrderStatus.WAIT) {
       throw new BusinessLogicException(ExceptionCode.INVALID_ORDER_STATES_CHANGE);
     }
     this.status = OrderStatus.ACCEPTED;
   }
 
-  public void changeStatesToDelivered() {
+  private void changeStatusToDelivered() {
     if (this.status != OrderStatus.ACCEPTED) {
       throw new BusinessLogicException(ExceptionCode.INVALID_ORDER_STATES_CHANGE);
     }
     this.status = OrderStatus.DELIVERED;
   }
 
-  public void changeStatesToCanceled() {
-    if (this.status == OrderStatus.DELIVERED) {
+  private void changeStatusToCanceled() {
+    if (this.status != OrderStatus.WAIT) {
       throw new BusinessLogicException(ExceptionCode.INVALID_ORDER_STATES_CHANGE);
     }
     this.status = OrderStatus.CANCELED;
