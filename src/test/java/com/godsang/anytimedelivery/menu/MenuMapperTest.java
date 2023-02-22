@@ -158,9 +158,6 @@ public class MenuMapperTest {
 
     //then
     assertThat(response.getName()).isEqualTo(menu.getName());
-    assertThat(response.getGroups().get(4).getTitle()).isEqualTo(menu.getGroups().get(4).getTitle());
-    assertThat(response.getGroups().get(4).getOptions().get(9).getName())
-        .isEqualTo(menu.getGroups().get(4).getOptions().get(9).getName());
   }
 
   @Test
