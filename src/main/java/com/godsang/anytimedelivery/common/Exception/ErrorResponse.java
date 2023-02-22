@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolation;
 import java.util.List;
@@ -43,6 +44,20 @@ public class ErrorResponse {
 
   public static ErrorResponse of(HttpStatus httpStatus, String message) {
     return new ErrorResponse(httpStatus.value(), message);
+  }
+
+  public static ErrorResponse of(MethodArgumentTypeMismatchException e) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("A value of '");
+    sb.append(e.getName());
+    sb.append("' should be one of ");
+    Object[] enumValues = e.getRequiredType().getEnumConstants();
+    for (Object enumValue : enumValues) {
+      sb.append(enumValue.toString());
+      sb.append(", ");
+    }
+    sb.deleteCharAt(sb.length() - 1);
+    return new ErrorResponse(400, sb.toString());
   }
 
   @Getter

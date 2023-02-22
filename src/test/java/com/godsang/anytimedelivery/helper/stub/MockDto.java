@@ -4,11 +4,13 @@ import com.godsang.anytimedelivery.address.dto.AddressDto;
 import com.godsang.anytimedelivery.menu.dto.GroupDto;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
 import com.godsang.anytimedelivery.menu.dto.OptionDto;
+import com.godsang.anytimedelivery.order.dto.OrderDto;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.user.dto.UserDto;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -119,6 +121,7 @@ public class MockDto {
       groupPost.setOptions(options);
       return groupPost;
     }
+
     private static List<List<OptionDto.Post>> getOptionList() {
       List<List<OptionDto.Post>> optionPost = new ArrayList<>();
       optionPost.add(getOptions(Map.of("간장맛", 0, "마늘맛", 0, "민트맛", 0)));
@@ -148,6 +151,57 @@ public class MockDto {
       postDto.setName(name);
       postDto.setPrice(price);
       return postDto;
+    }
+  }
+
+  public static class OrderPost {
+    public static OrderDto.Post get() {
+      List<OrderDto.OrderMenuDto> menus = new ArrayList<>();
+      for (int m = 0; m < 3; m++) {
+        List<OrderDto.OrderGroupDto> groups = new ArrayList<>();
+        for (int i = m; i < m + 3; i++) {
+          List<Long> optionIds = List.of(1L, 2L, 3L, 4L);
+          OrderDto.OrderGroupDto groupDto = OrderDto.OrderGroupDto.builder()
+              .groupId(1L)
+              .optionIds(optionIds)
+              .build();
+          groups.add(groupDto);
+        }
+        OrderDto.OrderMenuDto menuDto = OrderDto.OrderMenuDto.builder()
+            .menuId(1L)
+            .amount(3)
+            .groups(groups)
+            .build();
+        menus.add(menuDto);
+      }
+      OrderDto.Post post = OrderDto.Post.builder()
+          .request("많이 주세요")
+          .storeId(1L)
+          .menus(menus)
+          .build();
+      return post;
+    }
+  }
+
+  public static class OrderResponse {
+    public static OrderDto.ResponseForList get(Long orderId) {
+      return OrderDto.ResponseForList.builder()
+          .orderId(orderId)
+          .orderTime(LocalDateTime.now())
+          .detailAddress("서울시 행복구 행복동")
+          .detailAddress("205호")
+          .deliveryTime((short) 30)
+          .request("조심히 와주세요")
+          .foodTotalPrice(10000)
+          .build();
+    }
+
+    public static List<OrderDto.ResponseForList> getList() {
+      List<OrderDto.ResponseForList> responses = new ArrayList<>();
+      for (long orderId = 1; orderId <= 5; orderId++) {
+        responses.add(get(orderId));
+      }
+      return responses;
     }
   }
 }

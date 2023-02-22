@@ -39,6 +39,9 @@ public class Group {
   @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Option> options = new ArrayList<>();
 
+  public Group(Long groupId) {
+    this.groupId = groupId;
+  }
   @Builder
   private Group(String title, ChoiceType choiceType, List<Option> options) {
     this.title = title;

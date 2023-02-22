@@ -38,6 +38,10 @@ public class Menu {
   @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Group> groups = new ArrayList<>();
 
+  public Menu(Long menuId) {
+    this.menuId = menuId;
+  }
+
   @Builder
   private Menu(String name, int price, String description, String photo, List<Group> groups) {
     this.name = name;
