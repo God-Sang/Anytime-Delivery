@@ -3,9 +3,12 @@ package com.godsang.anytimedelivery.deliveryArea.service;
 import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
 import com.godsang.anytimedelivery.common.Exception.ExceptionCode;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.deliveryArea.repository.DeliveryAreaRepository;
+import com.godsang.anytimedelivery.store.entity.Store;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -31,5 +34,27 @@ public class DeliveryAreaService {
 
   private DeliveryArea createDeliveryArea(String juso) {
     return deliveryAreaRepository.save(new DeliveryArea(juso));
+  }
+
+  /**
+   * 배달 가능 지역인지 확인
+   *
+   * @param store
+   * @param userId
+   */
+  @Transactional(readOnly = true)
+  public void verifyPossibleArea(Store store, Long userId) {
+    boolean isPossible = false;
+    DeliveryArea userDeliveryArea = findUserDeliveryArea(userId);
+    for (DeliveryAreaStore deliveryAreaStore : store.getDeliveryAreaStores()) {
+      Long storeDeliveryAreaId = deliveryAreaStore.getDeliveryArea().getDeliveryAreaId();
+      if (storeDeliveryAreaId == userDeliveryArea.getDeliveryAreaId()) {
+        isPossible = true;
+        break;
+      }
+    }
+    if (!isPossible) {
+      throw new BusinessLogicException(ExceptionCode.NOT_IN_DELIVERY_AREA);
+    }
   }
 }
