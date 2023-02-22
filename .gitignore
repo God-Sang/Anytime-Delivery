@@ -36,8 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 
+### Custom ###
+**/application-local.yml
 **/application-local.properties
-**/application-dev.properties
+**/application-dev.yml
 **/generated/
-**/data.sql
 **/TestController.java
