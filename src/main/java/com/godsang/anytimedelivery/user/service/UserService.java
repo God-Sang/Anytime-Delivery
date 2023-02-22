@@ -35,10 +35,7 @@ public class UserService {
 
   public User findUser(Long userId) {
     Optional<User> optionalUser = userRepository.findById(userId);
-    if (optionalUser.isEmpty()) {
-      throw new BusinessLogicException(ExceptionCode.USER_NOT_FOUND);
-    }
-    return optionalUser.get();
+    return optionalUser.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
   }
 
   /**

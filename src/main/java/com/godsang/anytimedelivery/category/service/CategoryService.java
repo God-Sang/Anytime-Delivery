@@ -72,10 +72,7 @@ public class CategoryService {
 
   private Category findVerifiedCategoryByName(String name) {
     Optional<Category> optionalCategory = categoryRepository.findByName(name);
-    if (optionalCategory.isEmpty()) {
-      throw new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND);
-    }
-    return optionalCategory.get();
+    return optionalCategory.orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));
   }
 
   private void checkDuplicate(String name) {

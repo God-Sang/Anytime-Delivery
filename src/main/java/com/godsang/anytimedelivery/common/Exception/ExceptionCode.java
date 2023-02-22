@@ -29,6 +29,7 @@ public enum ExceptionCode {
   // Menu
   OWNER_NOT_MATCHED(403, "Owner not matched."),
   MENU_ALREADY_EXISTS(409, "You already have this menu."),
+  MENU_NOT_FOUND(404, "Menu not found"),
 
   // Order
   STORE_CLOSED(409, "Store is closed"),
