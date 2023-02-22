@@ -1,5 +1,7 @@
 package com.godsang.anytimedelivery.deliveryArea.service;
 
+import com.godsang.anytimedelivery.common.Exception.BusinessLogicException;
+import com.godsang.anytimedelivery.common.Exception.ExceptionCode;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import com.godsang.anytimedelivery.deliveryArea.repository.DeliveryAreaRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,11 @@ public class DeliveryAreaService {
   public DeliveryArea findExistedDeliveryArea(String juso) {
     Optional<DeliveryArea> deliveryArea = deliveryAreaRepository.findByJuso(juso);
     return deliveryArea.orElseGet(() -> createDeliveryArea(juso));
+  }
+
+  public DeliveryArea findUserDeliveryArea(Long userId) {
+    Optional<DeliveryArea> deliveryArea = deliveryAreaRepository.findUserDeliveryArea(userId);
+    return deliveryArea.orElseThrow(() -> new BusinessLogicException(ExceptionCode.ADDRESS_NOT_EXIST));
   }
 
   private DeliveryArea createDeliveryArea(String juso) {

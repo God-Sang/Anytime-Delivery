@@ -67,6 +67,9 @@ public class Store {
   public void addDeliveryAreaStore(DeliveryAreaStore deliveryAreaStore) {
     deliveryAreaStores.add(deliveryAreaStore);
   }
+  public Store(Long storeId) {
+    this.storeId = storeId;
+  }
 
   @Builder
   private Store(Long storeId, String registrationNumber, String name, String tel, String address, LocalTime openTime, LocalTime closeTime, int deliveryFee, int deliveryTime) {

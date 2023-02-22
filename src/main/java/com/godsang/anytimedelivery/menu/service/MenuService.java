@@ -36,25 +36,11 @@ public class MenuService {
   @CacheEvict(cacheNames = "menu", key = "#storeId")
   public Menu createMenu(long storeId, long userId, Menu menu) {
     Store store = storeService.findStoreById(storeId);
-    verifyStoreOwner(store, userId);
+    storeService.verifyStoreOwner(store, userId);
     verifyStoreHasSameMenu(store, menu.getName());
 
     menu.setStore(store);
     return menuRepository.save(menu);
-  }
-
-  /**
-   * Context Holder의 User와 가게의 사장님이 일치하는지 확인
-   *
-   * @throws BusinessLogicException when owner does not match.
-   * @Param store 가게
-   * @Param userId 사장님 아이디
-   */
-  private void verifyStoreOwner(Store store, long userId) {
-    User storeOwner = store.getUser();
-    if (userId != storeOwner.getUserId()) {
-      throw new BusinessLogicException(ExceptionCode.OWNER_NOT_MATCHED);
-    }
   }
 
   /**

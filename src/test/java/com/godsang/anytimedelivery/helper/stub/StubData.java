@@ -2,6 +2,8 @@ package com.godsang.anytimedelivery.helper.stub;
 
 
 import com.godsang.anytimedelivery.address.entity.Address;
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.menu.entity.ChoiceType;
 import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
@@ -42,6 +44,14 @@ public class StubData {
           .role(role)
           .build();
     }
+
+    public static User getMockEntity() {
+      User user = StubData.MockUser.getMockEntity(Role.ROLE_CUSTOMER);
+      DeliveryArea deliveryArea = new DeliveryArea("서울시 요기구 저기동");
+      Address address = MockAddress.getMockAddress(deliveryArea);
+      user.setAddress(address);
+      return user;
+    }
   }
 
   public static class MockStore {
@@ -72,6 +82,18 @@ public class StubData {
           .deliveryTime(30)
           .build();
     }
+
+    public static Store getMockEntityWithDeliveryArea() {
+      Store store = getMockEntity();
+      List<DeliveryAreaStore> deliveryAreaStores = new ArrayList<>();
+      for (int i = 1; i <= 5; i++) {
+        DeliveryArea deliveryArea = new DeliveryArea("서울시 저쪽구 이쪽" + i + "동");
+        DeliveryAreaStore deliveryAreaStore = new DeliveryAreaStore(store, deliveryArea);
+        deliveryAreaStores.add(deliveryAreaStore);
+      }
+      store.setDeliveryAreaStores(deliveryAreaStores);
+      return store;
+    }
   }
 
   public static class MockAddress {
@@ -79,6 +101,14 @@ public class StubData {
       return Address.builder()
           .address(address)
           .detailAddress(detailAddress)
+          .build();
+    }
+
+    public static Address getMockAddress(DeliveryArea deliveryArea) {
+      return Address.builder()
+          .address("서울시 요기구 저기동")
+          .detailAddress("105동 103호")
+          .deliveryArea(deliveryArea)
           .build();
     }
   }
@@ -144,11 +174,57 @@ public class StubData {
     }
   }
   public static class MockOrder {
-    public static Order getMockOrder(Store store, User user, OrderStatus orderStatus) {
+    public static Order getMockOrder(Long userId, Long storeId, Long menuId, Long groupId, Long optionId,
+                                     int numBerOfMenus, int numberOfGroups, int numberOfOptions) {
+      Order order = Order.builder()
+          .user(new User(userId))
+          .request("맛있게 해주세요~")
+          .store(new Store(storeId))
+          .build();
+
+      for (int p = 0; p < numBerOfMenus; p++) {
+        OrderMenu orderMenu = OrderMenu.builder()
+            .menu(new Menu(menuId))
+            .order(order)
+            .amount(1)
+            .build();
+        for (int i = 0; i < numberOfGroups; i++) {
+          OrderGroup orderGroup = OrderGroup.builder()
+              .group(new Group(groupId))
+              .orderMenu(orderMenu)
+              .build();
+          for (int j = 0; j < numberOfOptions; j++) {
+            OrderOption orderOption = OrderOption.builder()
+                .option(new Option(optionId))
+                .orderGroup(orderGroup)
+                .build();
+            orderGroup.addOrderOption(orderOption);
+          }
+          orderMenu.addOrderGroup(orderGroup);
+        }
+        order.addOrderMenu(orderMenu);
+      }
+      return order;
+    }
+    public static Order getMockOrder(OrderStatus orderStatus) {
+      Store store = MockStore.getMockEntity();
+      User user = MockUser.getMockEntity();
+      Order order = getMockOrder(1L, store, user);
+      OrderMenu orderMenu = getMockOrderMenu(MockMenu.getMockMenu(), order, 1);
+      OrderGroup orderGroup = getMockOrderGroup(MockMenu.getMockGroup("맛 선택", ChoiceType.CHECK), orderMenu);
+      orderGroup.addOrderOption(getMockOrderOption(MockMenu.getMockOption("매운맛", 10000), orderGroup));
+      orderMenu.addOrderGroup(orderGroup);
+      order.addOrderMenu(orderMenu);
+      return order;
+    }
+    public static Order getMockOrder(Long orderId, Store store, User user) {
       return Order.builder()
-          .status(orderStatus)
+          .orderId(orderId)
           .store(store)
           .user(user)
+          .request("느리게 와주세요")
+          .deliveryFee(1000)
+          .deliveryTime((short) 60)
           .build();
     }
 
