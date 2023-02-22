@@ -5,8 +5,10 @@ import com.godsang.anytimedelivery.menu.dto.GroupDto;
 import com.godsang.anytimedelivery.menu.dto.MenuDto;
 import com.godsang.anytimedelivery.menu.dto.OptionDto;
 import com.godsang.anytimedelivery.order.dto.OrderDto;
+import com.godsang.anytimedelivery.order.entity.OrderStatus;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
 import com.godsang.anytimedelivery.user.dto.UserDto;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -161,30 +163,68 @@ public class MockDto {
         List<OrderDto.OrderGroupDto> groups = new ArrayList<>();
         for (int i = m; i < m + 3; i++) {
           List<Long> optionIds = List.of(1L, 2L, 3L, 4L);
-          OrderDto.OrderGroupDto groupDto = OrderDto.OrderGroupDto.builder()
-              .groupId(1L)
-              .optionIds(optionIds)
-              .build();
+          OrderDto.OrderGroupDto groupDto = new OrderDto.OrderGroupDto();
+          ReflectionTestUtils.setField(groupDto, "groupId", 1L);
+          ReflectionTestUtils.setField(groupDto, "optionIds", optionIds);
           groups.add(groupDto);
         }
-        OrderDto.OrderMenuDto menuDto = OrderDto.OrderMenuDto.builder()
-            .menuId(1L)
-            .amount(3)
-            .groups(groups)
-            .build();
+        OrderDto.OrderMenuDto menuDto = new OrderDto.OrderMenuDto();
+        ReflectionTestUtils.setField(menuDto, "menuId", 1L);
+        ReflectionTestUtils.setField(menuDto, "amount", 3);
+        ReflectionTestUtils.setField(menuDto, "groups", groups);
         menus.add(menuDto);
       }
-      OrderDto.Post post = OrderDto.Post.builder()
-          .request("많이 주세요")
-          .storeId(1L)
-          .menus(menus)
-          .build();
+      OrderDto.Post post = new OrderDto.Post();
+      ReflectionTestUtils.setField(post, "request", "많이 주세요");
+      ReflectionTestUtils.setField(post, "foodTotalPrice", 20000);
+      ReflectionTestUtils.setField(post, "storeId", 1L);
+      ReflectionTestUtils.setField(post, "menus", menus);
       return post;
     }
   }
 
   public static class OrderResponse {
-    public static OrderDto.ResponseForList get(Long orderId) {
+    public static OrderDto.Customer getCustomer() {
+      return OrderDto.Customer.builder()
+          .address("서울시 강남구 서초동")
+          .detailAddress("204호")
+          .phone("010-1111-1111")
+          .nickName("서초동 햄주먹")
+          .build();
+    }
+
+    public static OrderDto.OptionResponse getOption() {
+      return OrderDto.OptionResponse.builder()
+          .name("콜라")
+          .price(2000)
+          .build();
+    }
+    public static OrderDto.GroupResponse getGroup() {
+      return OrderDto.GroupResponse.builder()
+          .options(List.of(getOption(), getOption()))
+          .title("추가 메뉴")
+          .build();
+    }
+    public static OrderDto.MenuResponse getMenu() {
+      return OrderDto.MenuResponse.builder()
+          .name("짜장면")
+          .price(2000)
+          .groups(List.of(getGroup(), getGroup()))
+          .amount(1)
+          .build();
+    }
+    public static OrderDto.Response get(OrderStatus orderStatus) {
+      return OrderDto.Response.builder()
+          .orderStatus(orderStatus.name())
+          .customer(getCustomer())
+          .orderId(1L)
+          .foodTotalPrice(10000)
+          .menus(List.of(getMenu(), getMenu()))
+          .orderTime(LocalDateTime.now())
+          .deliveryFee(10000)
+          .build();
+    }
+    public static OrderDto.ResponseForList getForList(Long orderId) {
       return OrderDto.ResponseForList.builder()
           .orderId(orderId)
           .orderTime(LocalDateTime.now())
@@ -199,9 +239,25 @@ public class MockDto {
     public static List<OrderDto.ResponseForList> getList() {
       List<OrderDto.ResponseForList> responses = new ArrayList<>();
       for (long orderId = 1; orderId <= 5; orderId++) {
-        responses.add(get(orderId));
+        responses.add(getForList(orderId));
       }
       return responses;
+    }
+  }
+
+  public static class OrderPatch {
+    public static OrderDto.Patch get(OrderStatus orderStatus) {
+      OrderDto.Patch patch = new OrderDto.Patch();
+      ReflectionTestUtils.setField(patch, "orderStatus", orderStatus);
+      return patch;
+    }
+  }
+
+  public static class OrderPatchCancel {
+    public static OrderDto.PatchCancel get(String reason) {
+      OrderDto.PatchCancel patchCancel = new OrderDto.PatchCancel();
+      ReflectionTestUtils.setField(patchCancel, "reason", reason);
+      return patchCancel;
     }
   }
 }
