@@ -28,7 +28,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/orders")
+@RequestMapping("/customer/orders")
 @Validated
 public class OrderForCustomerController {
   private final OrderService orderService;
@@ -85,7 +85,7 @@ public class OrderForCustomerController {
    * @return 주문 리스트
    */
 
-  @GetMapping()
+  @GetMapping
   public ResponseEntity retrieveOrders(@AuthenticationPrincipal UserDetailsImpl principal,
                                        @RequestParam @Positive int page,
                                        @RequestParam @Positive int size) {

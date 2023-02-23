@@ -50,7 +50,7 @@ public class OrderControllerForCustomerTest {
 
     // when
     mockMvc.perform(
-            post("/orders")
+            post("/customer/orders")
                 .content(content)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -66,7 +66,7 @@ public class OrderControllerForCustomerTest {
 
     // when
     mockMvc.perform(
-            patch("/orders/{order-id}", orderId)
+            patch("/customer/orders/{order-id}", orderId)
                 .accept(MediaType.APPLICATION_JSON)
         )
         // then
@@ -83,7 +83,7 @@ public class OrderControllerForCustomerTest {
 
     // when
     mockMvc.perform(
-            get("/orders/{order-id}", orderId)
+            get("/customer/orders/{order-id}", orderId)
                 .accept(MediaType.APPLICATION_JSON)
         )
         // then
@@ -103,7 +103,7 @@ public class OrderControllerForCustomerTest {
 
     // when
     mockMvc.perform(
-            get("/orders")
+            get("/customer/orders")
                 .accept(MediaType.APPLICATION_JSON)
                 .queryParam("page", String.valueOf(page))
                 .queryParam("size", String.valueOf(size))
