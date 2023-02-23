@@ -27,9 +27,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
   /**
    * 주문 상세 조회를 위한 주문 아이디를 가지고 주문 조회.
    *
-   * 연관된 엔티티를 모두 조회해야하기 때문에 N+1문제를 방지하기 위하여,
+   * 연관된 엔티티를 모두 조회하기 때문에 N+1문제를 방지하기 위하여,
    * 1:1 N:1 관계의 엔티티는 join fetch로 한번에 조회하고
-   * 1:N 관계의 엔티티는 @BatchSize를 통해 in 절로 조회햇습니다.
+   * 1:N 관계의 엔티티는 @BatchSize를 통해 in 절로 조회했습니다.
    * 일반 주문 조회는 findById(Long id)로 수행합니다.
    * @param orderId
    * @return 상세 주문
