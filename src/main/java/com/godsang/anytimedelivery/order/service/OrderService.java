@@ -40,6 +40,7 @@ public class OrderService {
     storeService.verifyOpen(store);
     deliveryAreaService.verifyPossibleArea(store, order.getUser().getUserId());
     payService.pay();
+    orderRepository.save(order);
   }
 
   /**
