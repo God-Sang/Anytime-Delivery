@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.validation.ConstraintViolation;
 import java.util.List;
@@ -46,12 +45,18 @@ public class ErrorResponse {
     return new ErrorResponse(httpStatus.value(), message);
   }
 
-  public static ErrorResponse of(MethodArgumentTypeMismatchException e) {
+  /**
+   * Enum Mapping 실패의 예외 메시지
+   *
+   * @param field
+   * @param enumValues
+   * @return 예외 정보
+   */
+  public static ErrorResponse of(String field, Object[] enumValues) {
     StringBuilder sb = new StringBuilder();
     sb.append("A value of '");
-    sb.append(e.getName());
+    sb.append(field);
     sb.append("' should be one of ");
-    Object[] enumValues = e.getRequiredType().getEnumConstants();
     for (Object enumValue : enumValues) {
       sb.append(enumValue.toString());
       sb.append(", ");

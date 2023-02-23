@@ -118,12 +118,13 @@ public class OrderControllerForOwnerTest {
   @ParameterizedTest
   @ValueSource(strings = {"WAIT", "CANCELED"})
   @DisplayName("주문 상태 변경 조회 예외 : WAIT / CANCELED 로 변경하는 경우")
-  void changeOrderStateExceptionTest(String orderStatus) throws Exception {
+  void changeOrderStateExceptionTest1(String orderStatus) throws Exception {
     // given
     Long storeId = 1L;
     Long orderId = 1L;
     OrderDto.Patch patch = MockDto.OrderPatch.get(OrderStatus.valueOf(orderStatus));
     String content = gson.toJson(patch);
+
     // when
     mockMvc.perform(
             patch("/owner/stores/{store-id}/orders/{order_id}", storeId, orderId)
@@ -132,7 +133,30 @@ public class OrderControllerForOwnerTest {
                 .content(content)
         )
         // then
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.fieldErrors[0].reason")
+            .value("must match \"ACCEPTED|DELIVERED\""));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"aa", "bb"})
+  @DisplayName("주문 상태 변경 조회 예외 : 상태명 중 하나가 아닌 경우")
+  void changeOrderStateExceptionTest2(String orderStatus) throws Exception {
+    // given
+    Long storeId = 1L;
+    Long orderId = 1L;
+    String content = "{\"orderStatus\":\"" + orderStatus + "\"}";
+    // when
+    mockMvc.perform(
+            patch("/owner/stores/{store-id}/orders/{order_id}", storeId, orderId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(content)
+        )
+        // then
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message")
+            .value("A value of 'orderStatus' should be one of WAIT, ACCEPTED, DELIVERED, CANCELED,"));
   }
 
   @Test
@@ -171,6 +195,8 @@ public class OrderControllerForOwnerTest {
                 .content(content)
         )
         // then
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.fieldErrors[0].reason")
+            .value("must not be blank"));
   }
 }

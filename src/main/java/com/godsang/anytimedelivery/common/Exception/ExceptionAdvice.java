@@ -1,8 +1,9 @@
 package com.godsang.anytimedelivery.common.Exception;
 
-import com.godsang.anytimedelivery.order.entity.OrderStatus;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,10 +27,27 @@ public class ExceptionAdvice {
   public ResponseEntity handleBusinessLogicException(BusinessLogicException e) {
     return new ResponseEntity(ErrorResponse.of(e), HttpStatus.valueOf(e.getExceptionCode().getCode()));
   }
+
   @ExceptionHandler
   public ResponseEntity handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
-    if (e.getRequiredType().equals(OrderStatus.class)) {
-      return new ResponseEntity(ErrorResponse.of(e), HttpStatus.BAD_REQUEST);
+    if (e.getRequiredType().isEnum()) {
+      return new ResponseEntity(ErrorResponse.of(e.getName(), e.getRequiredType().getEnumConstants()), HttpStatus.BAD_REQUEST);
+    }
+    throw e;
+  }
+
+  @ExceptionHandler
+  public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    InvalidFormatException invalidFormatException;
+    try {
+      invalidFormatException = (InvalidFormatException) e.getCause();
+    } catch (Exception exception) {
+      throw e;
+    }
+    Class type = invalidFormatException.getTargetType();
+    if (type.isEnum()) {
+      return new ResponseEntity(ErrorResponse.of(invalidFormatException.getPath().get(0).getFieldName(),
+          type.getEnumConstants()), HttpStatus.BAD_REQUEST);
     }
     throw e;
   }
