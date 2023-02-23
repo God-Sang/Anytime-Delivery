@@ -42,7 +42,7 @@ public class OrderMapperTest {
     //given
     List<Order> orders = new ArrayList<>();
     for (int i = 0; i < 3; i++) {
-      orders.add(StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED));
+      orders.add(StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED, null));
     }
 
     //when
@@ -57,7 +57,7 @@ public class OrderMapperTest {
   @DisplayName("Order -> OrderResponseDtd Test")
   void orderToResponseTest() {
     //given
-    Order order = StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED);
+    Order order = StubData.MockOrder.getMockOrder(OrderStatus.ACCEPTED, 1L);
 
     //when
     OrderDto.Response response = orderMapper.orderToResponse(order);
@@ -67,7 +67,7 @@ public class OrderMapperTest {
         .isEqualTo(order.getUser().getAddress().getDetailAddress());
     assertThat(response.getMenus().get(0).getName())
         .isEqualTo(order.getOrderMenus().get(0).getMenu().getName());
-    assertThat(response.getMenus().get(0).getGroups().get(0).getOptionResponses().get(0).getPrice())
+    assertThat(response.getMenus().get(0).getGroups().get(0).getOptions().get(0).getPrice())
         .isEqualTo(order.getOrderMenus().get(0).getOrderGroups().get(0).getOrderOptions().get(0).getOption().getPrice());
   }
 }

@@ -83,6 +83,19 @@ public class StoreService {
   }
 
   /**
+   * storeId를 가지고 가게 사장님이 일치하는지 확인
+   *
+   * @param storeId
+   * @param userId
+   * @return
+   */
+  public Store verifyStoreOwner(Long storeId, long userId) {
+    Store store = findStoreById(storeId);
+    verifyStoreOwner(store, userId);
+    return store;
+  }
+
+  /**
    * category와 N:M 매핑
    */
   private void setCategoryStore(Store store, List<Long> categoryIds) {

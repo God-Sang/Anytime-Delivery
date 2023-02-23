@@ -14,7 +14,6 @@ import com.godsang.anytimedelivery.user.entity.User;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,24 +28,28 @@ public interface OrderMapper {
     Address address = order.getUser().getAddress();
     return OrderDto.ResponseForList.builder()
         .orderId(order.getOrderId())
+        .storeName(order.getStore().getName())
         .address(address.getAddress())
         .detailAddress(address.getDetailAddress())
         .request(order.getRequest())
-        .deliveryTime(order.getDeliveryTime())
         .orderTime(order.getCreatedAt())
         .foodTotalPrice(order.getFoodTotalPrice())
+        .deliveryTime(order.getStore().getDeliveryTime())
+        .deliveryFee(order.getStore().getDeliveryFee())
         .build();
   }
+
   default OrderDto.Response orderToResponse(Order order) {
     return OrderDto.Response.builder()
         .orderId(order.getOrderId())
-        .deliveryFee(order.getDeliveryFee())
-        .deliveryTime(order.getDeliveryTime())
+        .storeName(order.getStore().getName())
         .foodTotalPrice(order.getFoodTotalPrice())
         .orderStatus(order.getStatus().name())
         .customer(userToCustomer(order.getUser()))
         .orderTime(order.getCreatedAt())
         .menus(orderMenusToMenuResponses(order.getOrderMenus()))
+        .deliveryFee(order.getStore().getDeliveryFee())
+        .deliveryTime(order.getStore().getDeliveryTime())
         .build();
   }
 
@@ -65,7 +68,7 @@ public interface OrderMapper {
   default OrderDto.GroupResponse orderGroupToGroupResponse(OrderGroup orderGroup) {
     return OrderDto.GroupResponse.builder()
         .title(orderGroup.getGroup().getTitle())
-        .optionResponses(orderOptionsToOptionResponses(orderGroup.getOrderOptions()))
+        .options(orderOptionsToOptionResponses(orderGroup.getOrderOptions()))
         .build();
   }
 
@@ -88,8 +91,9 @@ public interface OrderMapper {
   }
   default Order orderDtoToOrder(OrderDto.Post post, Long userId) {
     Order order = Order.builder()
-        .store(new Store(post.getStoreId()))
         .request(post.getRequest())
+        .foodTotalPrice(post.getFoodTotalPrice())
+        .store(new Store(post.getStoreId()))
         .user(new User(userId))
         .build();
     for (OrderDto.OrderMenuDto orderMenuDto : post.getMenus()) {

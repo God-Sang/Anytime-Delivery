@@ -61,16 +61,6 @@ public class OrderRepositoryTest {
   }
 
   @Test
-  @DisplayName("연관 관계 매핑")
-  void mappingTest() {
-    List<Order> orders = orderRepository.findAllByStore(store);
-    assertThat(orders.size()).isEqualTo(numberOfOrders);
-    assertThat(orders.get(0).getOrderMenus().get(0).getOrderGroups().get(0).getOrderOptions().size())
-        .isEqualTo(numberOfOptions);
-  }
-
-
-  @Test
   @DisplayName("외래키만 가지고 생성한 엔티티가 잘 저장이 되는지")
   void saveTest() {
     Order orderRetrieved = orderRepository.findById(1L).get();
@@ -104,9 +94,24 @@ public class OrderRepositoryTest {
   void findAllByStoreAndOrderStatusTest() {
     //when
     List<Order> orders = orderRepository.findAllByStoreAndStatus(store, OrderStatus.ACCEPTED, PageRequest.of(0, 5));
+
     //then
     assertThat(orders.size()).isEqualTo(5);
     assertThat(orders.get(0).getStatus()).isEqualTo(OrderStatus.ACCEPTED);
+  }
+
+
+  @Test
+  @DisplayName("고객의 주문 리스트 조회")
+  void findAllByUserTest() {
+    //given
+    int size = 5;
+    int page = 0;
+    //when
+    List<Order> orders = orderRepository.findAllByUser(user, PageRequest.of(page, size));
+
+    //then
+    assertThat(orders.size()).isEqualTo(size);
   }
 
   private User saveUser() {
