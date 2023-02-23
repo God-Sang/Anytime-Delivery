@@ -28,6 +28,10 @@ public class ExceptionAdvice {
     return new ResponseEntity(ErrorResponse.of(e), HttpStatus.valueOf(e.getExceptionCode().getCode()));
   }
 
+  /**
+   * 컨트롤러 method argument로 resolve하지 못할 경우 발생하는 예외.
+   * Enum으로 전환하지 못하는 경우 핸들링
+   */
   @ExceptionHandler
   public ResponseEntity handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
     if (e.getRequiredType().isEnum()) {
@@ -36,6 +40,10 @@ public class ExceptionAdvice {
     throw e;
   }
 
+  /**
+   * HttpMessageConverter가 convert에 실패하면 발생하는 예외.
+   * Json을 DTO의 필드인 Enum으로 전환하지 못할 경우를 핸들링
+   */
   @ExceptionHandler
   public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
     InvalidFormatException invalidFormatException;
