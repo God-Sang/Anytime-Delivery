@@ -65,10 +65,6 @@ public class Order extends BaseEntity {
     orderMenus.add(orderMenu);
   }
 
-  public void addFoodTotalPrice(int price) {
-    this.foodTotalPrice += price;
-  }
-
   public void setCanceledOrder(CanceledOrder canceledOrder) {
     this.canceledOrder = canceledOrder;
   }
