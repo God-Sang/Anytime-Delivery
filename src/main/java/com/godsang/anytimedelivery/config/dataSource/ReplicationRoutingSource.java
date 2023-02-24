@@ -18,7 +18,7 @@ public class ReplicationRoutingSource extends AbstractRoutingDataSource {
 
   /**
    * master, slave dataSource를 targetDataSource에 set한다.
-   * slave의 dataSource명은 SlaveNames 필드로 생성한다.
+   * slave의 dataSource명은 SlaveNames instance로 생성한다.
    */
   @Override
   public void setTargetDataSources(Map<Object, Object> targetDataSources) {
@@ -36,7 +36,7 @@ public class ReplicationRoutingSource extends AbstractRoutingDataSource {
   /**
    * @Transactional(readOnly = true) 트랜잭션은 slave 호출한다.
    * 이외의 트랜잭션은 master 호출한다.
-   * return하는 data source명과 일치하는 targetDataSource를 사용한다.
+   * return 하는 dataSource명과 일치하는 targetDataSource를 사용한다.
    */
   @Override
   protected Object determineCurrentLookupKey() {
@@ -62,13 +62,15 @@ public class ReplicationRoutingSource extends AbstractRoutingDataSource {
       this.values = values;
     }
 
+    /**
+     * slave dataSource가 호출될 때마다 index 이동
+     * @Return slave dataSource명
+     */
     private T getNext() {
       if (index >= values.size() - 1) {
         index = -1;
       }
       return values.get(++index);
     }
-
   }
-
 }

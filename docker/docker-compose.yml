@@ -2,8 +2,6 @@ version: "3"
 services:
   db-master:
     container_name: mysql-master
-#    cap_add:
-#      - SYS_NICE
     build:
       context: ./mysql/master/
       dockerfile: Dockerfile
@@ -23,8 +21,6 @@ services:
 
   db-slave:
     container_name: mysql-slave
-#    cap_add:
-#      - SYS_NICE
     build:
       context: ./mysql/slave
       dockerfile: Dockerfile
