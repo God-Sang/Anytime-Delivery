@@ -45,7 +45,7 @@ public class ReplicationDatasourceConfig {
         dataSourceProperties.getPassword(),
         dataSourceProperties.getUrl()
     );
-    targetDataSources.put(DataSourceType.MASTER, masterDataSource);
+    targetDataSources.put(DataSourceType.MASTER.getName(), masterDataSource);
 
     for (ReplicationDataSourceProperties.Slave slave : dataSourceProperties.getSlaves().values()) {
       DataSource slaveDataSource = createDataSource(

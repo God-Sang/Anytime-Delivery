@@ -27,7 +27,7 @@ public class ReplicationRoutingSource extends AbstractRoutingDataSource {
     List<String> slaveNames = targetDataSources.keySet()
         .stream()
         .map(Object::toString)
-        .filter(str -> str.contains(DataSourceType.SLAVE.toString()))
+        .filter(str -> str.contains(DataSourceType.SLAVE.getName()))
         .collect(Collectors.toList());
 
     this.slaveNames = new SlaveNames<>(slaveNames);
@@ -48,7 +48,7 @@ public class ReplicationRoutingSource extends AbstractRoutingDataSource {
       return nextSlaveName;
     }
     log.info("Master connected");
-    return DataSourceType.MASTER;
+    return DataSourceType.MASTER.getName();
   }
 
   /**
