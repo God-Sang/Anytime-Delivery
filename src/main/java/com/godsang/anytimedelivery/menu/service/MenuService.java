@@ -69,6 +69,7 @@ public class MenuService {
    * @Param storeId 가게 아이디
    * @Return menus
    **/
+  @Transactional(readOnly = true)
   public List<Menu> findStoreMenus(long storeId) {
     Store store = storeService.findStoreById(storeId);
     List<Menu> menus = store.getMenus();

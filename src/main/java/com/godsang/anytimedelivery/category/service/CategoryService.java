@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,7 @@ public class CategoryService {
    * get list of all categories
    */
   @Cacheable(cacheNames = "categories", key = "'categories'")
+  @Transactional(readOnly = true)
   public List<Category> getAllCategories() {
     return categoryRepository.findAll();
   }
@@ -36,6 +38,7 @@ public class CategoryService {
    * @throws BusinessLogicException when same category found.
    */
   @CacheEvict(cacheNames = "categories", key = "'categories'")
+  @Transactional
   public Category addCategory(String name) {
     Category category = new Category(name);
     checkDuplicate(name);
@@ -46,6 +49,7 @@ public class CategoryService {
    * update a specific category after duplication check
    */
   @CacheEvict(cacheNames = "categories", key = "'categories'")
+  @Transactional
   public Category updateCategory(String prevName, String curName) {
     Category category = findVerifiedCategoryByName(prevName);
     checkDuplicate(curName);
@@ -57,6 +61,7 @@ public class CategoryService {
    * delete a specific category
    */
   @CacheEvict(cacheNames = "categories", key = "'categories'")
+  @Transactional
   public void deleteCategory(String name) {
     Category category = findVerifiedCategoryByName(name);
     categoryRepository.delete(category);
@@ -65,6 +70,7 @@ public class CategoryService {
   /**
    * validate id of category
    */
+  @Transactional(readOnly = true)
   public Category findVerifiedCategoryById(Long categoryId) {
     Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
     return optionalCategory.orElseThrow(() -> new BusinessLogicException(ExceptionCode.CATEGORY_NOT_FOUND));

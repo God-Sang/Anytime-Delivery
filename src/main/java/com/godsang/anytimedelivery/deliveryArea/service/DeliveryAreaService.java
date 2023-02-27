@@ -4,6 +4,7 @@ import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import com.godsang.anytimedelivery.deliveryArea.repository.DeliveryAreaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ public class DeliveryAreaService {
    * @Param juso oo시 oo구 oo동
    * @return deliveryArea
    */
+  @Transactional
   public DeliveryArea findExistedDeliveryArea(String juso) {
     Optional<DeliveryArea> deliveryArea = deliveryAreaRepository.findByJuso(juso);
     return deliveryArea.orElseGet(() -> createDeliveryArea(juso));

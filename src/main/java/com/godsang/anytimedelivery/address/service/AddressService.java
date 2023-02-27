@@ -9,7 +9,6 @@ import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +26,9 @@ public class AddressService {
    * save an address.
    * if there is an address already saved, then it is changed to the new one.
    * And, the old one is removed automatically.
-   * @param userId
-   * @param address
+   *
+   * @param userId 사용자 아이디
+   * @param address 사용자 주소
    * @param deliveryArea it consists of a combination of Jibun address components.(not Doromyung)
    */
   @Transactional
@@ -42,10 +42,11 @@ public class AddressService {
 
   /**
    * get an address of a user.
-   * @param userId
+   *
+   * @param userId 사용자 아이디
    * @return Address
    */
-  @Transactional
+  @Transactional(readOnly = true)
   @Cacheable(cacheNames = "deliveryArea", key = "#userId")
   public Address getAddress(Long userId) {
     User user = userService.findUser(userId);

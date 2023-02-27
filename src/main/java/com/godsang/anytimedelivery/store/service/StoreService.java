@@ -43,6 +43,7 @@ public class StoreService {
    * @param pageable 페이지 정보
    * @return Store page
    */
+  @Transactional(readOnly = true)
   public Page<Store> findStoresByCategoryId(Long categoryId, long userId, Pageable pageable) {
     Address userAddress = addressService.getAddress(userId);
     Long deliveryAddressId = userAddress.getDeliveryArea().getDeliveryAreaId();
@@ -149,6 +150,7 @@ public class StoreService {
    * @Param storeId store id
    * @Return Store
    */
+  @Transactional(readOnly = true)
   public Store findStoreById(long storeId) {
     Optional<Store> store = storeRepository.findById(storeId);
     return store.orElseThrow(() -> new BusinessLogicException(ExceptionCode.STORE_NOT_FOUND));
