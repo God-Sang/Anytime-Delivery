@@ -7,7 +7,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +25,6 @@ import java.util.Map;
 
 @Profile("dev")
 @Configuration
-@EnableConfigurationProperties(ReplicationDataSourceProperties.class)
 @RequiredArgsConstructor
 public class ReplicationDatasourceConfig {
   private final JpaProperties jpaProperties;
