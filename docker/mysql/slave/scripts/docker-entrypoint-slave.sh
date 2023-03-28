@@ -13,7 +13,7 @@ mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "GRANT ALL PRIVILEGES ON *.* TO 'rep
 mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -e "FLUSH PRIVILEGES"
 
 # get master log file
-master_log_file=$(mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -h 172.28.0.2 -e "SHOW MASTER STATUS\G" | grep mysql-bin | grep mysql-bin)
+master_log_file=$(mysql -u root -p"${MYSQL_ROOT_PASSWORD}" -h 172.28.0.2 -e "SHOW MASTER STATUS\G" | grep mysql-bin)
 re="[a-z]*-bin.[0-9]*"
 
 if [[ $master_log_file =~ $re ]];then

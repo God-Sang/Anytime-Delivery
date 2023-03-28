@@ -3,6 +3,7 @@ package com.godsang.anytimedelivery.config.dataSource;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
+@Component
 @ConfigurationProperties(prefix = "spring.datasource")
 public class ReplicationDataSourceProperties {
   private String driverClassName;

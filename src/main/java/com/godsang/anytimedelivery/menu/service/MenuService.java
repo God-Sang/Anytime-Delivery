@@ -62,6 +62,7 @@ public class MenuService {
    * @Param storeId 가게 아이디
    * @Return menus
    */
+  @Transactional(readOnly = true)
   @Cacheable(cacheNames = "menu", key = "#storeId")
   public List<Menu> findStoreMenus(long storeId) {
     storeService.findStoreById(storeId);

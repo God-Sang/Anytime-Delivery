@@ -22,6 +22,7 @@ public class DeliveryAreaService {
    * @Param juso oo시 oo구 oo동
    * @return deliveryArea
    */
+  @Transactional
   public DeliveryArea findExistedDeliveryArea(String juso) {
     Optional<DeliveryArea> deliveryArea = deliveryAreaRepository.findByJuso(juso);
     return deliveryArea.orElseGet(() -> createDeliveryArea(juso));

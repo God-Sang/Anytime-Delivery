@@ -33,6 +33,7 @@ public class UserService {
     return userRepository.save(user);
   }
 
+  @Transactional(readOnly = true)
   public User findUser(Long userId) {
     Optional<User> optionalUser = userRepository.findById(userId);
     return optionalUser.orElseThrow(() -> new BusinessLogicException(ExceptionCode.USER_NOT_FOUND));
