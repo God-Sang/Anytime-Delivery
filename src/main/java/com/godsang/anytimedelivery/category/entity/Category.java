@@ -1,5 +1,6 @@
 package com.godsang.anytimedelivery.category.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ public class Category {
   @Column(unique = true, nullable = false)
   private String name;
   @OneToMany(mappedBy = "category")
+  @JsonBackReference
   private List<CategoryStore> categoryStores = new ArrayList<>();
 
   public Category(String name) {
