@@ -11,7 +11,6 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
@@ -22,10 +21,12 @@ import java.time.Duration;
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 3600)
 @EnableCaching
 public class RedisConfig {
-  @Value("${spring.redis.host}")
-  private String host;
+  @Value("${spring.redis.session.host}")
+  private String sessionHost;
   @Value("${spring.redis.session.port}")
   private int sessionPort;
+  @Value("${spring.redis.cache.host}")
+  private String cacheHost;
   @Value("${spring.redis.cache.port}")
   private int cachePort;
 
@@ -35,7 +36,7 @@ public class RedisConfig {
   @Bean({"redisConnectionFactory", "redisSessionConnectionFactory"})
   public RedisConnectionFactory redisSessionConnectionFactory() {
     RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-    redisStandaloneConfiguration.setHostName(host);
+    redisStandaloneConfiguration.setHostName(sessionHost);
     redisStandaloneConfiguration.setPort(sessionPort);
     return new LettuceConnectionFactory(redisStandaloneConfiguration);
   }
@@ -47,7 +48,7 @@ public class RedisConfig {
   @Bean
   public RedisConnectionFactory redisCacheConnectionFactory() {
     RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-    redisStandaloneConfiguration.setHostName(host);
+    redisStandaloneConfiguration.setHostName(cacheHost);
     redisStandaloneConfiguration.setPort(cachePort);
     return new LettuceConnectionFactory(redisStandaloneConfiguration);
   }
