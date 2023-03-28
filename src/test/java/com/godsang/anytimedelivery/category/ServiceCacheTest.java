@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ServiceCacheTest {
-  @MockBean
+  @SpyBean
   private CategoryRepository categoryRepository;
   @Autowired
   private CategoryService categoryService;
