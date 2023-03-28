@@ -2,6 +2,8 @@ package com.godsang.anytimedelivery.helper.stub;
 
 
 import com.godsang.anytimedelivery.address.entity.Address;
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
+import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.menu.entity.ChoiceType;
 import com.godsang.anytimedelivery.menu.entity.Group;
 import com.godsang.anytimedelivery.menu.entity.Menu;
@@ -14,6 +16,7 @@ import com.godsang.anytimedelivery.order.entity.OrderStatus;
 import com.godsang.anytimedelivery.store.entity.Store;
 import com.godsang.anytimedelivery.user.entity.Role;
 import com.godsang.anytimedelivery.user.entity.User;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -41,6 +44,14 @@ public class StubData {
           .password("1q2w3e4r@")
           .role(role)
           .build();
+    }
+
+    public static User getMockEntity() {
+      User user = StubData.MockUser.getMockEntity(Role.ROLE_CUSTOMER);
+      DeliveryArea deliveryArea = new DeliveryArea("서울시 요기구 저기동");
+      Address address = MockAddress.getMockAddress(deliveryArea);
+      user.setAddress(address);
+      return user;
     }
   }
 
@@ -72,6 +83,18 @@ public class StubData {
           .deliveryTime(30)
           .build();
     }
+
+    public static Store getMockEntityWithDeliveryArea() {
+      Store store = getMockEntity();
+      List<DeliveryAreaStore> deliveryAreaStores = new ArrayList<>();
+      for (int i = 1; i <= 5; i++) {
+        DeliveryArea deliveryArea = new DeliveryArea("서울시 저쪽구 이쪽" + i + "동");
+        DeliveryAreaStore deliveryAreaStore = new DeliveryAreaStore(store, deliveryArea);
+        deliveryAreaStores.add(deliveryAreaStore);
+      }
+      store.setDeliveryAreaStores(deliveryAreaStores);
+      return store;
+    }
   }
 
   public static class MockAddress {
@@ -79,6 +102,14 @@ public class StubData {
       return Address.builder()
           .address(address)
           .detailAddress(detailAddress)
+          .build();
+    }
+
+    public static Address getMockAddress(DeliveryArea deliveryArea) {
+      return Address.builder()
+          .address("서울시 요기구 저기동")
+          .detailAddress("105동 103호")
+          .deliveryArea(deliveryArea)
           .build();
     }
   }
@@ -143,12 +174,69 @@ public class StubData {
       return groups;
     }
   }
+
   public static class MockOrder {
-    public static Order getMockOrder(Store store, User user, OrderStatus orderStatus) {
+    public static Order getMockOrder(Long userId, Long storeId, Long menuId, Long groupId, Long optionId,
+                                     int numBerOfMenus, int numberOfGroups, int numberOfOptions) {
+      Order order = Order.builder()
+          .user(new User(userId))
+          .request("맛있게 해주세요~")
+          .store(new Store(storeId))
+          .build();
+
+      for (int p = 0; p < numBerOfMenus; p++) {
+        OrderMenu orderMenu = OrderMenu.builder()
+            .menu(new Menu(menuId))
+            .order(order)
+            .amount(1)
+            .build();
+        for (int i = 0; i < numberOfGroups; i++) {
+          OrderGroup orderGroup = OrderGroup.builder()
+              .group(new Group(groupId))
+              .orderMenu(orderMenu)
+              .build();
+          for (int j = 0; j < numberOfOptions; j++) {
+            OrderOption orderOption = OrderOption.builder()
+                .option(new Option(optionId))
+                .orderGroup(orderGroup)
+                .build();
+            orderGroup.addOrderOption(orderOption);
+          }
+          orderMenu.addOrderGroup(orderGroup);
+        }
+        order.addOrderMenu(orderMenu);
+      }
+      return order;
+    }
+
+    public static Order getMockOrder(OrderStatus orderStatus, Long orderId) {
+      Store store = MockStore.getMockEntity();
+      User user = MockUser.getMockEntity();
+      Order order = getMockOrder(orderId, store, user);
+      ReflectionTestUtils.setField(order, "status", orderStatus);
+      int numberOfMenus = 3;
+      int numberOfGroups = 3;
+      int numberOfOptions = 3;
+      for (int i = 0; i < numberOfMenus; i++) {
+        OrderMenu orderMenu = getMockOrderMenu(MockMenu.getMockMenu(), order, 1);
+        for (int j = 0; j < numberOfGroups; j++) {
+          OrderGroup orderGroup = getMockOrderGroup(MockMenu.getMockGroup("맛 선택", ChoiceType.CHECK), orderMenu);
+          for (int p = 0; p < numberOfOptions; p++) {
+            orderGroup.addOrderOption(getMockOrderOption(MockMenu.getMockOption("매운맛", 10000), orderGroup));
+          }
+          orderMenu.addOrderGroup(orderGroup);
+        }
+        order.addOrderMenu(orderMenu);
+      }
+      return order;
+    }
+
+    public static Order getMockOrder(Long orderId, Store store, User user) {
       return Order.builder()
-          .status(orderStatus)
+          .orderId(orderId)
           .store(store)
           .user(user)
+          .request("느리게 와주세요")
           .build();
     }
 

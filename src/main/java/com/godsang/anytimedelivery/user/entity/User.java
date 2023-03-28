@@ -46,10 +46,13 @@ public class User extends BaseEntity implements Serializable {
   @Enumerated(EnumType.STRING)
   private Role role;
 
-  @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+  @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
   @JoinColumn(name = "address_id")
   private Address address;
 
+  public User(Long userId) {
+    this.userId = userId;
+  }
   @Builder
   private User(Long userId, String email, String password, String nickName, String phone, Role role) {
     this.userId = userId;

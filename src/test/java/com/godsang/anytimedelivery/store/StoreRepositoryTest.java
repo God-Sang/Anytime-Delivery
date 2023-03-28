@@ -88,7 +88,7 @@ public class StoreRepositoryTest {
   @Transactional
   void association2Test() {
     //when
-    Store store = storeRepository.findById(1L).get();
+    Store store = storeRepository.findAll().get(0);
     Long deliveryAreaId = store.getDeliveryAreaStores().get(0).getDeliveryArea().getDeliveryAreaId();
     //then
     assertThat(deliveryAreaId)

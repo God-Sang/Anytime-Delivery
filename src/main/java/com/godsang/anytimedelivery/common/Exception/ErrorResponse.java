@@ -45,6 +45,26 @@ public class ErrorResponse {
     return new ErrorResponse(httpStatus.value(), message);
   }
 
+  /**
+   * Enum Mapping 실패의 예외 메시지
+   *
+   * @param field
+   * @param enumValues
+   * @return 예외 정보
+   */
+  public static ErrorResponse of(String field, Object[] enumValues) {
+    StringBuilder sb = new StringBuilder();
+    sb.append("A value of '");
+    sb.append(field);
+    sb.append("' should be one of ");
+    for (Object enumValue : enumValues) {
+      sb.append(enumValue.toString());
+      sb.append(", ");
+    }
+    sb.deleteCharAt(sb.length() - 1);
+    return new ErrorResponse(400, sb.toString());
+  }
+
   @Getter
   @AllArgsConstructor
   public static class FieldError {

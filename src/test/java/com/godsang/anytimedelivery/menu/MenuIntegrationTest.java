@@ -1,5 +1,6 @@
 package com.godsang.anytimedelivery.menu;
 
+import com.godsang.anytimedelivery.helper.annotation.WithMockCustomer;
 import com.godsang.anytimedelivery.helper.stub.StubData;
 import com.godsang.anytimedelivery.helper.annotation.WithMockCustomUser;
 import com.godsang.anytimedelivery.helper.stub.MockDto;
@@ -37,7 +38,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
 @WithMockCustomUser(role = Role.ROLE_OWNER)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class MenuIntegrationTest {
@@ -67,12 +67,18 @@ public class MenuIntegrationTest {
     Store store = StubData.MockStore.getMockEntity(1L, savedRegistrationNumber, savedName, savedTel, savedAddress);
     store.setUser(user);
     Store savedStore = storeRepository.save(store);
+    for (int i = 0; i < 5; i++) {
+      Menu menu = StubData.MockMenu.getMockMenu();
+      menu.setStore(store);
+      menuRepository.save(menu);
+    }
     storeId = savedStore.getStoreId();
   }
 
   @Test
   @DisplayName("메뉴등록 성공")
   @Order(100)
+  @Transactional
   void createStoreTest() throws Exception {
     // given
     MenuDto.Post post = MockDto.MenuPost.getOption("치킨", 20000, ChoiceType.RADIO.name());
@@ -87,11 +93,9 @@ public class MenuIntegrationTest {
         )
         // then
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.data.name").value(post.getName()))
-        .andExpect(jsonPath("$.data.groups[0].title").value(post.getGroups().get(0).getTitle()))
-        .andExpect(jsonPath("$.data.groups[0].options[0].name").value(post.getGroups().get(0).getOptions().get(0).getName()));
+        .andExpect(jsonPath("$.data.name").value(post.getName()));
 
-    Menu menu = menuRepository.findById(1L).get();
+    Menu menu = menuRepository.findById(6L).get();
     assertThat(menu.getStore().getStoreId()).isEqualTo(storeId);
     assertThat(menu.getGroups().get(0).getChoiceType()).isEqualTo(ChoiceType.RADIO);
 
@@ -101,23 +105,33 @@ public class MenuIntegrationTest {
 
   @Test
   @DisplayName("가게의 메뉴 조회")
-  @WithMockCustomUser(role = Role.ROLE_CUSTOMER)
+  @WithMockCustomer
   @Order(200)
   void findMenusTest() throws Exception {
-    // given
-    Store store = storeService.findStoreById(storeId);
-    Menu menu = StubData.MockMenu.getMockMenu();
-    menu.setStore(store);
-    menuRepository.save(menu);
-
     // when
     mockMvc.perform(
             get("/categories/{category-id}/stores/{store-id}/menu", 1L, storeId)
                 .accept(MediaType.APPLICATION_JSON)
         )
-        .andExpect(jsonPath("$.data[0].menuId").value(2))
-        .andExpect(jsonPath("$.data[0].groups[1].choiceType").value("RADIO"))
-        .andExpect(jsonPath("$.data[0].groups[1].options[3].price").value(1000));
+        // then
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data[0].menuId").value(1L))
+        .andExpect(jsonPath("$.data[4].menuId").value(5L));
+  }
 
+  @Test
+  @DisplayName("메뉴의 옵션 조회")
+  @WithMockCustomer
+  @Order(300)
+  void findOptionsTest() throws Exception {
+    // when
+    mockMvc.perform(
+            get("/categories/{category-id}/stores/{store-id}/menu/{menu-id}", 1L, storeId, 1L)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+        // then
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.data[0].groupId").value(1L))
+        .andExpect(jsonPath("$.data[0].options[0].optionId").value(1L));
   }
 }

@@ -28,7 +28,17 @@ public enum ExceptionCode {
 
   // Menu
   OWNER_NOT_MATCHED(403, "Owner not matched."),
-  MENU_ALREADY_EXISTS(409, "You already have this menu.");
+  MENU_ALREADY_EXISTS(409, "You already have this menu."),
+  MENU_NOT_FOUND(404, "Menu not found"),
+
+  // Order
+  STORE_CLOSED(409, "Store is closed"),
+  NOT_IN_DELIVERY_AREA(409, "Your address is not in the store's delivery area."),
+  INVALID_ORDER_STATES_CHANGE(403, "Invalid change of an order state"),
+  ORDER_NOT_EXIST(404, "The order does not exist."),
+  ORDER_NOT_YOURS(403, "This order is not yours"),
+  UNABLE_TO_CHANGE_TO_WAIT(403, "An order state can not be changed to WAIT"),
+  ORDER_NOT_BELONG_TO_STORE(403, "This order does not belong to your store");
 
   private final int code;
   private final String description;
