@@ -23,7 +23,7 @@ import javax.sql.DataSource;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Profile("dev")
+@Profile({"dev", "prod"})
 @Configuration
 @RequiredArgsConstructor
 public class ReplicationDatasourceConfig {
