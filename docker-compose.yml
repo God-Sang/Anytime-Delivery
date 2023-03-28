@@ -3,7 +3,7 @@ services:
   db-master:
     container_name: mysql-master
     build:
-      context: ./mysql/master/
+      context: docker/mysql/master/
       dockerfile: Dockerfile
     restart: always
     environment:
@@ -14,15 +14,15 @@ services:
       - "13306:3306"
     volumes:
       - master_vol:/var/lib/mysql
-      - ./mysql/master/scripts:/docker-entrypoint-initdb.d
+      - ./docker/mysql/master/scripts:/docker-entrypoint-initdb.d
     networks:
-      net-mysql:
+      net-app:
         ipv4_address: 172.28.0.2
 
   db-slave:
     container_name: mysql-slave
     build:
-      context: ./mysql/slave
+      context: docker/mysql/slave/
       dockerfile: Dockerfile
     restart: always
     environment:
@@ -33,9 +33,9 @@ services:
       - "13307:3306"
     volumes:
       - slave_vol:/var/lib/mysql
-      - ./mysql/slave/scripts:/docker-entrypoint-initdb.d
+      - ./docker/mysql/slave/scripts:/docker-entrypoint-initdb.d
     networks:
-      net-mysql:
+      net-app:
         ipv4_address: 172.28.0.3
     depends_on:
       - db-master
@@ -45,9 +45,8 @@ volumes:
   slave_vol:
 
 networks:
-  net-mysql:
+  net-app:
     driver: bridge
     ipam:
       config:
         - subnet: 172.28.0.0/16
-
