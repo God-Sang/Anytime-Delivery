@@ -19,7 +19,7 @@ public class DataSourceTest {
   public final String TEST_METHOD = "determineCurrentLookupKey";
 
   @Test
-  @DisplayName("Master Data Source")
+  @DisplayName("Master Data Source 분기 테스트")
   @Transactional
   void masterDataSourceTest(@Qualifier("routingDataSource") DataSource routingDataSource) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Method determineCurrentLookupKey = AbstractRoutingDataSource.class.getDeclaredMethod(TEST_METHOD);
@@ -31,7 +31,7 @@ public class DataSourceTest {
   }
 
   @Test
-  @DisplayName("Slave Data Source")
+  @DisplayName("Slave Data Source 분기 테스트")
   @Transactional(readOnly = true)
   void slaveDataSourceTest(@Qualifier("routingDataSource") DataSource routingDataSource) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     Method determineCurrentLookupKey = AbstractRoutingDataSource.class.getDeclaredMethod(TEST_METHOD);
