@@ -50,6 +50,8 @@ services:
       - "8080:8080"
     networks:
       net-app:
+    depends_on:
+      - redis-cache
   server-2:
     container_name: server-2
     build:
@@ -60,6 +62,8 @@ services:
       - "8081:8080"
     networks:
       net-app:
+    depends_on:
+      - redis-cache
   server-3:
     container_name: server-3
     build:
@@ -70,6 +74,33 @@ services:
       - "8082:8080"
     networks:
       net-app:
+    depends_on:
+      - redis-cache
+
+  redis-session:
+    container_name: session
+    build:
+      context: docker/redis/session
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      net-app:
+    depends_on:
+      - db-slave
+  redis-cache:
+    container_name: cache
+    build:
+      context: docker/redis/cache
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "6378:6379"
+    networks:
+      net-app:
+    depends_on:
+      - redis-session
 
 volumes:
   master_vol:
