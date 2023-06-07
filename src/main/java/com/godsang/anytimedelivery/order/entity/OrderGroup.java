@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -32,16 +31,16 @@ public class OrderGroup {
   @ManyToOne(optional = false)
   @JoinColumn(name = "group_id")
   private Group group;
-  @BatchSize(size = 500)
   @OneToMany(mappedBy = "orderGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<OrderOption> orderOptions = new ArrayList<>();
 
-  public void addOrderOption(OrderOption orderOption) {
-    orderOptions.add(orderOption);
-  }
   @Builder
   private OrderGroup(OrderMenu orderMenu, Group group) {
     this.orderMenu = orderMenu;
     this.group = group;
+  }
+
+  public void addOrderOption(OrderOption orderOption) {
+    orderOptions.add(orderOption);
   }
 }
