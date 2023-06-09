@@ -1,7 +1,5 @@
 package com.godsang.anytimedelivery.store.service;
 
-import com.godsang.anytimedelivery.address.entity.Address;
-import com.godsang.anytimedelivery.address.service.AddressService;
 import com.godsang.anytimedelivery.category.entity.Category;
 import com.godsang.anytimedelivery.category.entity.CategoryStore;
 import com.godsang.anytimedelivery.category.service.CategoryService;
@@ -15,8 +13,9 @@ import com.godsang.anytimedelivery.store.repository.StoreRepository;
 import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,22 +33,23 @@ public class StoreService {
   private final CategoryService categoryService;
   private final DeliveryAreaService deliveryAreaService;
   private final UserService userService;
-  private final AddressService addressService;
 
   /**
    * search stores by category id and deliveryArea id and page information.
+   * <p>
+   * For cache, categoryId should be first argument and deliveryAddressId second.
    *
-   * @param categoryId 카테고리 아이디
-   * @param userId     사용자 아이디
-   * @param pageable   페이지 정보
+   * @param categoryId     카테고리 아이디
+   * @param deliveryAreaId 지역 아이디
+   * @param page           페이지 번호
+   * @param size           페이지 크기
    * @return Store page
    */
   @Transactional(readOnly = true)
-  public Page<Store> findStoresByCategoryId(Long categoryId, long userId, Pageable pageable) {
-    Address userAddress = addressService.getAddress(userId);
-    Long deliveryAddressId = userAddress.getDeliveryArea().getDeliveryAreaId();
+  @Cacheable(key = "'page' + #page + 'size' + #size", cacheResolver = "storeCacheResolver")
+  public Page<Store> findStoresByCategoryId(Long categoryId, Long deliveryAreaId, int page, int size) {
     categoryService.findVerifiedCategoryById(categoryId);
-    return storeRepository.findStoresByCategoryAndDeliveryArea(categoryId, deliveryAddressId, pageable);
+    return storeRepository.findStoresByCategoryAndDeliveryArea(categoryId, deliveryAreaId, PageRequest.of(page, size));
   }
 
   /**

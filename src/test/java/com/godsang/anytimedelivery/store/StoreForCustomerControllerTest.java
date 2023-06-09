@@ -83,7 +83,7 @@ public class StoreForCustomerControllerTest {
     }
     Page<Store> result = new PageImpl<>(stores, PageRequest.of(1, 10), 20);
 
-    given(storeService.findStoresByCategoryId(anyLong(), anyLong(), any())).willReturn(result);
+    given(storeService.findStoresByCategoryId(anyLong(), anyLong(), any(), any())).willReturn(result);
     given(storeMapper.storeListToResponseDto(stores)).willReturn(dtos);
     MultiValueMap<String, String> queries = MockDto.Query.getPageQuery(1, 10);
 
