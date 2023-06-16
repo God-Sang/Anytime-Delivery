@@ -1,16 +1,26 @@
 package com.godsang.anytimedelivery.config;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.StdTypeResolverBuilder;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.godsang.anytimedelivery.config.objectMapper.PageDeserializer;
+import com.godsang.anytimedelivery.config.objectMapper.PageSerializer;
+import com.godsang.anytimedelivery.config.objectMapper.StoreMixin;
+import com.godsang.anytimedelivery.store.entity.Store;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.CacheResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.redis.cache.BatchStrategies;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
+import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -34,15 +44,22 @@ public class RedisConfig {
   private int cachePort;
 
   @Bean
+  @Primary
   public ObjectMapper objectMapper() {
     ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JavaTimeModule());
+    mapper.addMixIn(Store.class, StoreMixin.class);
+
     GenericJackson2JsonRedisSerializer.registerNullValueSerializer(mapper, null);
     StdTypeResolverBuilder builder = new ObjectMapper.DefaultTypeResolverBuilder(ObjectMapper.DefaultTyping.EVERYTHING,
         mapper.getPolymorphicTypeValidator());
     builder = builder.init(JsonTypeInfo.Id.CLASS, null);
     builder = builder.inclusion(JsonTypeInfo.As.PROPERTY);
     mapper.setDefaultTyping(builder);
-    mapper.registerModule(new JavaTimeModule());
+    Module module = new SimpleModule()
+        .addSerializer(PageImpl.class, new PageSerializer())
+        .addDeserializer(PageImpl.class, new PageDeserializer());
+    mapper.registerModule(module);
     return mapper;
   }
 
@@ -92,12 +109,13 @@ public class RedisConfig {
             RedisSerializationContext.SerializationPair
                 .fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper))
         )
-        .entryTtl(Duration.ofSeconds(3600));
+        .entryTtl(Duration.ofHours(6L));
 
     return RedisCacheManager.RedisCacheManagerBuilder
         .fromConnectionFactory(redisCacheConnectionFactory())
-        .transactionAware()
         .cacheDefaults(redisCacheConfiguration)
+        .cacheWriter(RedisCacheWriter.nonLockingRedisCacheWriter(
+            redisCacheConnectionFactory(), BatchStrategies.scan(1000)))
         .build();
   }
 

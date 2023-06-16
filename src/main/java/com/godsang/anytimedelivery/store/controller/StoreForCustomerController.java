@@ -1,7 +1,5 @@
 package com.godsang.anytimedelivery.store.controller;
 
-import com.godsang.anytimedelivery.address.entity.Address;
-import com.godsang.anytimedelivery.address.service.AddressService;
 import com.godsang.anytimedelivery.auth.details.UserDetailsImpl;
 import com.godsang.anytimedelivery.common.dto.PageResponseDto;
 import com.godsang.anytimedelivery.store.dto.StoreDto;
@@ -31,7 +29,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class StoreForCustomerController {
-  private final AddressService addressService;
   private final StoreService storeService;
   private final StoreMapper storeMapper;
 
@@ -48,9 +45,8 @@ public class StoreForCustomerController {
                                   @RequestParam @Positive int page,
                                   @RequestParam @Positive int size,
                                   @AuthenticationPrincipal UserDetailsImpl principal) {
-    Address userAddress = addressService.getAddress(principal.getUserId());
-    Long deliveryAddressId = userAddress.getDeliveryArea().getDeliveryAreaId();
-    Page<Store> stores = storeService.findStoresByCategoryId(categoryId, deliveryAddressId, page, size);
+    Long userId = principal.getUserId();
+    Page<Store> stores = storeService.findStores(categoryId, userId, page, size);
     List<StoreDto.Response> storeDtos = storeMapper.storeListToResponseDto(stores.getContent());
     return new ResponseEntity(new PageResponseDto<>(storeDtos, stores), HttpStatus.OK);
   }

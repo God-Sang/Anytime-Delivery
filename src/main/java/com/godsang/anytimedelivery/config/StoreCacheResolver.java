@@ -20,6 +20,14 @@ public class StoreCacheResolver extends SimpleCacheResolver {
     super(cacheManager);
   }
 
+  /**
+   * ResolveCaches for Store
+   * <p>
+   * This is available for both @Cacheable and @CacheEvict.
+   * If method signature is changed, findCacheForCacheable() and findCacheForEvict should be changed along.
+   *
+   * @param context the context of the particular invocation
+   */
   @Override
   public Collection<? extends Cache> resolveCaches(CacheOperationInvocationContext<?> context) {
     List<String> cacheNames = makeCacheNames(context);
