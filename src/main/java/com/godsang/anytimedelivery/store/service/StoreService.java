@@ -15,8 +15,9 @@ import com.godsang.anytimedelivery.store.repository.StoreRepository;
 import com.godsang.anytimedelivery.user.entity.User;
 import com.godsang.anytimedelivery.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,18 +39,20 @@ public class StoreService {
 
   /**
    * search stores by category id and deliveryArea id and page information.
+   * <p>
    *
    * @param categoryId 카테고리 아이디
-   * @param userId     사용자 아이디
-   * @param pageable   페이지 정보
+   * @param userId     유저 아이디
+   * @param page       페이지 번호
+   * @param size       페이지 크기
    * @return Store page
    */
   @Transactional(readOnly = true)
-  public Page<Store> findStoresByCategoryId(Long categoryId, long userId, Pageable pageable) {
+  public Page<Store> findStores(Long categoryId, Long userId, int page, int size) {
     Address userAddress = addressService.getAddress(userId);
-    Long deliveryAddressId = userAddress.getDeliveryArea().getDeliveryAreaId();
+    Long deliveryAreaId = userAddress.getDeliveryArea().getDeliveryAreaId();
     categoryService.findVerifiedCategoryById(categoryId);
-    return storeRepository.findStoresByCategoryAndDeliveryArea(categoryId, deliveryAddressId, pageable);
+    return storeRepository.findStoresByCategoryAndDeliveryArea(categoryId, deliveryAreaId, PageRequest.of(page, size));
   }
 
   /**

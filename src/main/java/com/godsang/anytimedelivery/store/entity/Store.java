@@ -35,9 +35,9 @@ public class Store {
   private String registrationNumber;
   @Column(nullable = false, unique = true)
   private String name;
-  @Column(nullable = false, unique = true, length = 13)
+  @Column(nullable = false, length = 13)
   private String tel;
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false)
   private String address;
   private String introduction;
   @Column(nullable = false)
