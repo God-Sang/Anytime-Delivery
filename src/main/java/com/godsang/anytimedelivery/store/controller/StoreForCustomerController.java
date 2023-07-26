@@ -8,7 +8,6 @@ import com.godsang.anytimedelivery.store.mapper.StoreMapper;
 import com.godsang.anytimedelivery.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,8 +36,8 @@ public class StoreForCustomerController {
    * Search stores based on a category and address of a user.
    *
    * @param categoryId 카테고리 아이디
-   * @param page 페이지
-   * @param size 사이즈
+   * @param page       페이지
+   * @param size       사이즈
    * @return ResponseEntity
    */
   @GetMapping
@@ -47,7 +46,7 @@ public class StoreForCustomerController {
                                   @RequestParam @Positive int size,
                                   @AuthenticationPrincipal UserDetailsImpl principal) {
     Long userId = principal.getUserId();
-    Page<Store> stores = storeService.findStoresByCategoryId(categoryId, userId, PageRequest.of(page, size));
+    Page<Store> stores = storeService.findStores(categoryId, userId, page, size);
     List<StoreDto.Response> storeDtos = storeMapper.storeListToResponseDto(stores.getContent());
     return new ResponseEntity(new PageResponseDto<>(storeDtos, stores), HttpStatus.OK);
   }

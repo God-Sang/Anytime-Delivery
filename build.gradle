@@ -45,6 +45,8 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.10'
 
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 tasks.named('test') {

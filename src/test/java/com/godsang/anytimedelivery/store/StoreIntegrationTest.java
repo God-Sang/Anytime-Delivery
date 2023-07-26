@@ -224,6 +224,39 @@ public class StoreIntegrationTest {
     assertThat(deliveryArea.size()).isEqualTo(2);
   }
 
+  @Test
+  @DisplayName("고객의 스토어 조회 테스트")
+  void customerGetTest() throws Exception {
+    // given
+    Store store = storeRepository.findById(1L).get();
+    for (String juso : deliveryAreas) {
+      DeliveryArea deliveryArea = deliveryAreaService.findExistedDeliveryArea(juso);
+      DeliveryAreaStore deliveryAreaStore = new DeliveryAreaStore(store, deliveryArea);
+      store.addDeliveryAreaStore(deliveryAreaStore);
+    }
+    storeRepository.save(store);
+
+    String registrationNumber = "321-21-54321";
+    String name = "오빠닥";
+    String tel = "031-123-1234";
+    String address = "경기도 성남시 분당구 정자동 123";
+    String content = gson.toJson(getPostDto(registrationNumber, name, tel, address, categoryIds, deliveryAreas));
+
+    // when
+    mockMvc.perform(
+        post("/owner/stores")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(content)
+    );
+
+    // then
+    List<DeliveryArea> deliveryArea = deliveryAreaRepository.findAll();
+    assertThat(deliveryArea.size()).isEqualTo(2);
+  }
+
+
+
   private StoreDto.Post getPostDto(String registrationNumber, String name, String tel, String address, List<Long> categoryIds, List<String> deliveryAreas) {
     return MockDto.StorePost.get(
         registrationNumber,

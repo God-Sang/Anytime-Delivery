@@ -2,6 +2,8 @@ package com.godsang.anytimedelivery.helper.stub;
 
 
 import com.godsang.anytimedelivery.address.entity.Address;
+import com.godsang.anytimedelivery.category.entity.Category;
+import com.godsang.anytimedelivery.category.entity.CategoryStore;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryArea;
 import com.godsang.anytimedelivery.deliveryArea.entity.DeliveryAreaStore;
 import com.godsang.anytimedelivery.menu.entity.ChoiceType;
@@ -84,6 +86,20 @@ public class StubData {
           .build();
     }
 
+    public static Store getMockEntity(long id) {
+      return Store.builder()
+          .storeId(id)
+          .registrationNumber("123-12-12345")
+          .name("애니타임 치킨")
+          .tel("02-123-1234")
+          .address("경기도 성남시 분당구 123")
+          .openTime(LocalTime.of(9, 30))
+          .closeTime(LocalTime.of(21, 30))
+          .deliveryFee(1000)
+          .deliveryTime(30)
+          .build();
+    }
+
     public static Store getMockEntityWithDeliveryArea() {
       Store store = getMockEntity();
       List<DeliveryAreaStore> deliveryAreaStores = new ArrayList<>();
@@ -93,6 +109,18 @@ public class StubData {
         deliveryAreaStores.add(deliveryAreaStore);
       }
       store.setDeliveryAreaStores(deliveryAreaStores);
+      return store;
+    }
+
+    public static Store getMockEntityWithDeliveryAreaAndCategory() {
+      Store store = getMockEntityWithDeliveryArea();
+      List<CategoryStore> categoryStores = new ArrayList<>();
+      for (int i = 1; i <= 3; i++) {
+        Category category = new Category("카테고리" + i);
+        CategoryStore categoryStore = new CategoryStore(category, store);
+        categoryStores.add(categoryStore);
+      }
+      store.setCategoryStores(categoryStores);
       return store;
     }
   }
