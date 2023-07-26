@@ -42,6 +42,7 @@ out/
 **/application-dev.yml
 **/generated/
 **/TestController.java
-**/.env
-init.sh
-stop.sh
+.env
+script/init.sh
+script/start.sh
+script/stop.sh

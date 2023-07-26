@@ -37,9 +37,11 @@ import java.time.Duration;
 @EnableCaching
 public class RedisConfig {
   @Value("${spring.redis.session.host}")
-  private String host;
+  private String sessionHost;
   @Value("${spring.redis.session.port}")
   private int sessionPort;
+  @Value("${spring.redis.cache.host}")
+  private String cacheHost;
   @Value("${spring.redis.cache.port}")
   private int cachePort;
 
@@ -69,7 +71,7 @@ public class RedisConfig {
   @Bean({"redisConnectionFactory", "redisSessionConnectionFactory"})
   public RedisConnectionFactory redisSessionConnectionFactory() {
     RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-    redisStandaloneConfiguration.setHostName(host);
+    redisStandaloneConfiguration.setHostName(sessionHost);
     redisStandaloneConfiguration.setPort(sessionPort);
     return new LettuceConnectionFactory(redisStandaloneConfiguration);
   }
@@ -81,7 +83,7 @@ public class RedisConfig {
   @Bean
   public RedisConnectionFactory redisCacheConnectionFactory() {
     RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-    redisStandaloneConfiguration.setHostName(host);
+    redisStandaloneConfiguration.setHostName(cacheHost);
     redisStandaloneConfiguration.setPort(cachePort);
     return new LettuceConnectionFactory(redisStandaloneConfiguration);
   }
