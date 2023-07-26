@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${rdb.master.username}
+    password: ${rdb.master.password}
+    url: jdbc:mysql://${rdb.master.host}:${rdb.master.port}/${rdb.name}?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    slaves:
+      slave1:
+        name: slave1
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: ${rdb.slave.username}
+        password: ${rdb.slave.password}
+        url: jdbc:mysql://${rdb.slave.host}:${rdb.slave.port}/${rdb.name}?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate:
+        default_batch_fetch_size: 20
+        format_sql: true
+        show_sql: true
+        physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        hbm2ddl:
+          auto: validate
+
+  redis:
+    session:
+      host: ${redis.session.host}
+      port: ${redis.session.port}
+    cache:
+      host: ${redis.cache.host}
+      port: ${redis.cache.port}
+
+mail:
+  address:
+    admin: ${admin.email}
+
+logging:
+  file:
+    path: logs
